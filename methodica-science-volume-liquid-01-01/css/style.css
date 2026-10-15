@@ -1300,9 +1300,9 @@
 .s9-peek-bubble {
   position: absolute;
   left: 23px;
-  top: calc(50% - 260px);
-  width: 203px;
-  height: 137px;
+  top: calc(50% - 291px);
+  width: 270px;
+  height: 168px;
   background: url('../assets/img/s9-talk-bubble.svg') no-repeat center center / 100% 100%;
   z-index: 6;
   pointer-events: none;
@@ -1315,7 +1315,7 @@
   position: absolute;
   left: 50%; top: 3.79%; bottom: 10.58%;
   transform: translateX(-50%);
-  width: 185px;
+  width: 248px;
   display: flex; align-items: center; justify-content: center;
   text-align: center; direction: rtl;
   font-family: Calibri, Arial, sans-serif;
