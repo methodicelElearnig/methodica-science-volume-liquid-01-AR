@@ -1,0 +1,68 @@
+{
+  "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-07/",
+  "title": "שאלת שיא",
+  "learningUnitId": "methodica-science-volume-liquid-01",
+  "componentPurpose": "practice",
+  "isAssessment": true,
+  "recommendedAfterFail": [],
+  "isRequired": true,
+  "relativeDifficulty": 5,
+  "masteryLevel": null,
+  "order": 6,
+  "depthLevel": "core-curriculum-basic",
+  "cognitiveLevels": ["evaluating-and-justifying"],
+  "languages": ["Hebrew"],
+  "skills": [],
+  "estimatedTimeInMinutes": 8,
+  "createdAt": "2026-09-24T00:00:00.000Z",
+  "updatedAt": "2026-09-24T00:00:00.000Z",
+  "subContent": [
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-07/methodica-science-volume-liquid-01-07-001/",
+      "title": "שאלת שיא: בקרת איכות בקבוקי מיץ במפעל (4 סעיפים)",
+      "informationToBot": "מטרת הפריט: שאלת שיא שנייה, המיישמת מהימנות מדידה וסטטיסטיקה בסיסית בהקשר של בקרת איכות תעשייתית - חברת משקאות מייצרת בקבוקי מיץ עם תכולה מוצהרת של 750 מ״ל, ולפי התקן טווח הנפח המותר הוא 735-765 מ״ל. אגף הצרכנות מדד 8 בקבוקים (745, 752, 748, 760, 749, 755, 747, 754 מ״ל). תתי-סעיפים: א) חישוב הנפח הממוצע של 8 המדידות. ב) קביעת מספר הבקבוקים מתוך 8 שעומדים בטווח התקן. ג) זיהוי הטיעון המדעי השלם והנכון ביותר לכך שהחברה עומדת בתקן. ד) הערכת הצעה למדוד את כל הבקבוקים (ולא רק מדגם) - הבנת עקרון הדגימה המייצגת. מה התלמיד אמור להבין: החלטה על עמידה בתקן נשענת על כלל תוצאות המדגם ביחס לטווח המותר (לא רק על הממוצע), ושמדגם מייצג יכול להחליף בדיקה מלאה של כל הפריטים. טעויות נפוצות: סעיף א - טעות חישוב בממוצע 8 הערכים (התוצאה הנכונה 751.25). סעיף ב - קביעה שגויה של מספר הבקבוקים בטווח (כל 8 הבקבוקים נמצאים בין 745-760, בתוך הטווח 735-765, ולכן כולם עומדים בתקן). סעיף ג - בחירת טיעון חלקי או שגוי (למשל המבוסס רק על ההשוואה ל-750 המוצהר, בלי להתייחס לטווח התקן המלא). סעיף ד - קבלת ההצעה למדוד את כל הבקבוקים בלי לשקול עלות/יעילות ואת עקרון הדגימה המייצגת.",
+      "contentType": "practice",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-07/methodica-science-volume-liquid-01-07-001/q1",
+          "questionType": "choice",
+          "questionText": "סעיף א׳: תוצאות מדידות נפח המיץ בבקבוקים שונים במ\"ל: 745, 752, 748, 760, 749, 755, 747, 754. מהו הנפח הממוצע של תכולת 8 הבקבוקים?",
+          "answers": ["748.5 מ״ל", "751.25 מ״ל", "755 מ״ל", "760 מ״ל"],
+          "correctAnswers": ["751.25 מ״ל"]
+        },
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-07/methodica-science-volume-liquid-01-07-001/q2",
+          "questionType": "numeric",
+          "questionText": "סעיף ב׳: לפי התקן הבקבוקים יכולים להכיל טווח של 735–765 מ\"ל מיץ תפוזים. ממוצע המדידות הוא: 751.25 מ\"ל. ולכן ___ בקבוקים מתוך 8 הבקבוקים עומדים בטווח התקן.",
+          "answers": [],
+          "correctAnswers": [8]
+        },
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-07/methodica-science-volume-liquid-01-07-001/q3",
+          "questionType": "choice",
+          "questionText": "סעיף ג׳: חברת המשקאות טוענת שהיא עומדת בתקן. איזה מהמשפטים הבאים מציג טיעון מדעי נכון ומלא התומך בטענת החברה?",
+          "answers": [
+            "החברה עומדת בתקן כחוק - התקן הנדרש בארץ נע בין 735 מ\"ל ל-765 מ\"ל וזהו טווח הוגן לחלוטין עבור הצרכנים",
+            "החברה עומדת בתקן כחוק - בבדיקה של אגף הצרכנות נמדדו בבקבוקים השונים ערכים שבין 745 מ\"ל ל-760 מ\"ל",
+            "החברה עומדת בתקן כחוק - כל מדידות הבדיקה (745–760 מ\"ל) נמצאות בתוך הטווח המותר לפי התקן (735–765 מ\"ל)",
+            "החברה לא עומדת בתקן, מכיוון שבבדיקה נמצא בקבוק המכיל 745 מ\"ל, וזה פחות מ-750 מ\"ל שרשומים על גבי תווית המיץ"
+          ],
+          "correctAnswers": ["החברה עומדת בתקן כחוק - כל מדידות הבדיקה (745–760 מ\"ל) נמצאות בתוך הטווח המותר לפי התקן (735–765 מ\"ל)"]
+        },
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-07/methodica-science-volume-liquid-01-07-001/q4",
+          "questionType": "choice",
+          "questionText": "סעיף ד׳: קובי טוען שצריך למדוד את נפח המיץ בכל הבקבוקים. מה אתם חושבים?",
+          "answers": [
+            "הצעה מצוינת – תמיד כדאי להיות בטוחים",
+            "לא מעשי. יקר ואיטי. ניתן להסיק ממדגם מייצג",
+            "רעיון לא טוב – זה יכול להזיק למדידה כולה",
+            "אין אפשרות להעריך"
+          ],
+          "correctAnswers": ["לא מעשי. יקר ואיטי. ניתן להסיק ממדגם מייצג"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-05/",
+  "title": "בואו נאתגר את עצמנו",
+  "learningUnitId": "methodica-science-volume-liquid-01",
+  "componentPurpose": "practice",
+  "isAssessment": false,
+  "recommendedAfterFail": [],
+  "isRequired": false,
+  "relativeDifficulty": 5,
+  "masteryLevel": null,
+  "order": 5,
+  "depthLevel": "core-curriculum-basic",
+  "cognitiveLevels": ["analyzing"],
+  "languages": ["Hebrew"],
+  "skills": [],
+  "estimatedTimeInMinutes": 4,
+  "createdAt": "2026-09-24T00:00:00.000Z",
+  "updatedAt": "2026-09-24T00:00:00.000Z",
+  "subContent": [
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-05/methodica-science-volume-liquid-01-05-001/",
+      "title": "מינון תרופה לפי משקל גוף",
+      "informationToBot": "מטרת הפריט: תרגיל מתקדם המשלב קריאת תווית תרופה באנגלית וחישוב פרופורציה - לפי התווית, המנה המומלצת היא כפית (5 מ״ל) לכל 10 ק״ג משקל גוף, ועילאי שוקל 30 ק״ג. מה התלמיד אמור להבין/לתרגל: יש לחשב שעילאי שוקל פי 3 מ-10 ק״ג, ולכן מנתו היא 3 כפיות = 15 מ״ל. טעויות נפוצות: חישוב מנה אחת (5 מ״ל) בלי להכפיל לפי משקל הגוף בפועל; בלבול במונחים האנגליים (Dose/TSP/Body Weight).",
+      "contentType": "practice",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-05/methodica-science-volume-liquid-01-05-001/q1",
+          "questionType": "choice",
+          "questionText": "לפניכם תרופה אמריקאית עם הוראות באנגלית על התווית. פירוש התווית בעברית: מנה מומלצת - 1 כפית לכל 10 ק\"ג של משקל גוף. עילאי שוקל 30 ק\"ג. כמה מ\"ל יקבל?",
+          "answers": ["5 מ״ל", "10 מ״ל", "15 מ״ל"],
+          "correctAnswers": ["15 מ״ל"]
+        }
+      ]
+    },
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-05/methodica-science-volume-liquid-01-05-002/",
+      "title": "מסה ונפח - מי צדק, עידו או תמר?",
+      "informationToBot": "מטרת הפריט: תרגיל מתקדם המבחין בין מדידת מסה למדידת נפח, ומיישם את הידיעה ש-1 גרם מים = 1 מ״ל מים - עידו מדד מסה נטו של מים בבקבוק (500 גרם), תמר מדדה את הנפח (500 מ״ל), ושניהם טוענים שיש להם חצי ליטר מים. מה התלמיד אמור להבין/לתרגל: לכל חומר יש גם מסה וגם נפח, ועבור מים במיוחד היחס בין גרם למ״ל הוא 1:1 - ולכן שתי המדידות השונות (מסה ונפח) מוליכות לאותה מסקנה בדיוק, ושניהם צודקים. טעויות נפוצות: הנחה שמדידת מסה תמיד מדויקת יותר ממדידת נפח (או להיפך); אי-הבנה שמסה ונפח הם תכונות שונות שמתקשרות זו לזו רק דרך הצפיפות של החומר הספציפי. מידע נוסף: הפריט מסתיים בסרטון קצר על 'כפית שמצילה חיים' - תוכן העשרה חותם ללא שאלה מוערכת נוספת.",
+      "contentType": "practice",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-05/methodica-science-volume-liquid-01-05-002/q1",
+          "questionType": "choice",
+          "questionText": "עידו מדד מסה נטו של מים בבקבוק ומצא שהמסה שלהם היא 500 גרם. תמר מדדה את הנפח של המים באותו בקבוק ומצאה שהוא 500 מ\"ל. שניהם טענו: \"יש לי בקבוק עם חצי ליטר מים\". ידוע: 1 גרם מים = 1 מ\"ל מים. מי צדק – תמר או עידו?",
+          "answers": [
+            "רק תמר צודקת, כי אי אפשר לדעת נפח דרך מדידת מסה.",
+            "שניהם צודקים, כי לכל חומר יש גם מסה וגם נפח. שתי המדידות השונות מוליכות לאותה מסקנה בדיוק.",
+            "רק עידו צודק כי מדידת מסה תמיד מדויקת יותר ממדידת נפח של נוזל.",
+            "שניהם טועים כי מסה ונפח הם לא אותו הדבר."
+          ],
+          "correctAnswers": ["שניהם צודקים, כי לכל חומר יש גם מסה וגם נפח. שתי המדידות השונות מוליכות לאותה מסקנה בדיוק."]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,640 @@
+/* ═══════════════════════════════════════════════════════
+   css/style.css  —  720 Science · Liquid Volume Lomda · Part 03
+   Canvas: 1280 × 710 px   (matches the 720 reference engine)
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── Screens ───────────────────────────────────────────── */
+.screen {
+  position: absolute; inset: 0;
+  display: none; overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TEMPLATE — TransitionScreen (Screen 01 / #s0)
+   Ported from the part-01 S13 transition and its S15
+   sibling instance (the latter now part 02's #s0)
+   (same Figma component: "TransitionScreen"). Centered lead +
+   title + subtitle above the companion character video (jumping-rope
+   variant, resolved from the character chosen in part 01).
+   ═══════════════════════════════════════════════════════ */
+#s0 { background: #fff; }
+
+.s13tr-content {
+  position: absolute;
+  inset: 0 0 74px 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 24px;
+}
+.s13tr-text {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 12px;
+  text-align: center;
+}
+.s15tr-lead {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 28px; font-weight: 400; color: #303030;
+  margin: 0;
+}
+.s13tr-title {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 40px; font-weight: 700; color: #303030;
+  margin: 0;
+}
+.s13tr-subtitle {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 28px; font-weight: 700; color: #303030;
+  margin: 0;
+}
+.s13tr-video-wrap { width: 640px; height: 360px; flex-shrink: 0; }
+.s13tr-video {
+  width: 100%; height: 100%;
+  object-fit: contain; display: block;
+  /* Hide the GPU edge-blend seam: at fractional canvas scales the video's
+     edge pixels blend with outside-the-frame black → faint gray line. */
+  clip-path: inset(2px);
+  /* Decorative, non-interactive video — suppress browser-injected hover
+     overlays (PiP/cast/read-aloud) some browsers show regardless of the
+     controlsList/disablepictureinpicture attributes on the element itself. */
+  pointer-events: none;
+}
+/* #s0 has no .scq-bar wrapper (TransitionScreen convention) — position its
+   own back button, same as part-01's #s13-back/#s15-back. */
+#s0-back {
+  position: absolute;
+  bottom: 17.5px; right: 24px;
+  z-index: 12;
+}
+#s4-back {
+  position: absolute;
+  bottom: 17.5px; right: 24px;
+  z-index: 12;
+}
+
+/* ═══════════════════════════════════════════════════════
+   S4 — Speech-bubble callout, EXACT Figma component (file
+   dpY9DTl41tzW8SKvcPWU0C, node 2500:5858 "Image Text Bubble
+   States" — the same reusable bubble family as part-01's
+   .s1-talk-bubble: white fill, #1CB0F6 stroke). This screen's
+   instance is the tail-bottom variant rotated -90° (tail → right);
+   the real SVG shape (asset handling rule: shape = image asset,
+   label = live HTML, never baked in) is pre-rotated once in
+   assets/img/s4-bubble.svg rather than CSS-transformed at use time.
+   Positioned so the tail points toward the character's mouth without
+   overlapping the character's silhouette. The medal character's body
+   starts at ~33% of the 640×360 wrap (≈211px, same framing in the
+   .mp4 as in the interim .png it replaced) — the bubble's right edge
+   (including tail) is kept left of that with a clear margin, per
+   explicit correction: it was covering the character, moved further
+   left (X-axis only). ═══ */
+.s4tr-image-wrap { position: relative; }
+.s4-bubble {
+  position: absolute;
+  left: -10px; top: 112px;
+  width: 189px; height: 93px;
+  background: url('../assets/img/s4-bubble.svg') no-repeat center / 100% 100%;
+  z-index: 5;
+}
+.s4-bubble-text {
+  position: absolute;
+  inset: 4px 22px 4px 4px;   /* right inset clears the tail (Figma's own text-frame inset) */
+  display: flex; align-items: center; justify-content: center;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 20px; font-weight: 400; color: #000;
+  text-align: center; direction: rtl;
+  margin: 0; line-height: normal;
+}
+.scq-popup-title p { margin: 0 0 2px; }
+.scq-popup-title p:last-child { margin-bottom: 0; }
+
+/* ═══════════════════════════════════════════════════════
+   TEMPLATE — SingleChoiceQuestion, image-choice variant (#s1)
+   Ported from methodica-science-volume-liquid-01-02's #s3 (was part
+   01's #s19 before the practice series was split into part 02)
+   (same producer composition: "TwoOptionSelectio +
+   SingleChoiceQuestion" — TwoOptionSelection's image cards as
+   answer options, driven by the SingleChoiceQuestion state
+   machine). Hint hidden until the first wrong attempt (producer
+   note: "רמז מופיעה מהניסיון מענה ראשון"). Correct: משורה.
+   Nudged down (top: calc(50% - 5px)) so the centered block
+   clears the Progress Question nav above it.
+   ═══════════════════════════════════════════════════════ */
+#s1 { background: #fff; }
+
+.s5q-content {
+  position: absolute;
+  left: 50%; top: calc(50% - 5px);
+  transform: translate(-50%, -50%);
+  width: 1120px;
+  display: flex; flex-direction: column; align-items: center; gap: 36px;
+}
+.s5q-header {
+  display: flex; flex-direction: column; gap: 8px;
+  align-items: stretch; width: 100%; padding: 0 10px;
+}
+/* Blue question title — same spec as part-01's .s5q-title (24px bold,
+   Subject/500), used by S2's "מדידת נפח" header. */
+.s5q-title {
+  width: 100%; text-align: right;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 700; color: var(--subject-500);
+  direction: rtl; line-height: 1.35; margin: 0;
+}
+.s5q-body {
+  width: 100%; text-align: right;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 400; color: #303030;
+  direction: rtl; line-height: 1.35; margin: 0;
+}
+
+/* Cards row — right→left: משורה · כף · סרגל · מאזניים דיגיטליים;
+   ltr keeps physical order (4 cards → narrower gap than the 3-card S5/S19). */
+.s5q-cards {
+  display: flex; gap: 56px; justify-content: center;
+  direction: ltr;
+}
+#s1 .s5q-content { align-items: flex-start; }   /* rtl column: flex-start = right */
+#s1 .s5q-cards { margin-right: 10px; }
+
+/* S1's question group gained the OrangeJuice.png flavor photo (producer
+   request): header becomes an RTL row — text right, image far left —
+   revealed/kept as ONE group. The answer cards shrink 216 → 190 (scoped,
+   the #s2 precedent) and the group gap grows 36 → 44, so the taller
+   question group doesn't crowd the cards row. */
+#s1 .s5q-content { gap: 44px; }
+#s1 .s5q-header {
+  flex-direction: row; align-items: center;
+  justify-content: flex-start;  /* RTL: pack from the right */
+  direction: rtl;               /* text (first child) right, image left */
+  gap: 20px;
+}
+/* Size to the text's natural width so the image hugs the question
+   (the shared .s5q-body width:100% would push it to the far edge). */
+#s1 .s5q-header .s5q-body { width: auto; }
+.s1q-img {
+  width: 120px; height: 120px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+#s1 .s5q-card { width: 190px; }
+#s1 .s5q-card-frame { width: 190px; height: 190px; }
+
+/* Card button — image frame + label below (TwoOptionSelection card look) */
+.s5q-card {
+  position: relative;
+  background: transparent; border: none; padding: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  cursor: pointer; outline: none;
+  width: 216px;
+}
+.s5q-card:disabled { cursor: default; }
+.s5q-card-frame {
+  width: 216px; height: 216px;
+  border: 3px solid rgba(201, 206, 216, 0.4);
+  border-radius: 16px; background: #fff;
+  overflow: hidden; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.15s, background 0.15s;
+}
+.s5q-card-frame img {
+  width: 100%; height: 100%;
+  object-fit: cover; border-radius: 13px;
+  display: block; pointer-events: none; user-select: none;
+}
+.s5q-card-label {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 22px; font-weight: 700; color: #303030;
+  text-align: center; direction: rtl;
+}
+.s5q-card:not(:disabled):hover .s5q-card-frame,
+.s5q-card:focus-visible .s5q-card-frame { border-color: var(--subject-500); }
+.s5q-card.selected .s5q-card-frame {
+  border-color: var(--subject-500);
+  background: var(--subject-100);
+}
+.s5q-card.correct .s5q-card-frame { border-color: #609e12; background: #edf8ed; }
+.s5q-card.wrong   .s5q-card-frame { border-color: #b20010; background: #fff0f4; }
+/* Feedback icon badge — exact Figma vector (32px circle), pinned to the
+   card frame's top-right corner (nodes 3707:23340 / 2134:21437) */
+.s5q-card.correct::after,
+.s5q-card.wrong::after {
+  content: '';
+  position: absolute; top: 0; right: 0;
+  transform: translate(50%, -50%);
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background-repeat: no-repeat; background-position: center;
+}
+.s5q-card.correct::after {
+  background-color: #609e12;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 11' fill='none'%3E%3Cpath d='M5.16613 11C4.71195 11.0002 4.27638 10.8283 3.9555 10.5222L0.295374 7.03766C-0.0984579 6.66246 -0.0984579 6.05428 0.295374 5.67908C0.689332 5.30401 1.32794 5.30401 1.72189 5.67908L5.16613 8.95926L14.2781 0.281305C14.6721 -0.0937682 15.3107 -0.0937682 15.7046 0.281305C16.0985 0.656497 16.0985 1.26468 15.7046 1.63988L6.37675 10.5222C6.05587 10.8283 5.6203 11.0002 5.16613 11Z' fill='white'/%3E%3C/svg%3E");
+  background-size: 16px 11px;
+}
+.s5q-card.wrong::after {
+  background-color: #b20010;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M15.6278 0.372219C15.3894 0.133887 15.0661 0 14.729 0C14.3919 0 14.0686 0.133887 13.8302 0.372219L8 6.20239L2.16983 0.372219C1.93143 0.133887 1.60813 0 1.27103 0C0.933923 0 0.610622 0.133887 0.372219 0.372219C0.133887 0.610622 0 0.933923 0 1.27103C0 1.60813 0.133887 1.93143 0.372219 2.16983L6.20239 8L0.372219 13.8302C0.133887 14.0686 0 14.3919 0 14.729C0 15.0661 0.133887 15.3894 0.372219 15.6278C0.610622 15.8661 0.933923 16 1.27103 16C1.60813 16 1.93143 15.8661 2.16983 15.6278L8 9.79761L13.8302 15.6278C14.0686 15.8661 14.3919 16 14.729 16C15.0661 16 15.3894 15.8661 15.6278 15.6278C15.8661 15.3894 16 15.0661 16 14.729C16 14.3919 15.8661 14.0686 15.6278 13.8302L9.79761 8L15.6278 2.16983C15.8661 1.93143 16 1.60813 16 1.27103C16 0.933923 15.8661 0.610622 15.6278 0.372219Z' fill='white'/%3E%3C/svg%3E");
+  background-size: 16px 16px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TEMPLATE — MultipleChoiceQuestion, image-choice variant (#s2,
+   PROJECT-LOCAL VARIANT — see main.js's candidate-template writeup).
+   Reuses .s5q-header/.s5q-body/.s5q-card* verbatim from S1's
+   SingleChoiceQuestion; the only new layout piece is the 2×3 grid
+   (6 cards don't fit one row as comfortably as S1/S19's 3–4).
+   Card frame/label shrink, SCOPED TO #s2 ONLY — two stacked rows of
+   the shared 216px S1 card size overflow into the bottom bar (measured
+   overlap: 29px at the design's own 1280×710). Must not resize
+   .s5q-card globally — S1 still uses the 216px size in one row.
+   ═══════════════════════════════════════════════════════ */
+#s2 { background: #fff; }
+
+.s2mc-content {
+  position: absolute;
+  left: 50%; top: calc(50% - 5px);
+  transform: translate(-50%, -50%);
+  width: 700px;
+  /* rtl column: flex-start = right — the cards grid shares the header
+     text's right edge (the 10px header inset), same as part-01 S5. */
+  display: flex; flex-direction: column; align-items: flex-start; gap: 16px;
+}
+.s2mc-content .s2mc-grid { margin-right: 10px; }
+
+/* Transient "up to 3 answers" notice — inline in the instruction line,
+   right after (left of, RTL) the sentence. Same validation-note style as
+   part-03's char-limit message (plain red text, NO background): Assistant
+   16px, #b20010. Toggled via visibility (not display) so its inline space
+   stays reserved and showing it never shifts the line. */
+.s2mc-limit-msg {
+  display: inline;
+  margin-right: 16px;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 18px; font-weight: 400; color: #b20010;
+}
+.s2mc-limit-msg[hidden] { display: inline; visibility: hidden; }
+.s2mc-grid {
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+}
+/* Row — right→left within the row (RTL reading order);
+   direction:ltr keeps physical order (first DOM child = leftmost). */
+.s2mc-row {
+  display: flex; gap: 48px; justify-content: center;
+  direction: ltr;
+}
+/* Scoped card-size override — 216px → 160px so 2 rows × 3 cards fit
+   above the bottom bar. Frame/label only; selection/state classes
+   (.selected/.correct/.wrong) are unaffected, still shared with S1. */
+#s2 .s5q-card { width: 160px; }
+#s2 .s5q-card-frame { width: 160px; height: 160px; }
+#s2 .s5q-card-label { font-size: 18px; }
+
+/* ═══════════════════════════════════════════════════════
+   GLOBAL COMPONENT — Dropdown select (generic — reusable across
+   any DropdownQuestion). Ported verbatim from part-01's #s10
+   (itself ported from Target-01's mdq*). Ported alongside its own
+   answer-select markup here, not the multi-blank fill-in-sentence
+   layout — this screen uses ONE standalone dropdown, not blanks
+   embedded in flowing text.
+   ═══════════════════════════════════════════════════════ */
+.mdq-dropdown-wrap { position: relative; flex-shrink: 0; }
+
+.mdq-btn {
+  display: flex; flex-direction: row; align-items: center;
+  direction: ltr; /* chevron left, text right */
+  gap: 16px;
+  width: 260px; height: 48px;
+  padding: 0 17px;
+  background: #fff;
+  border: 1.5px solid rgba(174, 174, 174, 0.5);
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.mdq-btn:disabled { cursor: default; }
+.mdq-btn[aria-expanded="true"] {
+  border: 1.5px solid var(--subject-500);
+  position: relative; z-index: 31;
+}
+.mdq-chevron { flex-shrink: 0; width: 16px; height: 8px; display: block; }
+.mdq-selected {
+  flex: 1; min-width: 0;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 20px; font-weight: 400; color: #303030;
+  text-align: right; direction: rtl;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  line-height: normal;
+}
+.mdq-btn[data-empty="true"] .mdq-selected { opacity: 0.5; }
+/* Resolved states — Figma DropdownQuestion (110:1703) / ValueInputQuestion
+   (120:3439): WHITE background, 1px Feedback/300 border (#609e12 correct,
+   #b20010 incorrect), 16px ✓/✗ icon in place of the chevron. */
+.mdq-btn.mdq-correct { border: 1px solid #609e12; background: #fff; }
+.mdq-check-ico,
+.mdq-wrong-ico { flex-shrink: 0; }
+.mdq-btn.mdq-wrong { border: 1px solid #b20010; background: #fff; }
+
+.mdq-list {
+  position: absolute;
+  top: calc(100% - 15px); left: 0;
+  width: 260px;
+  background: #fff;
+  border: 1px solid rgba(174, 174, 174, 0.5);
+  border-radius: 8px;
+  padding: 24px 8px 8px;
+  list-style: none; margin: 0;
+  z-index: 30;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.10);
+  direction: rtl;
+}
+.mdq-option {
+  padding: 8px 20px; border-radius: 8px;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 20px; font-weight: 400; color: #303030;
+  text-align: center; cursor: pointer; white-space: nowrap;
+}
+.mdq-option:hover { background: var(--subject-300); }
+.mdq-option + .mdq-option { position: relative; margin-top: 17px; }
+.mdq-option + .mdq-option::before {
+  content: ''; position: absolute;
+  top: -9px; left: 12px; right: 12px; height: 1px;
+  background: #d9d9d9; border-radius: 999px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   GLOBAL COMPONENT — ValueInputQuestion numeric box. Ported
+   verbatim from the Target-01 reference (methodica-science-
+   mass-measure-01-02 #s4), per the skill's ValueInputQuestion.md.
+   ═══════════════════════════════════════════════════════ */
+.s4v-input {
+  width: 92px; height: 48px;
+  border: 1.5px solid #aeaeae; border-radius: 10px;
+  background: #fff; color: #303030;
+  font-family: Calibri, Arial, sans-serif; font-size: 24px; font-weight: 700;
+  text-align: center;
+}
+.s4v-input::-webkit-outer-spin-button,
+.s4v-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.s4v-input:focus { outline: none; border-color: var(--subject-500); }
+/* Feedback states — Figma ValueInputQuestion (120:3439): WHITE background,
+   1px Feedback/300 border (#b20010 incorrect, #609e12 correct) — identical
+   to the DropdownQuestion states so the pair always reads uniformly.
+   .correct comes after .locked so it wins the border when both are set. */
+.s4v-input.error  { border: 1px solid #b20010; background: #fff; }
+.s4v-input.locked { border-color: rgba(174, 174, 174, 0.5); color: #303030; }
+.s4v-input.correct { border: 1px solid #609e12; background: #fff; }
+
+/* ═══════════════════════════════════════════════════════
+   TEMPLATE — ValueInputQuestion + DropdownQuestion, combined
+   variant (#s3, slide 31). Producer: "וריאנט קטן של תבניות
+   קיימות כיוון שיש במסך שתי תבניות שונות במסך" — a small variant
+   combining two existing templates on one screen. "צדקתי?" only
+   enables once BOTH parts are filled. 2 attempts. Hint visible
+   from the start (template default). Correct: part א = 21,
+   part ב = "לא, עדיף 3 כדי לדייק".
+   ═══════════════════════════════════════════════════════ */
+#s3 { background: #fff; }
+
+.s3vd-content {
+  position: absolute;
+  top: 139px; right: 40px;   /* standard question-screen anchor (part-01
+                                .scq-question / .s10q-content) — top-right,
+                                not vertically centered */
+  width: 1160px;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 32px;
+  direction: rtl;
+}
+.s3vd-context {
+  width: 100%; text-align: right;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 400; color: #303030;
+  line-height: 1.35; margin: 0;
+}
+.s3vd-row {
+  display: flex; flex-direction: row; align-items: center;
+  gap: 20px; direction: rtl;
+}
+.s3vd-label {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 700; color: #303030;
+  white-space: nowrap;
+}
+.img-zoom-modal__panel {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  width: 660px;
+  height: 660px;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  display: flex; flex-direction: column;   /* caption row (if any) + stage, never overlapping */
+}
+/* Optional per-image title (e.g. "which board is this?") — set via the
+   opening button's data-zoom-caption. Empty/absent → collapses to nothing,
+   so images without a caption are unaffected. Sits in its own row so it
+   never overlaps the enlarged image (unlike an absolutely-positioned
+   overlay would). Left padding clears the close button (top-left, 44px). */
+.img-zoom-modal__caption {
+  flex: none;
+  padding: 20px 20px 0 76px;
+  font-family: Calibri, Arial, sans-serif; font-size: 20px; font-weight: 700; color: #222;
+  text-align: right; direction: rtl;
+}
+.img-zoom-modal__caption:empty { display: none; }
+.img-zoom-modal__stage {
+  position: relative;
+  flex: 1; min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+/* Width/height/transform are set inline by openImageZoom() per the cloned
+   source's own aspect ratio (see comment above); this rule only supplies
+   the non-size defaults. */
+.img-zoom-modal__stage > .img-zoom-clone {
+  flex: none;
+  border: none;
+  transform-origin: center;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TEMPLATE — SingleChoiceQuestion, dual-image variant (#s5,
+   slide 33, last slide of the deck). Same shape as the base
+   SingleChoiceQuestion template (content image + question text +
+   answer pills + feedback popup + bottom bar) with one change per
+   producer notes: the content-image slot holds two captioned
+   reference images stacked instead of one. Standalone "harder
+   exercise" screen (no progress-question nav). Hint hidden until
+   the first wrong attempt. 2 attempts. Correct: b.
+
+   Layout uses flow/flex (not the reference build's fixed absolute
+   offsets) per SingleChoiceQuestion.md's own allowance for
+   longer/taller question content — image column first in DOM,
+   `direction: ltr` on the row anchors it physically left (same
+   technique as part-03's .ts-content-row).
+   ═══════════════════════════════════════════════════════ */
+#s5 { background: #fff; }
+
+.scq-question {
+  position: absolute; top: 84px; right: 40px; left: 40px;
+  display: flex; direction: ltr; align-items: flex-start; gap: 40px;
+}
+
+/* Content image frame — reusable box (SingleChoiceQuestion component).
+   Sizing is supplied per-usage (see .s5bq-img) rather than baked in here,
+   since this template's image slot isn't always a single 380×380 square. */
+.scq-img { padding: 8px; }
+
+/* Question text — vertically stacked, flows with the answers below it */
+.scq-qtext {
+  display: flex; flex-direction: column; gap: 0;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 700; color: var(--subject-500);   /* Blue/70, Body/B5 Bold */
+  text-align: right; direction: rtl; line-height: normal;
+}
+.scq-qtext p { margin: 0; }
+
+/* Answers — fixed to the template's own Figma width (604px), NOT stretched
+   to fill whatever the text column happens to be. Right-anchored via
+   align-self (the text column's own direction is set to rtl below, so
+   flex-start here resolves to the physical right edge, matching the
+   question text above it). */
+.scq-answers {
+  display: flex; flex-direction: column; gap: 12px;
+  width: 604px; max-width: 100%;
+  align-self: flex-start;
+}
+.scq-opt {
+  width: 100%; min-height: 46px;
+  border: 2px solid var(--subject-500); border-radius: 1000px;
+  background: #fff; padding: 7px 20px;
+  display: flex; align-items: center; gap: 10px;
+  direction: rtl; cursor: pointer;
+  font-family: Calibri, Arial, sans-serif;
+  overflow: visible;
+}
+
+/* S5-specific: two stacked, captioned boards in place of one content image */
+.s5bq-boards {
+  flex-shrink: 0; width: 300px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.s5bq-board {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.s5bq-board-caption {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 18px; font-weight: 700; color: #222;
+  text-align: right; direction: rtl; margin: 0;
+}
+.s5bq-img { width: 300px; height: 210px; }
+
+.s5bq-textcol {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; gap: 24px;
+  direction: rtl;   /* so .scq-answers' align-self: flex-start (above) = physical right */
+}
+/* Paragraph emphasis per the source script's own run formatting —
+   the intro line keeps the template's default blue-bold; these two
+   are plain body / dark-bold per _question-template-defaults.md's
+   "explicit source formatting over generic template defaults" rule. */
+.s5bq-plain  { font-weight: 400; color: #303030; }
+.s5bq-strong { font-weight: 700; color: #303030; }
+
+/* =======================================================
+   Feedback popup — in-popup action button   [FOUNDATION]
+
+   The one approved interactive control inside a feedback popup: the
+   final-attempt solution/answer toggle. Every other in-popup control
+   remains forbidden (see 720-templates -> _global-components.md ->
+   Feedback popup system -> No manual close) -- this is NOT a dismiss
+   affordance and must never be styled or reused as one.
+
+   Opt-in per question: a screen gets this button only by returning an
+   `action` from its feedback config. In this part, S3 does.
+
+   Figma source of truth: file eSbp4bKHgBky0rakDb8l9N, component set
+   217:4135 -- variants 2464:28288 (MyAnswerBtn=True, label
+   מעבר לתשובה שלי) and 2464:28331 (MyAnswerBtn=False, label
+   התשובה הנכונה). Both place the button hard against the physical
+   right of the popup's padding box, bottom-aligned, width hugging the
+   label. NOTE: an older node 217:4134 carries the same variant name as
+   2464:28331 -- it is superseded, do not use it.
+
+   Rendered widths are ~4px over the widths shown in Figma, because
+   .nav-label reserves the SemiBold measurement of each label while
+   Figma measures the Regular weight. That is the width-reservation
+   rule working as intended -- do not "correct" it.
+
+   This is the Figma `ShowAnswer` button (node 196:6020, Default +
+   Hover). It is NEUTRAL and must stay that way: white fill, #222222
+   text, #484848 hairline. It is NOT the subject-themed nav button --
+   no var(--subject-*) anywhere in this block, so the same button looks
+   identical in the Science and Math themes. Never restyle it from
+   .scq-back / .btn-continue / .scq-hint.
+
+   Ported verbatim from part 06's Foundation -- keep byte-identical
+   across parts; diff this block against part 06 if either changes.
+   ======================================================= */
+.scq-popup-actions {
+  display: flex;
+  justify-content: flex-start;   /* popup is direction:rtl -> physical right */
+  align-items: center;           /* never stretch the button */
+  /* 20px margin + the popup's own 4px flex gap = Figma's 24px, applied ONLY
+     between the feedback content and this row -- title-to-body spacing is
+     untouched (see the Popup layout comment below). */
+  margin-top: 20px;
+}
+
+.popup-action {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 39px;                  /* Figma exact. Pinned rather than derived so
+                                    sub-pixel border rounding at fractional
+                                    devicePixelRatio can't shift it off 39. */
+  padding: 7.5px 20px;           /* 7.5 + 22 + 7.5 + 2x1 border = 39 */
+  line-height: 22px;
+  flex: 0 0 auto;                /* hug the label; never stretch to the popup */
+  width: auto;                   /* no fixed width, no min-width floor */
+  border: 1px solid #484848; border-radius: 1000px; background: #FFFFFF;
+  color: #222222;
+  font-family: Calibri, Arial, sans-serif; font-size: 20px; font-weight: 400;
+  direction: rtl; white-space: nowrap;
+  cursor: pointer;               /* overrides .scq-popup's cursor: move */
+}
+
+/* Hover changes the LABEL WEIGHT ONLY -- Assistant 400 -> 600. Per the Figma
+   ShowAnswer component the stroke is identical in both states (1px #484848),
+   so unlike .scq-back / .btn-continue / .scq-hint this button must NOT thicken
+   its border on hover. Do not add border-width, outline, or a box-shadow ring
+   here: a 1px -> 1.5px border really would resize the button, because it is
+   width:auto and box-sizing:border-box has no effect on an auto-width box
+   (used width = content + padding + border). The weight change itself is
+   absorbed by .nav-label, whose ::before reserves the SemiBold measurement of
+   the same label, so the width is invariant. */
+.popup-action:hover { font-weight: 600; }
+
+/* ── Popup layout, Figma node 217:4135 ──────────────────────────────
+   Scoped to the popups that carry the toggle ON PURPOSE, one #id at a
+   time as each is migrated -- .scq-popup is shared by every question in
+   this part, and production ships 15px padding everywhere; correcting
+   that globally is a separate, wider change. When this pattern is
+   promoted, fold these rules into .scq-popup rather than continuing to
+   grow this selector list.
+
+   Title-to-body spacing is NOT part of this override -- it stays at the
+   base .scq-popup gap (4px), identical to every non-toggle popup (e.g.
+   SingleChoiceQuestion). Figma's "24px gap" describes the space between
+   the feedback content and the action row ONLY; earlier this was
+   mis-applied as the flex container's gap, which -- since gap applies
+   between EVERY adjacent child, not just the last pair -- also pushed
+   title away from body by 24px. Fixed by leaving the container gap alone
+   and adding the 24px purely via .scq-popup-actions's own margin-top (above). */
+#s3v-popup { padding: 24px; }
+/* Vestige of the removed X close button: the title was nudged down 4px to
+   optically centre against it. With no X and a 24px padding box, it just
+   offsets the first line. */
+#s3v-popup .scq-popup-title { padding-top: 0; }
+/* Single-child header now -- drop the LTR flip that ordered title vs. X. */
+#s3v-popup .scq-popup-header { direction: rtl; }

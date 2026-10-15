@@ -1,0 +1,81 @@
+/* ═══════════════════════════════════════════════════════
+   unit-css/progress-question.css  —  question-progress nav (numbered steps
+   with current / correct / incorrect icons and connectors). Shared by the
+   practice parts 02, 03 and 05 only; linked from those index.html files,
+   right after scq.css and before the part's css/style.css.
+   Rules identical in all three parts, moved verbatim (part 02's copy).
+   ═══════════════════════════════════════════════════════ */
+
+/* ═══ COMPONENT — Progress Question nav (reusable across all practice
+   screens; ported from Target-01, the reference named in notesSlide23).
+   Usage: .progress-question container with __item / __connector children.
+   RTL: Q1 first in DOM = physically RIGHT. ═══ */
+.progress-question {
+  position: absolute;
+  top: 48px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: row; gap: 4px;
+  align-items: flex-start;
+  direction: rtl;
+}
+.progress-question__item {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  width: 56px; flex-shrink: 0;   /* was 43px — widened so "שאלה N" fits at 18px (see label below) */
+  cursor: default;
+}
+/* Status icon — base = not-answered */
+.progress-question__icon {
+  width: 24px; height: 24px;
+  aspect-ratio: 1 / 1; border-radius: 50%;
+  border: 2px solid #ececec; background: #fff;
+  box-sizing: border-box; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.progress-question__icon::before {
+  content: '';
+  display: block;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #ececec;
+}
+/* Current — Figma 96:809: subject-500 dot > white > subject-500 ring >
+   subject-300 halo (radial-gradient keeps the rings circular at any scale) */
+.progress-question__icon--current {
+  border: none;
+  background: radial-gradient(circle closest-side,
+    var(--subject-500) 0 30%, #fff 30% 63.33%, var(--subject-500) 63.33% 80%, var(--subject-300) 80% 100%);
+}
+.progress-question__icon--current::before { display: none; }
+.progress-question__icon--correct {
+  background: var(--subject-500); border-color: var(--subject-500);
+}
+/* Exact Figma vector (white), node 96:812 "ProgressStatusIcons" */
+.progress-question__icon--correct::before {
+  content: ''; width: 12.7273px; height: 9.188px; border-radius: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12.7273 9.18763' fill='none'%3E%3Cpath d='M4.10942 9.18763C3.74814 9.18778 3.40167 9.04418 3.14642 8.78851L0.234956 5.87812C-0.0783188 5.56475 -0.0783188 5.05677 0.234956 4.74339C0.548332 4.43012 1.05631 4.43012 1.36969 4.74339L4.10942 7.48312L11.3576 0.234956C11.671 -0.0783188 12.1789 -0.0783188 12.4923 0.234956C12.8056 0.548332 12.8056 1.05631 12.4923 1.36969L5.07242 8.78851C4.81717 9.04418 4.47069 9.18778 4.10942 9.18763Z' fill='white'/%3E%3C/svg%3E") no-repeat center / contain;
+}
+.progress-question__icon--incorrect {
+  background: var(--subject-500); border-color: var(--subject-500);
+}
+.progress-question__icon--incorrect::before {
+  content: ''; width: 10px; height: 10px; border-radius: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' fill='none'%3E%3Cpath d='M9.76736 0.232637C9.61836 0.0836796 9.4163 0 9.20561 0C8.99492 0 8.79286 0.0836796 8.64386 0.232637L5 3.87649L1.35615 0.232637C1.20714 0.0836796 1.00508 0 0.794391 0C0.583702 0 0.381639 0.0836796 0.232637 0.232637C0.0836796 0.381639 0 0.583702 0 0.794391C0 1.00508 0.0836796 1.20714 0.232637 1.35615L3.87649 5L0.232637 8.64386C0.0836796 8.79286 0 8.99492 0 9.20561C0 9.4163 0.0836796 9.61836 0.232637 9.76736C0.381639 9.91632 0.583702 10 0.794391 10C1.00508 10 1.20714 9.91632 1.35615 9.76736L5 6.12351L8.64386 9.76736C8.79286 9.91632 8.99492 10 9.20561 10C9.4163 10 9.61836 9.91632 9.76736 9.76736C9.91632 9.61836 10 9.4163 10 9.20561C10 8.99492 9.91632 8.79286 9.76736 8.64386L6.12351 5L9.76736 1.35615C9.91632 1.20714 10 1.00508 10 0.794391C10 0.583702 9.91632 0.381639 9.76736 0.232637Z' fill='white'/%3E%3C/svg%3E") no-repeat center / contain;
+}
+/* Nav label — base = not-visited */
+.progress-question__label {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 18px; font-weight: 400;
+  color: #ececec; text-align: right;
+  width: 56px; white-space: nowrap;
+  direction: rtl; display: block;
+}
+.progress-question__label--visited { color: #303030; text-align: center; }
+/* Connector — base = not-visited */
+.progress-question__connector {
+  width: 64px; flex-shrink: 0;
+  padding-top: 11.5px; box-sizing: content-box;
+}
+.progress-question__connector::after {
+  content: ''; display: block;
+  height: 1.5px; border-radius: 2px;
+  background: #ececec;
+}
+.progress-question__connector--visited::after { background: rgba(0, 0, 0, 0.6); }

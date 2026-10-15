@@ -1,0 +1,113 @@
+{
+  "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-02/",
+  "title": "זמן תרגול",
+  "learningUnitId": "methodica-science-volume-liquid-01",
+  "componentPurpose": "practice",
+  "isAssessment": false,
+  "recommendedAfterFail": [],
+  "isRequired": true,
+  "relativeDifficulty": 3,
+  "masteryLevel": null,
+  "order": 2,
+  "depthLevel": "core-curriculum-basic",
+  "cognitiveLevels": ["applying-a-model-or-procedure"],
+  "languages": ["Hebrew"],
+  "skills": [],
+  "estimatedTimeInMinutes": 12,
+  "createdAt": "2026-09-24T00:00:00.000Z",
+  "updatedAt": "2026-09-24T00:00:00.000Z",
+  "subContent": [
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-02/methodica-science-volume-liquid-01-02-001/",
+      "title": "נקודת קריאה נכונה במשורה",
+      "informationToBot": "מטרת הפריט: תרגול זיהוי נקודת הקריאה הנכונה בעקומה (מניסקוס) שנוצרת כשמים נצמדים לדופן כלי המדידה. מה התלמיד אמור להבין/לתרגל: קוראים את גובה הנוזל לפי הנקודה הנמוכה ביותר בעקומה, לא מעל העקומה ולא בגובה העקומה. טעויות נפוצות: קריאה לפי החלק העליון של העקומה (מקום שהעין נוטה להתמקד בו ראשון).",
+      "contentType": "practice",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-02/methodica-science-volume-liquid-01-02-001/q1",
+          "questionType": "choice",
+          "questionText": "בתמונה משורה ובה מים. המים נצמדים מעט לדופן ולכן פני הנוזל יוצרים עקומה. לחצו על נקודת הקריאה אותה אנחנו מודדים. א. מעל העקומה ב. בגובה העקומה ג. בנקודה הנמוכה בעקומה",
+          "answers": ["א. מעל העקומה", "ב. בגובה העקומה", "ג. בנקודה הנמוכה בעקומה"],
+          "correctAnswers": ["ג. בנקודה הנמוכה בעקומה"]
+        }
+      ]
+    },
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-02/methodica-science-volume-liquid-01-02-002/",
+      "title": "תוצאה מהימנה - ממוצע שלוש מדידות",
+      "informationToBot": "מטרת הפריט: תרגול חישוב ממוצע משלוש מדידות והערכת מהימנות התוצאות. מה התלמיד אמור להבין/לתרגל: סעיף א - חישוב ממוצע של 30, 28, 32 מ״ל שווה 30 מ״ל. סעיף ב - התוצאות קרובות זו לזו ולכן המדידה מהימנה. טעויות נפוצות: טעות בחישוב ממוצע (למשל בחירת אחד מהערכים במקום ממוצע כולל); קביעה שגויה שהמדידה אינה מהימנה למרות שהתוצאות קרובות.",
+      "contentType": "practice",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-02/methodica-science-volume-liquid-01-02-002/q1",
+          "questionType": "choice",
+          "questionText": "דנה מדדה אותה כמות מים 3 פעמים וקיבלה את התוצאות הבאות: 30, 28, 32 מ״ל. א. מה הממוצע של שלוש המדידות?",
+          "answers": ["30", "31", "32"],
+          "correctAnswers": ["30"]
+        },
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-02/methodica-science-volume-liquid-01-02-002/q2",
+          "questionType": "true-false",
+          "questionText": "ב. האם המדידות מהימנות?",
+          "answers": ["כן", "לא"],
+          "correctAnswers": ["כן"]
+        }
+      ]
+    },
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-02/methodica-science-volume-liquid-01-02-003/",
+      "title": "מדידת אורי ומאיה - מי צדק?",
+      "informationToBot": "מטרת הפריט: תרגול זיהוי טעות מדידה שכיחה - אורי ומאיה מדדו את אותו נפח נוזל וקיבלו תוצאות שונות (50 מ״ל לעומת 48 מ״ל). מה התלמיד אמור להבין/לתרגל: קריאה בגובה העין היא השיטה המוסכמת והמדויקת - מדידתה של מאיה נכונה, ולא ניתן לקבוע נכונות לפי גודל המספר שהתקבל. טעויות נפוצות: הנחה שמספר גדול יותר משקף מדידה 'טובה יותר'; הנחה שקריאה מלמעלה מדויקת יותר כי 'רואים טוב יותר'.",
+      "contentType": "practice",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-02/methodica-science-volume-liquid-01-02-003/q1",
+          "questionType": "choice",
+          "questionText": "הסתכלו בתמונה. אורי ומאיה ביצעו מדידה של נפח נוזל. אורי קרא 50 מ״ל. מאיה קראה 48 מ״ל. איזו מדידה נכונה?",
+          "answers": [
+            "של אורי - מלמעלה רואים טוב יותר",
+            "של מאיה - קריאה בגובה העין היא השיטה המוסכמת",
+            "שתי התוצאות נכונות וזה בסדר",
+            "כנראה של אורי - כי המספר שקיבל גדול יותר"
+          ],
+          "correctAnswers": ["של מאיה - קריאה בגובה העין היא השיטה המוסכמת"]
+        }
+      ]
+    },
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-02/methodica-science-volume-liquid-01-02-004/",
+      "title": "בחירת כלי מדויק ל-10 מ״ל",
+      "informationToBot": "מטרת הפריט: תרגול בחירת כלי מדידה לפי דיוק נדרש - מדידת 10 מ״ל נוזל מתוך בחירה בין פיפטה לכוס כימית של 500 מ״ל. מה התלמיד אמור להבין/לתרגל: פיפטה מתאימה יותר לכמות קטנה ומדויקת כמו 10 מ״ל, בעוד כוס כימית גדולה מתאימה למדידה גסה בלבד. טעויות נפוצות: בחירת הכלי הגדול יותר מתוך הנחה שגודל הכלי אינו משפיע על דיוק המדידה.",
+      "contentType": "practice",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-02/methodica-science-volume-liquid-01-02-004/q1",
+          "questionType": "choice",
+          "questionText": "עלינו למדוד 10 מ״ל נוזל. באיזה כלי נוכל למדוד את הכמות בצורה מדויקת יותר?",
+          "answers": ["פיפטה", "כוס כימית של 500 מ״ל"],
+          "correctAnswers": ["פיפטה"]
+        }
+      ]
+    },
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-02/methodica-science-volume-liquid-01-02-005/",
+      "title": "מינון תרופה מדויק לכלב",
+      "informationToBot": "מטרת הפריט: תרגול בחירת כלי מדידה מדויק בתרחיש וטרינרי - וטרינר נותן לכלב קטן תרופה במינון 1.5 מ״ל, ויש לבחור מתוך משורת ליטר, מזרק 5 מ״ל, כוס כימית של 100 מ״ל, ופיפטה של 25 מ״ל. מה התלמיד אמור להבין/לתרגל: מזרק קטן (5 מ״ל) הוא הכלי המתאים לכמות קטנה ומדויקת כזו - כלים גדולים יותר (משורת ליטר, כוס כימית, פיפטה של 25 מ״ל) אינם מדויקים דיים לכמות כה קטנה. טעויות נפוצות: בחירת כלי לפי זמינותו ולא לפי התאמת טווח המדידה לכמות הנדרשת.",
+      "contentType": "practice",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-02/methodica-science-volume-liquid-01-02-005/q1",
+          "questionType": "choice",
+          "questionText": "וטרינר נותן לכלב קטן תרופה במינון 1.5 מ״ל. באיזה כלי לבחור על מנת למדוד את כמות התרופה המדויקת?",
+          "answers": ["משורת ליטר (1000 מ״ל)", "מזרק 5 מ״ל", "כוס כימית של 100 מ״ל", "פיפטה של 25 מ״ל"],
+          "correctAnswers": ["מזרק 5 מ״ל"]
+        }
+      ]
+    }
+  ]
+}

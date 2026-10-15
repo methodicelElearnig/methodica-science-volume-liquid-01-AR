@@ -1,0 +1,297 @@
+/* ═══════════════════════════════════════════════════════════════════
+   "מצאתם בעיה?" — מודאל דיווח בעיה. עותק אחד לכל ששת הסינים.
+   נטען מכל index.html כ-<link rel="stylesheet" href="../unit-css/25-report.css?v=1">
+   אחרי styles.css, כדי שכל תיקו specificity ייפול לכאן.
+
+   מקור: methodica-math-scale-01-01/styles.css שורות 3548–3812 (מאומת בפועל).
+   ‎.flag-btn עצמו לא הועתק — לכל סין יש כבר CSS משלו לכפתור, כולל אייקוני ה-PNG.
+
+   ── מיפוי צבעים מלומדת המתמטיקה לנושא "מדעים" ──
+   שונו רק צבעי המותג והסמנטיקה. הניטרליים נשארו כפי שהם, כדי לא להמציא
+   אפורים חדשים ולא לשבור היררכיה ויזואלית שכבר אומתה.
+     #8900E1 → #019de5   subject-500 (outline פוקוס, border של textarea)
+     #7100B9 → #007ac6   subject-700 (רקע כפתור שליחה, border של select בפוקוס)
+     #C62828 → #b20010   שגיאה
+     #D32F2F → #b20010   שגיאה (כוכבית חובה)
+     #1A2744 → #303030   כותרת — הפרויקט קובע #303030 לטקסט (SELF-QA-lomda-2.md)
+     rgba(165,28,255,.39) → rgba(1,157,229,.28)  hover באופציה
+     rgba(165,28,255,.12) → rgba(1,157,229,.12)  אופציה נבחרת
+   ה-hover הונמך מ-.39 ל-.28 במכוון: כחול ברוויה גבוהה נקרא כהה בהרבה מסגול
+   באותה אלפא, ו-.39 היה פוגע בניגודיות של הטקסט (#303030) שמעליו.
+
+   ── כל ה-transition-ים הוסרו במכוון ──
+   לכל styles.css בפרויקט יש "* { transition: none !important; }" גלובלי
+   ("transitions removed on purpose — Figma states change instantly"). שבע
+   הצהרות ה-transition שהגיעו מלומדת המתמטיקה היו נטרלות ממילא, ולכן הוסרו
+   ולא נכתבו מחדש עם !important — שום דבר במודאל הזה אינו זקוק לאנימציה.
+   (הפרויקט משתמש ב-!important נגד הכלל הגלובלי במקום אחד בלבד, היפוך הקלף
+   בסין 01, שם האנימציה היא הרכיב עצמו.)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* z-index: מעל .img-zoom-modal (1000) — מודאל דיווח הוא דיאלוג עליון.
+   (‎.methodica-zoom-popup הלגסי יושב על max-int בסינים 01/02, אבל .flag-btn
+   הוא z-index:30 ולכן לא ניתן ללחוץ עליו בכלל כשזום פתוח — אין התנגשות.) */
+.report-modal-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  direction: rtl;
+}
+
+.report-modal-overlay[hidden] {
+  display: none;
+}
+
+.report-modal-box {
+  width: 520px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 36px 36px 28px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  direction: rtl;
+}
+
+.report-confirm-box {
+  width: 420px;
+  padding: 40px 36px 32px;
+  gap: 20px;
+}
+
+/* RTL: כפתור הסגירה בפינה השמאלית העליונה — הצד ה"רחוק" בעברית. */
+.report-close-btn {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  font-size: 17px;
+  color: #8A9AAA;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+.report-close-btn:hover {
+  background: #F0F2F5;
+  color: #303030;
+}
+
+.report-close-btn:focus-visible {
+  outline: 2px solid #019de5;
+}
+
+.report-modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #303030;
+  line-height: 1.2;
+}
+
+.report-modal-body {
+  font-size: 20px;
+  color: #5A6A7A;
+  line-height: 1.5;
+  margin-top: -6px;
+}
+
+.report-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.report-label {
+  font-size: 20px;
+  font-weight: 600;
+  color: #303030;
+}
+
+.required-star {
+  color: #303030;
+}
+
+.required-star.is-error {
+  color: #b20010;
+}
+
+.report-custom-select {
+  position: relative;
+}
+
+/* select מותאם (לא <select> נייטיב): כפתור + <ul role="listbox"> + input נסתר.
+   לכן submitReport() חייב לקרוא את התווית מ-REPORT_TYPE_LABELS ולא מ-
+   options[selectedIndex].text. ראו REPORT-ISSUE.md §2. */
+.report-select-btn {
+  width: 100%;
+  height: 42px;
+  border: 1.5px solid #ECECEC;
+  border-radius: 9px;
+  padding: 0 14px 0 40px;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 20px;
+  color: #303030;
+  background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8' viewBox='20 17 16 8'%3E%3Cpath d='M35.6677 17.3299C35.5615 17.2254 35.4351 17.1424 35.2958 17.0858C35.1566 17.0292 35.0072 17 34.8564 17C34.7055 17 34.5562 17.0292 34.4169 17.0858C34.2776 17.1424 34.1513 17.2254 34.045 17.3299L28.8113 22.4378C28.7051 22.5424 28.5787 22.6253 28.4395 22.6819C28.3002 22.7386 28.1509 22.7677 28 22.7677C27.8491 22.7677 27.6998 22.7386 27.5605 22.6819C27.4213 22.6253 27.2949 22.5424 27.1887 22.4378L21.955 17.3299C21.8487 17.2254 21.7224 17.1424 21.5831 17.0858C21.4438 17.0292 21.2945 17 21.1436 17C20.9928 17 20.8434 17.0292 20.7042 17.0858C20.5649 17.1424 20.4385 17.2254 20.3323 17.3299C20.1195 17.5389 20 17.8215 20 18.1162C20 18.4108 20.1195 18.6935 20.3323 18.9024L25.5774 24.0215C26.2202 24.6481 27.0915 25 28 25C28.9085 25 29.7798 24.6481 30.4226 24.0215L35.6677 18.9024C35.8805 18.6935 36 18.4108 36 18.1162C36 17.8215 35.8805 17.5389 35.6677 17.3299Z' fill='%23AEAEAE'/%3E%3C/svg%3E") no-repeat left 14px center;
+  direction: rtl;
+  text-align: right;
+  outline: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.report-select-btn.is-placeholder {
+  color: #8A8A8A;
+}
+
+.report-select-btn:focus,
+.report-select-btn[aria-expanded="true"] {
+  border-color: #007ac6;
+}
+
+.report-select-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1.5px solid #ECECEC;
+  border-radius: 9px;
+  padding: 4px;
+  margin: 0;
+  list-style: none;
+  z-index: 200;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  direction: rtl;
+}
+
+.report-select-option {
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 20px;
+  color: #303030;
+  text-align: right;
+}
+
+.report-select-option:hover {
+  background: rgba(1, 157, 229, 0.28);
+}
+
+.report-select-option.is-selected {
+  background: rgba(1, 157, 229, 0.12);
+}
+
+.report-select-btn.has-error {
+  border-color: #b20010;
+}
+
+.report-field-error {
+  display: none;
+  color: #b20010;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 4px;
+  direction: rtl;
+  text-align: right;
+}
+
+.report-textarea {
+  border: 2px solid #C9CED8;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 20px;
+  color: #303030;
+  direction: rtl;
+  resize: none;
+  outline: none;
+  line-height: 1.5;
+}
+
+.report-textarea:focus {
+  border-color: #019de5;
+}
+
+/* מונה תווים: LTR במכוון — "0 / 250" הוא ביטוי מספרי. */
+.report-char-count {
+  font-size: 20px;
+  color: #8A9AAA;
+  text-align: left;
+  direction: ltr;
+}
+
+.report-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  direction: rtl;
+  margin-top: 4px;
+  justify-content: flex-end;
+}
+
+.report-submit-btn {
+  height: 44px;
+  padding: 0 32px;
+  background: #007ac6;
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+}
+
+.report-submit-btn:hover {
+  opacity: 0.88;
+}
+
+.report-submit-btn:focus-visible {
+  outline: 3px solid #019de5;
+  outline-offset: 3px;
+}
+
+.report-submit-btn:disabled {
+  background: #F3F3F5;
+  cursor: not-allowed;
+}
+
+.report-cancel-btn {
+  height: 44px;
+  padding: 0 28px;
+  background: #ffffff;
+  color: #5A6A7A;
+  border: 0px solid #C9CED8;
+  border-radius: 50px;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  cursor: pointer;
+  outline: none;
+}
+
+.report-cancel-btn:hover {
+  border-color: #8A9AAA;
+  color: #303030;
+}
+
+.report-cancel-btn:focus-visible {
+  outline: 3px solid #019de5;
+  outline-offset: 3px;
+}

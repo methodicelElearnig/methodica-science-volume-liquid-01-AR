@@ -1,0 +1,29 @@
+{
+  "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-04/",
+  "title": "משימה בכיתה",
+  "learningUnitId": "methodica-science-volume-liquid-01",
+  "componentPurpose": "practice",
+  "isAssessment": false,
+  "recommendedAfterFail": [],
+  "isRequired": true,
+  "relativeDifficulty": 3,
+  "masteryLevel": null,
+  "order": 4,
+  "depthLevel": "core-curriculum-basic",
+  "cognitiveLevels": ["applying-a-model-or-procedure"],
+  "languages": ["Hebrew"],
+  "skills": [],
+  "estimatedTimeInMinutes": 1,
+  "createdAt": "2026-09-24T00:00:00.000Z",
+  "updatedAt": "2026-09-24T00:00:00.000Z",
+  "subContent": [
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-04/methodica-science-volume-liquid-01-04-001/",
+      "title": "משימת כיתה - מדידת אורך השולחן בכלים לא-סטנדרטיים",
+      "informationToBot": "מטרת הפריט: יישום מציאותי (לא במחשב) של עקרונות המהימנות שנלמדו - בזוגות או לבד, הלומדים בוחרים שני חפצים מהכיתה (למשל עפרון ומחק) כ'כלי מדידה', מודדים בעזרת כל אחד את אורך השולחן 3 פעמים, מחשבים ממוצע לכל כלי, ומשווים בין מהימנות הכלים ובין התאמתם למשימה. מה התלמיד אמור להבין/לתרגל: יישום חזרתיות (3 מדידות), חישוב ממוצע, והשוואת מהימנות בין שני כלי מדידה לא-סטנדרטיים, וזיהוי איזה כלי היה מדויק/מהימן/מתאים יותר ומדוע. טעויות נפוצות: ביצוע פחות משלוש מדידות לכל כלי; אי-חישוב ממוצע; בחירת הכלי 'המתאים יותר' רק לפי גודלו הפיזי בלי להתייחס למהימנות המדידות. מידע נוסף: בסיום המשימה הלומד מקליד את שם החפץ המהימן שמצא (שדה קלט חופשי עד 10 תווים) - זו הזנה טכנית לצורך רצף הלמידה בלבד ואינה תשובה מוערכת (בהתאם לכלל הקבוע למשימת כיתה).",
+      "contentType": "project-or-inquiry-task",
+      "mediaFormat": "text",
+      "questions": []
+    }
+  ]
+}

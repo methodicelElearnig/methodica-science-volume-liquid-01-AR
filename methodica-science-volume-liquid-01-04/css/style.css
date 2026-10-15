@@ -1,0 +1,421 @@
+/* ═══════════════════════════════════════════════════════
+   css/style.css  —  720 Science · Liquid Volume Lomda · Part 04
+   Canvas: 1280 × 710 px   (matches the 720 reference engine)
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── Screens ───────────────────────────────────────────── */
+.screen {
+  position: absolute; inset: 0;
+  width: 1280px; height: 710px;
+  display: none; overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TEMPLATE — TwoOptionSelection
+   Title + subtitle + two single-select cards. Reusable for any
+   "choose one of two" screen. Card states: hover + selected.
+   ═══════════════════════════════════════════════════════ */
+#s0 { background: #fff; }
+
+/* ═══════════════════════════════════════════════════════
+   TEMPLATE — SingleChoiceQuestion (Screen 02)
+   Question image (left) + question text + 4 single-choice
+   option pills (right). Feedback panel (left) + bottom bar.
+   Figma: dpY9DTl41tzW8SKvcPWU0C, node 2085:4465.
+   ═══════════════════════════════════════════════════════ */
+#s1 { background: #fff; }
+.scq-feedbox.hidden { display: none !important; }
+.scq-fb.hidden { display: none !important; }
+
+/* ═══════════════════════════════════════════════════════
+   TEMPLATE — FlipCardsReveal (Screen 03)
+   Source of truth: Figma nodes 2120:3978 (State 01) and 2120:4115 (State 02)
+   Card: 325×325px square — both faces identical dimensions.
+   Same padding (16px), border-radius (16px), inset:0 on both faces.
+   ═══════════════════════════════════════════════════════ */
+#s2 { background: #fff; }
+
+/* Back button in S2 bottom bar */
+/* S0 has no .scq-bar wrapper (TransitionScreen convention) — position its
+   own back button, matching every other part's S0 pattern. Its visibility
+   is runtime-gated by syncS0BackButton(). */
+#s0-back {
+  position: absolute;
+  bottom: 17.5px; right: 24px;
+  z-index: 12;
+}
+#s2-back {
+  position: absolute;
+  bottom: 17.5px; right: 24px;
+  z-index: 12;
+}
+/* Correct state after check */
+.ddq-target.correct {
+  background: #fff;
+  border: 2px solid #609e12 !important;
+}
+.ddq-popup.hidden { display: none !important; }
+
+.mdq-hint-overlay.hidden {
+  display: none !important;
+}
+
+/* ─── SCREEN 11 — TransitionScreen "תרגול סטנדרטי" (S10) ──────── */
+
+#s10 { background: #fff; }
+
+.s10-content {
+  position: absolute;
+  inset: 0 0 74px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.s10-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  direction: rtl;
+}
+
+.s10-subtitle {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #303030;
+  margin: 0;
+}
+
+.s10-title {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  color: #303030;
+  margin: 0;
+}
+
+.s10-body {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #303030;
+  margin: 0;
+  text-align: center;
+  line-height: 1.35;
+}
+
+.s10-video-wrap {
+  width: 640px;
+  height: 360px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.s10-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  /* Hide the GPU edge-blend seam: at fractional canvas scales the video's
+     edge pixels blend with outside-the-frame black → the faint gray line
+     under the character. Frame edges are pure white (verified), so a 2px
+     clip is invisible. */
+  clip-path: inset(2px);
+  /* Decorative, non-interactive video — suppress browser-injected hover
+     overlays (PiP/cast/read-aloud) some browsers show regardless of the
+     controlsList/disablepictureinpicture attributes on the element itself. */
+  pointer-events: none;
+}
+
+/* Speech bubble for S0 — the SAME bubble as part-02 S0 (Figma 730:10395),
+   mirrored on the X axis so the tail points left toward the character.
+   Native SVG size 241×137; the SVG is drawn on a ::before with scaleX(-1)
+   so the bubble flips but the text stays unflipped and readable. */
+.s10-bubble {
+  position: absolute;
+  left: 714px;
+  top: 340px;
+  transform: translateY(-50%);
+  width: 241px;
+  height: 137px;
+  z-index: 5;
+}
+
+.s10-bubble--mirrored::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("../assets/img/s10-bubble.svg") no-repeat center / 100% 100%;
+  transform: scaleX(-1);
+  z-index: -1;
+}
+
+.s10-bubble-text {
+  position: absolute;
+  left: 6.81%;            /* keep the text clear of the (now left-side) tail */
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 12px;
+  box-sizing: border-box;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #000;
+  text-align: center;
+  direction: rtl;
+  line-height: normal;
+}
+
+/* ── Reusable speech bubble component ──
+   Width and position set via inline style on each instance.
+   Height is content-driven (auto grows with text).
+   Tail position stays attached at bottom center. */
+.speech-bubble {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.s13-input.active  { border: 1.5px solid var(--subject-500); }
+
+/* Continue button (class-toggled enabled/disabled, reuses scq-bar layout) */
+.s13-continue {
+  width: 140px;
+  padding: 0 40px;
+  height: 39px;   /* canonical nav-pill height — see _global-components.md § Nav bar button geometry */
+  display: flex; align-items: center; justify-content: center;
+  border: none;
+  border-radius: 1000px;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  direction: rtl;
+  white-space: nowrap;
+}
+
+.s13-continue.disabled {
+  background: #aeaeae;
+  color: #303030;
+  cursor: default;
+  pointer-events: none;
+}
+
+.s13-continue:not(.disabled) {
+  background: linear-gradient(180deg, #005FBE 9%, #0059B2 23.36%, #003971 100%);
+  color: white;
+  cursor: pointer;
+}
+
+.s13-continue:not(.disabled):hover { font-weight: 600; }
+
+/* ═══════════════════════════════════════════════════════════
+   PART-03 — TextWithCallout template
+   Figma dpY9DTl41tzW8SKvcPWU0C node 2501:6033 ("TextWithCallout").
+   Centered 40px bold title; content row = character+bubble column
+   (left) + numbered task list with an embedded reference table
+   (right, RTL reading).
+   ═══════════════════════════════════════════════════════════ */
+#s1 { background: #fff; }
+
+.ts-question {
+  position: absolute;
+  top: 32px; left: 0; right: 0;
+  padding: 0 40px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 24px;
+}
+
+.ts-title {
+  max-width: 1050px; width: 100%;
+  text-align: center;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 40px; font-weight: 700; color: #303030;
+  direction: rtl; line-height: 1.1; margin: 0;
+}
+
+/* Content row — image/bubble column physically LEFT, text column RIGHT
+   (direction:ltr keeps that physical order regardless of page RTL).
+   No fixed height: this task's fuller content (numbered list + table
+   + sub-bullets) is taller than the Figma reference's 489px box —
+   intrinsic height + the tightened rhythm below keep it clear of the
+   bottom action bar instead of clipping/overflowing it. */
+.ts-content-row {
+  width: 100%;
+  display: flex; align-items: flex-start; justify-content: flex-end;
+  gap: 40px;
+  direction: ltr;
+}
+
+/* Character + speech bubble — the column has no fixed height (the row
+   is intrinsic now), so the image keeps Figma's original vertical
+   offset via margin-top (221.6px = the old 489px column height minus
+   the image's own height) instead of a flex bottom-anchor; the bubble
+   (absolute, top:113px) still floats correctly above it either way. */
+.ts-img-col {
+  position: relative;
+  width: 254px;
+  flex-shrink: 0;
+}
+.ts-char-img {
+  display: block;
+  margin: 221.6px auto 0;
+  width: 232px; height: 267.4px;
+  object-fit: contain;
+}
+.ts-bubble {
+  position: absolute;
+  left: 19px; top: 113px;
+  width: 216px; height: 89px;
+  background: url('../../unit-assets/img/s1-talk-bubble.svg') no-repeat center center / 100% 100%;
+}
+.ts-bubble-text {
+  position: absolute;
+  left: 50%; top: 3.79%; bottom: 10.58%;
+  transform: translateX(-50%);
+  width: 193px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 20px; font-weight: 400; color: #000;
+  text-align: center; direction: rtl; line-height: normal;
+}
+
+.ts-content {
+  width: 890px;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+  direction: rtl;   /* html[dir=rtl] flips align-items: flex-start = right here */
+}
+
+.ts-item {
+  width: 100%;
+  text-align: right; direction: rtl;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 400; color: #303030;
+  line-height: 1.3; margin: 0;
+  /* Hanging indent: the number sits at the reading edge while every
+     continuation line (wrapped text and the sub-note after the <br>)
+     aligns under the item's text. */
+  padding-right: 1.1em;
+  text-indent: -1.1em;
+}
+.ts-item strong { font-weight: 700; }
+.ts-item--intro { padding-right: 0; text-indent: 0; }
+
+/* Numbered task list — continues numbering across the table break via
+   two <ol start="N">, exactly like the Figma source. */
+.ts-list {
+  width: 100%;
+  direction: rtl; text-align: right;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 400; color: #303030;
+  line-height: 1.3;
+  margin: 0; padding-right: 1.5em;
+}
+.ts-li { margin: 0; }
+.ts-li + .ts-li { margin-top: 6px; }
+.ts-sublist {
+  list-style: disc;
+  margin: 2px 0 0; padding-right: 1.3em;
+}
+
+/* Reference table — a static example of what to draw in the notebook,
+   not an interactive input (this task is offline). Figma node 2504:5894
+   is 344×171 true size: the header cell text is `whitespace-nowrap` and
+   NOT fixed-width in Figma (only the data-row "td (input)" cells and the
+   narrow "נסיון" column carry explicit widths) — table-layout stays
+   `auto` (default) so the wide column sizes to its one-line header text
+   instead of the 293px data-row width, exactly like Figma's own
+   mismatched-row-width auto-layout. direction:ltr keeps the wide column
+   physically LEFT / narrow RIGHT (Figma's column order); direction:rtl
+   on the cells themselves keeps the Hebrew text/digits reading right. */
+.ts-table {
+  border-collapse: collapse;
+  direction: ltr;
+  font-family: Calibri, Arial, sans-serif;
+}
+.ts-table th, .ts-table td {
+  border: 1px solid #c9ced8;
+  text-align: center; vertical-align: middle;
+  padding: 6px 10px;
+  direction: rtl;
+  box-sizing: border-box;
+}
+.ts-table th {
+  background: #f2f2f2; font-weight: 700; font-size: 18px; color: #303030;
+  white-space: nowrap;
+}
+.ts-table td { font-weight: 600; font-size: 18px; color: #303030; height: 46px; }
+.ts-table-wide { width: 293px; }
+.ts-table-narrow { width: 52px; }
+
+/* S1 continue button text can be long ("חזרתי. אפשר להמשיך") — let the
+   pill grow rather than wrap. */
+#s1-continue { width: auto; }
+
+/* ═══════════════════════════════════════════════════════════
+   S2 — TextInputQuestion (local, ungraded variant of ValueInputQuestion
+   — producer notes: free text, no correct answer, no feedback, no
+   hint). Reuses .ts-question/.ts-title/.ts-content-row/.ts-img-col/
+   .ts-bubble verbatim from S1 (same character + speech bubble
+   component, per producer notes) — only this screen's own question/
+   input content differs.
+   ═══════════════════════════════════════════════════════════ */
+#s2 { background: #fff; }
+
+/* Character + bubble reveal — space reserved from the start
+   (visibility, not display) so it appearing after typing never shifts
+   the content column beside it. */
+.s2ti-reveal {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.s2ti-reveal.revealed {
+  visibility: visible;
+  opacity: 1;
+}
+
+.s2ti-content {
+  width: 700px;
+  padding-top: 40px;   /* roughly centers against the taller character column */
+  display: flex; flex-direction: column; align-items: flex-start; gap: 16px;
+  direction: rtl;   /* html[dir=rtl] flips align-items: flex-start = right here */
+}
+.s2ti-q {
+  margin: 0; width: 100%;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 700; color: #222;
+  text-align: right; line-height: 1.3;
+}
+.s2ti-input-row {
+  display: flex; align-items: center; gap: 16px;
+  direction: rtl;
+}
+.s2ti-label {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 700; color: #222;
+  white-space: nowrap;
+}
+.s2ti-input {
+  width: 220px; height: 55px;
+  border: 1.5px solid rgba(174, 174, 174, 0.5); border-radius: 10px;
+  background: #fff; color: #303030;
+  font-family: Calibri, Arial, sans-serif; font-size: 24px; font-weight: 700;
+  text-align: right; padding: 0 16px;
+}
+.s2ti-input:focus { outline: none; border-color: var(--subject-500); }
+.s2ti-limit-msg {
+  margin: 0;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 18px; font-weight: 400; color: #b20010;
+  text-align: right;
+}

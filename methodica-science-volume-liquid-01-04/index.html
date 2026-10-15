@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>وحدة تعليمية — قياس حجم السائل وأدوات القياس · الجزء 04</title>
+  <link rel="stylesheet" href="../unit-css/base.css?v=3">
+  <link rel="stylesheet" href="../unit-css/scq.css?v=1">
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="../unit-css/25-report.css?v=1">
+  <link rel="stylesheet" href="../unit-css/motion.css?v=1">
+  <link rel="stylesheet" href="../unit-css/nav-buttons.css?v=1">
+</head>
+<body>
+<!-- Boot cover (guide §8.11): hides screen 0 until the resume decision, so a restored learner
+     never sees the first screen flash before their own. Inline-styled and a sibling of #app (not a
+     child: #app is scaled). 50-loader.js drops it on every exit path; this failsafe lifts it after
+     800 ms, or up to 6 s while a restore is actually in flight (window.__resumeInFlight). -->
+<div id="boot-cover" style="position:fixed;inset:0;z-index:9999;background:#fff"></div>
+<script>
+(function () {
+  var t0 = Date.now();
+  function tick() {
+    var c = document.getElementById('boot-cover');
+    if (!c || !c.parentNode) return;
+    if (window.__resumeInFlight && Date.now() - t0 < 6000) { setTimeout(tick, 100); return; }
+    c.parentNode.removeChild(c);
+  }
+  setTimeout(tick, 800);
+})();
+</script><div id="app">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       GLOBAL — Report / Issue button (shared across every screen).
+       ═══════════════════════════════════════════════════════════ -->
+  <button class="flag-btn" id="flag-btn" type="button" aria-label="هل وجدتم مشكلة؟">
+    <span class="flag-btn-icon"></span>
+    <span class="flag-btn-label">هل وجدتم مشكلة؟</span>
+  </button>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S0 — Screen 01 · TransitionScreen  (clone of part-01 s10)
+       Subtitle / title / body + auto-playing companion video.
+       Character carried over from earlier parts via localStorage.
+       First screen of this part: NO back button.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen active" data-screen="0" id="s0">
+
+    <div class="s10-content">
+      <!-- Motion v0.1 (video-zone fade): text floats in as one group; the
+           companion video AND its speech bubble fade in TOGETHER as one
+           gentle group (fade only, no float, no stagger between them);
+           autoplay untouched. -->
+      <div class="s10-text" data-reveal="1">
+        <p class="s10-subtitle">أنهيت التمرين بنجاح - كل الاحترام!</p>
+        <h1 class="s10-title">هذا وقت مناسب للتعلم بطريقة مختلفة أيضًا،</h1>
+        <p class="s10-body">لأن التعلم يتم بعدّة طرق.</p>
+      </div>
+      <div class="s10-video-wrap" data-reveal="1" data-reveal-fade>
+        <video id="s0-video" class="s10-video" autoplay muted playsinline
+               disablepictureinpicture disableremoteplayback
+               controlsList="nodownload noremoteplayback nofullscreen noplaybackrate"></video>
+      </div>
+      <div class="s10-bubble s10-bubble--mirrored" aria-hidden="true" data-reveal="1" data-reveal-fade>
+        <span class="s10-bubble-text">المهمة التالية ليست على الحاسوب، بل في داخل مقلمتكم‎!</span>
+      </div>
+    </div>
+
+    <button class="btn-continue" id="s0-continue" onclick="advanceFromS0()">متابعة</button>
+    <!-- Cross-part back: this part is reachable from part 02 (pass) or
+         part 03 (fail), so the destination is resolved at runtime from the
+         session route stack. Hidden by syncS0BackButton() when this part
+         was opened directly and there is no recorded part to return to. -->
+    <button class="scq-back" id="s0-back" type="button" onclick="goBack()">عودة</button>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S1 — Screen 02 · TextWithCallout (new template)
+       Figma: dpY9DTl41tzW8SKvcPWU0C node 2501:6033 ("TextWithCallout").
+       Centered 40px title; content row = character+bubble column
+       (left, direction:ltr physical order) + numbered task list with
+       an embedded reference table (right). Character image swaps per
+       the part-01 selection (character-1/2-happy).
+       Bottom bar: [continue → S2] (left) · [back] (right).
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="1" id="s1">
+
+    <div class="ts-question">
+      <!-- Motion v0.1: title → task list (RIGHT) → character column (LEFT).
+           RTL order rule: the row is direction:ltr with the character
+           column first in DOM but physically LEFT — so it reveals LAST,
+           after the right-side content. -->
+      <h1 class="ts-title" data-reveal="1">مهمّة صفيّة</h1>
+
+      <div class="ts-content-row">
+
+        <div class="ts-img-col" data-reveal="3">
+          <img class="ts-char-img" id="s1-char-img" src="" alt="">
+          <div class="ts-bubble" aria-hidden="true">
+            <span class="ts-bubble-text">هذا فرصة جيدة لتمديد العضلات!</span>
+          </div>
+        </div>
+
+        <div class="ts-content" data-reveal="2">
+          <p class="ts-item ts-item--intro"><strong>جدوا زميلًا أو زميلةً في نفس المرحلة من التعلم. اذا لم تجدوا، يمكنكم تنفيذ المهمة بمفردكم.</strong></p>
+
+          <ol class="ts-list" start="1">
+            <li class="ts-li">اختاروا غرضين من الصف لاستخدامهما كأداتَيّ قياس (مثلًا: قلم رصاص وممحاة، أو قلم رصاص وغطاء قلم حبر)‎.</li>
+            <li class="ts-li">قيسوا طول الطاولة بواسطة الأداة الأولى 3 مرات. سجلوا النتائج في جدول في الدفتر‎:</li>
+          </ol>
+
+          <table class="ts-table">
+            <tr>
+              <th>كم مرة يدخل الغرض في طول الطاولة؟</th>
+              <th class="ts-table-narrow">المحاولة</th>
+            </tr>
+            <tr><td class="ts-table-wide"></td><td class="ts-table-narrow">1</td></tr>
+            <tr><td class="ts-table-wide"></td><td class="ts-table-narrow">2</td></tr>
+            <tr><td class="ts-table-wide"></td><td class="ts-table-narrow">3</td></tr>
+          </table>
+
+          <ol class="ts-list" start="3">
+            <li class="ts-li">قيسوا طول الطاولة بواسطة الأداة الثانية 3 مرات. سجلوا النتائج في جدول منفرد.</li>
+            <li class="ts-li">احسبوا معدل القياسات الثلاثة لكل أداة‎.</li>
+            <li class="ts-li">
+              قارنوا بين النتائج وأجيبوا‎:
+              <ul class="ts-sublist">
+                <li>بأي أداة حصلتم على نتائج أكثر تقاربًا بين القياسات؟</li>
+                <li>أي أداة كانت أكثر موثوقية؟</li>
+                <li>أي أداة كانت أنسب لقياس الطاولة؟ ولماذا؟</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom action bar: [continue → S2] (left) · [back] (right) -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s1-continue" type="button"
+                onclick="advanceScreen()">عُدتُ. يمكن المتابعة</button>
+      </div>
+      <button class="scq-back" id="s1-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S2 — Screen 03 · TextInputQuestion (local, ungraded variant of
+       ValueInputQuestion — producer notes name the Figma screen and
+       skill template "ValueInputQuestion"/"ValueInputQuestion.md", but
+       free text, not numeric: no correct answer, no feedback, no hint.
+       Continues the "משימת כיתה" task started in S1 — reporting which
+       measuring tool was more reliable. Max 10 characters; a small
+       message appears if the learner tries to type past the limit.
+       Reuses S1's exact character + speech-bubble component
+       (.ts-img-col/.ts-char-img/.ts-bubble, same character) per
+       producer notes — only the bubble text changes, and it's revealed
+       (visibility, not display, so the layout never shifts) only once
+       the learner has typed at least 2 characters.
+       Bottom bar: [continue → part 04] (left) · [back] (right).
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="2" id="s2">
+
+    <div class="ts-question">
+      <!-- Motion v0.1: title + input block only. The character column
+           (.s2ti-reveal) is EXCLUDED — it has its own functional reveal
+           (appears after typing); never double-animate it. -->
+      <h1 class="ts-title" data-reveal="1">مهمّة صفيّة</h1>
+
+      <div class="ts-content-row">
+
+        <div class="ts-img-col s2ti-reveal" id="s2ti-reveal" aria-hidden="true">
+          <img class="ts-char-img" id="s2-char-img" src="" alt="">
+          <div class="ts-bubble" aria-hidden="true">
+            <span class="ts-bubble-text">إنه غرض رائع‎!</span>
+          </div>
+        </div>
+
+        <!-- fade-only: contains a focusable text input — no transform. -->
+        <div class="s2ti-content" data-reveal="2" data-reveal-fade>
+          <p class="s2ti-q">إذًا، ما هو غرضك الموثوق؟</p>
+          <div class="s2ti-input-row">
+            <label class="s2ti-label" for="s2ti-input">اكتبوه هنا‎:</label>
+            <input id="s2ti-input" class="s2ti-input" type="text" maxlength="10"
+                   autocomplete="off" dir="rtl" aria-describedby="s2ti-limit-msg"
+                   oninput="s2tiInputChange()" onkeydown="s2tiInputKeydown(event)">
+          </div>
+          <p class="s2ti-limit-msg hidden" id="s2ti-limit-msg" role="status">يمكن كتابة حتى 10 أحرف</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom action bar: [continue → part 04] (left) · [back] (right) -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s2-continue" type="button"
+                onclick="goToNextPart()">يمكن المتابعة</button>
+      </div>
+      <button class="scq-back" id="s2-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+
+  </section>
+
+  <!-- ═══ "מצאתם בעיה?" — the shared 720 issue-report dialogs (unit-js/25-report.js,
+       unit-css/25-report.css). Copied unchanged from methodica-science-mass-measure-03; inside
+       #app (the overlay aligns with the scaled canvas) and outside every .screen (always
+       available). Guide §7.1. ═══ -->
+  <div id="report-modal"
+       class="report-modal-overlay"
+       hidden
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="report-modal-title">
+    <div class="report-modal-box">
+      <button class="report-close-btn" type="button" onclick="tryCloseReportModal()" aria-label="إغلاق">&#10005;</button>
+      <h2 class="report-modal-title" id="report-modal-title">الإبلاغ عن مشكلة</h2>
+      <p class="report-modal-body">هل هناك شيء غير واضح أو لا يعمل كما ينبغي؟<br>أخبرونا بما حدث لنعالج المشكلة.</p>
+
+      <div class="report-field">
+        <label class="report-label" for="report-type"><span class="required-star">*</span> ما نوع المشكلة</label>
+        <div class="report-custom-select" id="report-type-wrapper">
+          <button class="report-select-btn is-placeholder" type="button" aria-haspopup="listbox" aria-expanded="false">
+            <span class="report-select-value">اختاروا نوع المشكلة</span>
+          </button>
+          <ul class="report-select-list" role="listbox" hidden>
+            <li class="report-select-option" data-value="technical" role="option">عطل تقني أو شيء لا يعمل</li>
+            <li class="report-select-option" data-value="unclear" role="option">شيء غير واضح لي</li>
+            <li class="report-select-option" data-value="other" role="option">أخرى</li>
+          </ul>
+          <input type="hidden" id="report-type" value="">
+        </div>
+        <span class="report-field-error" id="report-type-error" hidden>اختاروا نوع المشكلة</span>
+      </div>
+
+      <div class="report-field">
+        <label class="report-label" for="report-text"><span class="required-star">*</span> ماذا حدث؟</label>
+        <textarea class="report-textarea" id="report-text" maxlength="250" rows="4" placeholder="اشرحوا ما حدث لنتمكن من فهم المشكلة" onblur="reportTextBlur()"></textarea>
+        <span class="report-field-error" id="report-text-error" hidden>اكتبوا ما حدث</span>
+        <span class="report-char-count" id="report-char-count">0 / 250</span>
+      </div>
+
+      <div class="report-actions">
+        <button class="report-cancel-btn" type="button" onclick="tryCloseReportModal()">إلغاء</button>
+        <button class="report-submit-btn" type="button" onclick="submitReport()" disabled>إرسال البلاغ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- מצב "הדיווח נשלח". דיאלוג נפרד מדיאלוג הנטישה שמתחתיו — אין לאחד ביניהם. -->
+  <div id="report-thanks-modal"
+       class="report-modal-overlay"
+       hidden
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="report-thanks-title">
+    <div class="report-modal-box report-confirm-box">
+      <h2 class="report-modal-title" id="report-thanks-title">تم إرسال البلاغ، شكرًا!</h2>
+      <p class="report-modal-body">استلمنا بلاغكم وسنعالجه في أقرب وقت.</p>
+      <div class="report-actions">
+        <button class="report-submit-btn" type="button" onclick="closeReportThanks()">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- אישור נטישה: נפתח רק כשיש קלט שלא נשלח. -->
+  <div id="report-confirm-modal"
+       class="report-modal-overlay"
+       hidden
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="report-confirm-title">
+    <div class="report-modal-box report-confirm-box">
+      <h2 class="report-modal-title" id="report-confirm-title">هل أنتم متأكدون من إغلاق النافذة؟</h2>
+      <p class="report-modal-body">عند الضغط على إغلاق لن يُرسل البلاغ</p>
+      <div class="report-actions">
+        <button class="report-cancel-btn" type="button" onclick="forceCloseReportModal()">إغلاق النافذة</button>
+        <button class="report-submit-btn" type="button" onclick="backToReportForm()">أريد الإبلاغ</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /#app -->
+
+<script src="../unit-js/10-identity.js?v=2"></script>
+<script src="../unit-js/20-xapi.js?v=2"></script>
+<script src="../unit-js/25-report.js?v=1"></script>
+<script src="../unit-js/40-resume.js?v=2"></script>
+<script src="../unit-js/45-resume-paint.js?v=1"></script>
+<script src="../unit-js/50-loader.js?v=1"></script>
+<script src="../unit-js/05-motion.js?v=1"></script>
+<script src="../unit-js/00-util.js?v=2"></script>
+<script src="../unit-js/30-nav.js?v=2"></script>
+<script src="../unit-js/32-navlabels.js?v=1"></script>
+<script src="js/main.js?v=12"></script>
+<script src="../unit-js/90-boot.js?v=2"></script>
+</body>
+</html>

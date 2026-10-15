@@ -1,0 +1,468 @@
+/* ═══════════════════════════════════════════════════════
+   css/style.css  —  720 Science · Liquid Volume Lomda · Part 07
+   Canvas: 1280 × 710 px   (matches the 720 reference engine)
+
+   Engine scaffold only — no screen content has been added yet.
+   Add each screen's own section (with its own #sN { … } block and
+   template-specific classes) below the marker at the end of this
+   file as it's built; read the relevant 720-templates reference
+   file for that screen rather than pre-copying unused templates
+   here speculatively.
+   ═══════════════════════════════════════════════════════ */
+
+
+/* ─── Screens ───────────────────────────────────────────── */
+.screen {
+  position: absolute; inset: 0;
+  width: 1280px; height: 710px;
+  display: none; overflow: hidden;
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   S0 — TransitionScreen (slide 41 of the deck). Companion character
+   video above/below a multi-line text block. Ported verbatim from
+   part 05's S0 pattern (minus the "סיימת את התרגול" line, dropped in
+   this part's own copy of the text).
+   ═══════════════════════════════════════════════════════ */
+#s0 { background: #fff; }
+
+.s0tr-content {
+  position: absolute; inset: 0 0 74px 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 16px;
+}
+.s0tr-text {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 2px;
+  text-align: center;
+  max-width: 1050px;
+}
+.s0tr-lead {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 22px; font-weight: 400; color: #303030;
+  margin: 0; line-height: 1.25;
+}
+.s0tr-title {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 40px; font-weight: 700; color: #303030;
+  margin: 8px 0; line-height: 1.2;
+}
+.s0tr-strong {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 22px; font-weight: 700; color: #303030;
+  margin: 0; line-height: 1.25;
+}
+.s0tr-video-wrap { width: 560px; height: 315px; flex-shrink: 0; }
+.s0tr-video { width: 100%; height: 100%; object-fit: contain; display: block;
+  clip-path: inset(2px);   /* hide the GPU edge-blend seam at fractional scales */
+  /* Decorative, non-interactive video — suppress browser-injected hover
+     overlays (PiP/cast/read-aloud) some browsers show regardless of the
+     controlsList/disablepictureinpicture attributes on the element itself. */
+  pointer-events: none;
+}
+
+/* #s0 has no .scq-bar wrapper (TransitionScreen convention) — position its
+   own back button, matching every other part's S0/S4 pattern. */
+#s0-back {
+  position: absolute;
+  bottom: 17.5px; right: 24px;
+  z-index: 12;
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   S1 — TextScreen (Figma 2525:1344). Reference/setup screen: photo +
+   numbered list, no question mechanics. Same row shape idea as the
+   SingleChoiceQuestionImage template (DOM order forced to physical
+   left→right via direction:ltr — see figma-lomda-builder →
+   patterns.md "RTL flex alignment and embedded LTR content"), sized
+   for this screen's own image (279×419 portrait) and text (792px).
+   ═══════════════════════════════════════════════════════ */
+#s1 { background: #fff; }
+
+.s1t-content {
+  position: absolute; top: 100px; right: 40px; left: 40px;
+  display: flex; direction: ltr; align-items: flex-start; justify-content: flex-end; gap: 16px;
+}
+.s1t-img {
+  width: 279px; height: 419px; flex-shrink: 0;
+  padding: 8px; box-sizing: border-box;
+}
+.s1t-img-inner {
+  width: 100%; height: 100%;
+  position: relative;
+  border: 1px solid rgba(174, 174, 174, 0.5);
+  border-radius: 16px; overflow: hidden;
+}
+.s1t-img-inner img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
+.s1t-list {
+  width: 792px;
+  margin: 0;
+  direction: rtl; text-align: right;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 400; color: #303030;
+  line-height: normal;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.s1t-para { margin: 0; }
+/* 8-measurement table (client QA 2026-09-24, replaces the old inline
+   comma list). Same header/border convention as .s11er-table (part 01)
+   and .s1rc-table (part 06) — right column = row index, left column =
+   the value — right-aligned like the surrounding text (not centered). */
+.s1t-table {
+  width: 380px;
+  margin: 0;
+  border-collapse: collapse;
+  direction: rtl;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 20px; color: #303030;
+  table-layout: fixed;
+}
+.s1t-table th, .s1t-table td {
+  border: 1px solid #c9ced8;
+  text-align: center; vertical-align: middle;
+  padding: 6px 10px;
+  box-sizing: border-box;
+}
+.s1t-table th { background: #f2f2f2; font-weight: 700; height: 40px; }
+.s1t-table td { font-weight: 600; height: 40px; }
+.s1t-table th:first-child, .s1t-table td:first-child { width: 150px; }  /* מספר בקבוק (right) */
+
+/* #s1 has no .scq-bar wrapper (TransitionScreen convention) — position
+   its own back button, matching #s0-back elsewhere. */
+#s1-back {
+  position: absolute;
+  bottom: 17.5px; right: 24px;
+  z-index: 12;
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   Shared — question column shape (S2 onward). Ported from part 05's
+   SingleChoiceQuestion pattern (single 792px right-anchored column;
+   the row/image variant is not used in this part yet). See
+   `_question-template-defaults.md` for the shared hint/feedback
+   contract these classes plug into.
+   ═══════════════════════════════════════════════════════ */
+.scq-question {
+  position: absolute; top: 139px; right: 40px;
+  direction: rtl; display: flex; flex-direction: column;
+  align-items: flex-start; gap: 24px;
+  width: 792px;
+}
+.scq-qtext {
+  display: flex; flex-direction: column; gap: 16px;
+  direction: rtl; text-align: right; line-height: normal;
+  width: 100%;
+}
+.scq-qtext p { margin: 0; }
+.s2q-title { font-family: Calibri, Arial, sans-serif; font-size: 24px; font-weight: 700; color: #303030; margin: 0; }
+.s2q-body  { font-family: Calibri, Arial, sans-serif; font-size: 24px; font-weight: 400; color: #303030; margin: 0; }
+.s2q-recap {
+  width: 100%; margin: 0; padding-inline-start: 26px;
+  direction: rtl; text-align: right;
+  font-family: Calibri, Arial, sans-serif; font-size: 24px; font-weight: 400; color: #303030;
+  line-height: normal;
+  display: flex; flex-direction: column; gap: 4px;
+}
+
+/* Text-pill answers (SingleChoiceQuestion) — ported verbatim from
+   part 05's #s2/#s4. */
+.scq-answers {
+  align-self: flex-start;   /* RTL: flex-start = physical right */
+  width: 604px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.scq-opt {
+  width: 100%; min-height: 46px;
+  border: 2px solid var(--subject-500); border-radius: 1000px;
+  background: #fff; padding: 7px 20px;
+  display: flex; align-items: center; gap: 10px;
+  direction: rtl; cursor: pointer;
+  font-family: Calibri, Arial, sans-serif;
+  overflow: visible;
+}
+
+/* Fill-the-blank sentence row — natural RTL flow (no direction
+   override): DOM order matches Hebrew reading order (first child =
+   rightmost), and the default flex-start alignment under RTL hugs
+   the right edge, matching this column's right-anchored text. */
+.p6q-fillrow {
+  display: flex; align-items: center; flex-wrap: wrap;
+  gap: 12px; width: 100%;
+  font-family: Calibri, Arial, sans-serif; font-size: 24px; font-weight: 400; color: #303030;
+}
+
+/* Recall / task-details button — visually identical to .scq-hint
+   (reused as-is), positioned inline in the question flow rather
+   than the bottom bar. Always visible from the start (producer
+   instruction), same policy as part 05's recall button. */
+.s2q-recall-btn { align-self: flex-start; }   /* RTL: flex-start = physical right */
+
+/* ── Dropdown select (DropdownQuestion) — ported from part 02's
+   #s3 dropdown (.mdq-*), resized to this part's own Figma spec
+   (180×42, 24px text) rather than part 02's 260×48/20px — see
+   SKILL.md "explicit source formatting over generic defaults". ── */
+.mdq-dropdown-wrap { position: relative; flex-shrink: 0; display: inline-flex; }
+.mdq-btn {
+  display: flex; flex-direction: row; align-items: center;
+  direction: ltr; /* chevron left, text right */
+  gap: 16px;
+  width: 180px; height: 42px;
+  padding: 0 17px;
+  background: #fff;
+  border: 1px solid rgba(174, 174, 174, 0.5);
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.mdq-btn:disabled { cursor: default; }
+.mdq-btn[aria-expanded="true"] {
+  border: 1.5px solid var(--subject-500);
+  position: relative; z-index: 31;
+}
+.mdq-chevron { flex-shrink: 0; width: 16px; height: 8px; display: block; }
+.mdq-check-ico,
+.mdq-wrong-ico { flex-shrink: 0; }
+.mdq-selected {
+  flex: 1; min-width: 0;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 400; color: #303030;
+  text-align: right; direction: rtl;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  line-height: normal;
+}
+.mdq-btn[data-empty="true"] .mdq-selected { opacity: 0.5; }
+/* Client QA 2026-09-24: fill (background) white, stroke (border) unchanged. */
+.mdq-btn.mdq-correct { border: 1.5px solid #609e12; background: #fff; }
+.mdq-btn.mdq-wrong { border: 1.5px solid rgba(220, 53, 69, 0.6); background: #fff; }
+
+.mdq-list {
+  position: absolute;
+  top: calc(100% - 15px); left: 0;
+  width: 180px;
+  background: #fff;
+  border: 1px solid rgba(174, 174, 174, 0.5);
+  border-radius: 8px;
+  padding: 24px 8px 8px;
+  list-style: none; margin: 0;
+  z-index: 30;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.10);
+  direction: rtl;
+}
+.mdq-option {
+  padding: 8px 20px; border-radius: 8px;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 20px; font-weight: 400; color: #303030;
+  text-align: center; cursor: pointer; white-space: nowrap;
+}
+.mdq-option:hover { background: var(--subject-300); }
+.mdq-option + .mdq-option { position: relative; margin-top: 17px; }
+.mdq-option + .mdq-option::before {
+  content: ''; position: absolute;
+  top: -9px; left: 12px; right: 12px; height: 1px;
+  background: #d9d9d9; border-radius: 999px;
+}
+
+/* ── ValueInputQuestion numeric box — sized to this part's own Figma
+   spec (180×42, matching the dropdown box above) rather than the
+   generic template's 92×48. ── */
+.p6-input {
+  width: 180px; height: 42px;
+  border: 1px solid rgba(174, 174, 174, 0.5); border-radius: 10px;
+  background: #fff; color: #303030;
+  font-family: Calibri, Arial, sans-serif; font-size: 24px; font-weight: 700;
+  text-align: center;
+  padding: 0 12px;
+  -moz-appearance: textfield;
+}
+.p6-input::-webkit-outer-spin-button,
+.p6-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.p6-input:disabled { color: #303030; background: #fff; opacity: 1; }
+.p6-input.error { border-color: #b20010; background: #fff0f4; }
+.p6-input.locked { border-color: #609e12; background: #edf8ed; }
+
+/* ── Task-details popup (Figma "ContentPopup") — a large centered
+   modal that reuses S1's .s1t-* content verbatim, opened by the
+   .s2q-recall-btn instead of the standard hint. Backdrop matches the
+   standard hint overlay; the close button carries its own visual style
+   (see .recipe-popup-close). ── */
+.recipe-popup-overlay {
+  position: absolute; inset: 0; z-index: 60;
+  background: rgba(255, 255, 255, 0.78);
+  display: flex; align-items: center; justify-content: center;
+}
+.recipe-popup-overlay.hidden { display: none !important; }
+.recipe-popup {
+  position: relative;
+  /* Widened 1090 -> 1200 (client QA 2026-09-24): the task sentence needs
+     ~762px at the shared 24px bold size, which the previous 680px list
+     column wrapped onto two lines. Still leaves 40px clear of the 1280
+     canvas edge on each side. */
+  width: 1200px; height: 623px;
+  background: #fff; border: 1px solid #303030; border-radius: 48px;
+  overflow: hidden;
+}
+/* Override S1's full-screen absolute positioning — inside the modal,
+   the same row just fills the panel. The list is narrower here (the
+   popup itself is narrower than the full canvas) — sized so
+   image(279) + gap(16) + list leaves the same right-hugging slack
+   as the on-page layout (justify-content: flex-end, inherited). */
+.recipe-popup .s1t-content {
+  position: static;
+  width: 100%; height: 100%;
+  padding: 32px; box-sizing: border-box;
+}
+.recipe-popup .s1t-list { width: 790px; }
+.recipe-popup-close {
+  position: absolute; top: 16px; left: 16px; z-index: 2;
+  /* Self-contained visual styling — this button belongs to the recall modal
+     alone. It previously inherited its circle and X bars from the feedback
+     popup's close button, which no longer exists. */
+  flex-shrink: 0;
+  width: 30px; height: 30px;
+  border: 1px solid #303030; border-radius: 50%;
+  background: #fff; color: transparent;
+  font-size: 0; line-height: 0; cursor: pointer;
+  padding: 0;
+}
+.recipe-popup-close::before,
+.recipe-popup-close::after {
+  content: ''; position: absolute; left: 50%; top: 50%;
+  width: 11.31px; height: 1.333px; background: #303030; border-radius: 999px;
+  transform-origin: center;
+}
+.recipe-popup-close::before { transform: translate(-50%, -50%) rotate(45deg); }
+.recipe-popup-close::after  { transform: translate(-50%, -50%) rotate(-45deg); }
+
+
+/* ═══════════════════════════════════════════════════════
+   S2 — DropdownQuestion (Figma 2525:1423 / 2525:1602). Section א׳.
+   ═══════════════════════════════════════════════════════ */
+#s2 { background: #fff; }
+
+
+/* ═══════════════════════════════════════════════════════
+   S3 — ValueInputQuestion (Figma 2526:1287). Section ב׳.
+   ═══════════════════════════════════════════════════════ */
+#s3 { background: #fff; }
+
+
+/* ═══════════════════════════════════════════════════════
+   S4 — SingleChoiceQuestion (Figma 2526:1497). Section ג׳.
+   ═══════════════════════════════════════════════════════ */
+#s4 { background: #fff; }
+
+/* This screen packs more content than S2/S3/S5 — a 2-line body plus
+   four 2-line answer pills. Figma's own box-trimmed text metrics fit
+   this at top:139/gap:24 with ~14px to spare, but standard
+   line-height:normal rendering runs taller and pushed the recall
+   button under the bottom bar (measured 7px overlap). Tighten this
+   screen's own gaps only — S2/S3/S5 fit fine at the shared 24px and
+   are left untouched. */
+#s4 .scq-question { gap: 16px; }
+
+
+/* ═══════════════════════════════════════════════════════
+   S5 — SingleChoiceQuestion (Figma 2526:1579). Section ד׳.
+   ═══════════════════════════════════════════════════════ */
+#s5 { background: #fff; }
+
+
+/* =======================================================
+   Feedback popup — in-popup action button   [FOUNDATION]
+
+   The one approved interactive control inside a feedback popup: the
+   final-attempt solution/answer toggle. Every other in-popup control
+   remains forbidden (see 720-templates -> _global-components.md ->
+   Feedback popup system -> No manual close) -- this is NOT a dismiss
+   affordance and must never be styled or reused as one.
+
+   Opt-in per question: a screen gets this button only by returning an
+   `action` from its feedback config. In this part, S2 and S3 do.
+
+   Figma source of truth: file eSbp4bKHgBky0rakDb8l9N, component set
+   217:4135 -- variants 2464:28288 (MyAnswerBtn=True, label
+   מעבר לתשובה שלי) and 2464:28331 (MyAnswerBtn=False, label
+   התשובה הנכונה). Both place the button hard against the physical
+   right of the popup's padding box, bottom-aligned, width hugging the
+   label. NOTE: an older node 217:4134 carries the same variant name as
+   2464:28331 -- it is superseded, do not use it.
+
+   Rendered widths are ~4px over the widths shown in Figma, because
+   .nav-label reserves the SemiBold measurement of each label while
+   Figma measures the Regular weight. That is the width-reservation
+   rule working as intended -- do not "correct" it.
+
+   This is the Figma `ShowAnswer` button (node 196:6020, Default +
+   Hover). It is NEUTRAL and must stay that way: white fill, #222222
+   text, #484848 hairline. It is NOT the subject-themed nav button --
+   no var(--subject-*) anywhere in this block, so the same button looks
+   identical in the Science and Math themes. Never restyle it from
+   .scq-back / .btn-continue / .scq-hint.
+   ======================================================= */
+.scq-popup-actions {
+  display: flex;
+  justify-content: flex-start;   /* popup is direction:rtl -> physical right */
+  align-items: center;           /* never stretch the button */
+  /* 20px margin + the popup's own 4px flex gap = Figma's 24px, applied ONLY
+     between the feedback content and this row -- title-to-body spacing is
+     untouched (see the Popup layout comment below). */
+  margin-top: 20px;
+}
+
+.popup-action {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 39px;                  /* Figma exact. Pinned rather than derived so
+                                    sub-pixel border rounding at fractional
+                                    devicePixelRatio can't shift it off 39. */
+  padding: 7.5px 20px;           /* 7.5 + 22 + 7.5 + 2x1 border = 39 */
+  line-height: 22px;
+  flex: 0 0 auto;                /* hug the label; never stretch to the popup */
+  width: auto;                   /* no fixed width, no min-width floor */
+  border: 1px solid #484848; border-radius: 1000px; background: #FFFFFF;
+  color: #222222;
+  font-family: Calibri, Arial, sans-serif; font-size: 20px; font-weight: 400;
+  direction: rtl; white-space: nowrap;
+  cursor: pointer;               /* overrides .scq-popup's cursor: move */
+}
+
+/* Hover changes the LABEL WEIGHT ONLY -- Assistant 400 -> 600. Per the Figma
+   ShowAnswer component the stroke is identical in both states (1px #484848),
+   so unlike .scq-back / .btn-continue / .scq-hint this button must NOT thicken
+   its border on hover. Do not add border-width, outline, or a box-shadow ring
+   here: a 1px -> 1.5px border really would resize the button, because it is
+   width:auto and box-sizing:border-box has no effect on an auto-width box
+   (used width = content + padding + border). The weight change itself is
+   absorbed by .nav-label, whose ::before reserves the SemiBold measurement of
+   the same label, so the width is invariant. */
+.popup-action:hover { font-weight: 600; }
+
+/* ── Popup layout, Figma node 217:4135 ──────────────────────────────
+   Scoped to the popups that carry the toggle ON PURPOSE, one #id at a
+   time as each is migrated -- .scq-popup is shared by every question in
+   this part, and production ships 15px padding everywhere; correcting
+   that globally is a separate, wider change. When this pattern is
+   promoted, fold these rules into .scq-popup rather than continuing to
+   grow this selector list.
+
+   Title-to-body spacing is NOT part of this override -- it stays at the
+   base .scq-popup gap (4px), identical to every non-toggle popup (e.g.
+   SingleChoiceQuestion). Figma's "24px gap" describes the space between
+   the feedback content and the action row ONLY; earlier this was
+   mis-applied as the flex container's gap, which -- since gap applies
+   between EVERY adjacent child, not just the last pair -- also pushed
+   title away from body by 24px. Fixed by leaving the container gap alone
+   and adding the 24px purely via .scq-popup-actions's own margin-top (above). */
+#s3v-popup, #s2q-popup { padding: 24px; }
+/* Vestige of the removed X close button: the title was nudged down 4px to
+   optically centre against it. With no X and a 24px padding box, it just
+   offsets the first line. */
+#s3v-popup .scq-popup-title, #s2q-popup .scq-popup-title { padding-top: 0; }
+/* Single-child header now -- drop the LTR flip that ordered title vs. X. */
+#s3v-popup .scq-popup-header, #s2q-popup .scq-popup-header { direction: rtl; }

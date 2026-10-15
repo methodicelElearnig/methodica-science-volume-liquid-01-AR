@@ -1,0 +1,178 @@
+/* ═══════════════════════════════════════════════════════
+   unit-css/scq.css  —  SingleChoiceQuestion engine styles shared by every
+   part: option rows, radio marks, feedback popup, update bar, hint button
+   and hint popup. Rules identical in all seven parts, moved verbatim.
+   Loaded right after base.css and BEFORE the part's css/style.css, so a
+   part's own (screen-scoped) rules still override these.
+   ═══════════════════════════════════════════════════════ */
+
+.scq-opt-text {
+  flex: 1; text-align: right;
+  font-size: 22px; font-weight: 400; color: #222; line-height: 1.1;
+}
+.scq-opt:focus-visible { outline: 2px solid var(--subject-700); outline-offset: 2px; }
+.scq-opt:disabled { cursor: default; }
+/* Correct / wrong pill states */
+.scq-opt.correct { background: #edf8ed; border: 2px solid #609e12; }
+.scq-opt.wrong   { background: #fff0f4; border: 2px solid #b20010; }
+/* Radio indicator (22px) — RTL: sits on the RIGHT (reading start) of the pill */
+.scq-radio {
+  width: 22px; height: 22px; flex-shrink: 0;
+  border: 2px solid var(--subject-500); border-radius: 1000px;
+  position: relative; box-sizing: border-box;
+  order: -1;   /* first flex item → right edge in the RTL row */
+}
+.scq-opt.selected .scq-radio { background: var(--subject-500); }
+.scq-opt.correct  .scq-radio { background: #609e12; border-color: #609e12; }
+.scq-opt.wrong    .scq-radio { background: #b20010; border-color: #b20010; }
+/* Feedback icon — exact Figma vector (white), centered (node 196:6229 / 196:6232) */
+.scq-opt.correct .scq-radio::after,
+.scq-opt.wrong .scq-radio::after {
+  content: ''; position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  background-repeat: no-repeat; background-position: center; background-size: contain;
+}
+.scq-opt.correct .scq-radio::after {
+  width: 13px; height: 11px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 12' fill='none'%3E%3Cpath d='M4.52036 12C4.12296 12.0002 3.74183 11.8126 3.46106 11.4787L0.258452 7.67744C-0.0861507 7.26814 -0.0861507 6.60467 0.258452 6.19536C0.603165 5.78619 1.16194 5.78619 1.50666 6.19536L4.52036 9.77374L12.4933 0.306878C12.8381 -0.102293 13.3968 -0.102293 13.7415 0.306878C14.0862 0.716179 14.0862 1.37966 13.7415 1.78896L5.57966 11.4787C5.29889 11.8126 4.91776 12.0002 4.52036 12Z' fill='white'/%3E%3C/svg%3E");
+}
+.scq-opt.wrong .scq-radio::after {
+  width: 11px; height: 11px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M13.6743 0.325691C13.4657 0.117151 13.1828 0 12.8879 0C12.5929 0 12.31 0.117151 12.1014 0.325691L7 5.42709L1.8986 0.325691C1.69 0.117151 1.40711 0 1.11215 0C0.817183 0 0.534294 0.117151 0.325691 0.325691C0.117151 0.534294 0 0.817183 0 1.11215C0 1.40711 0.117151 1.69 0.325691 1.8986L5.42709 7L0.325691 12.1014C0.117151 12.31 0 12.5929 0 12.8879C0 13.1828 0.117151 13.4657 0.325691 13.6743C0.534294 13.8829 0.817183 14 1.11215 14C1.40711 14 1.69 13.8829 1.8986 13.6743L7 8.57291L12.1014 13.6743C12.31 13.8829 12.5929 14 12.8879 14C13.1828 14 13.4657 13.8829 13.6743 13.6743C13.8829 13.4657 14 13.1828 14 12.8879C14 12.5929 13.8829 12.31 13.6743 12.1014L8.57291 7L13.6743 1.8986C13.8829 1.69 14 1.40711 14 1.11215C14 0.817183 13.8829 0.534294 13.6743 0.325691Z' fill='white'/%3E%3C/svg%3E");
+}
+/* ── Feedback popup (draggable, resets position on every open) ── */
+.scq-popup {
+  position: absolute;
+  left: 2px; bottom: 76px;
+  width: 426px;
+  height: auto;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.18);
+  display: flex; flex-direction: column; gap: 4px;
+  direction: rtl; z-index: 50;
+  cursor: move;
+}
+.scq-popup.hidden { display: none !important; }
+.scq-popup-header {
+  display: flex; align-items: flex-start; gap: 8px;
+  direction: ltr;
+  width: 100%;
+}
+.scq-popup-title {
+  flex: 1;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 20px; font-weight: 700;
+  text-align: right; direction: rtl;
+  line-height: normal; margin: 0;
+  padding-top: 4px;
+}
+.scq-popup-body { direction: rtl; }
+.scq-popup-body p {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 20px; font-weight: 400; color: #222;
+  text-align: right; direction: rtl;
+  line-height: normal; margin: 0 0 4px;
+}
+.scq-popup-body p:last-child { margin-bottom: 0; }
+/* ── Bottom action bar ── */
+.scq-bar {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 74px;
+  background: #fff; border-top: 0.4px solid #aeaeae;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 34px; direction: ltr;   /* check+hint left, back right */
+  z-index: 15;
+}
+.scq-bar-main { display: flex; align-items: center; gap: 16px; }
+.scq-check {
+  min-width: 140px; padding: 0 40px;
+  height: 39px;   /* canonical nav-pill height — see _global-components.md § Nav bar button geometry */
+  display: flex; align-items: center; justify-content: center;
+  border: none; border-radius: 1000px;
+  background: #aeaeae; color: #303030;
+  font-family: Calibri, Arial, sans-serif; font-size: 20px; font-weight: 400;
+  cursor: not-allowed; direction: rtl; white-space: nowrap;
+  text-align: center;
+}
+.scq-check:not(:disabled) {
+  background: linear-gradient(180deg, #005FBE 9%, #0059B2 23.36%, #003971 100%);
+  color: #fff; cursor: pointer;
+}
+.scq-check:not(:disabled):hover { font-weight: 600; }
+.scq-hint {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 0 20px;
+  height: 39px;   /* canonical nav-pill height — see _global-components.md § Nav bar button geometry */
+  border: 1px solid var(--subject-700); border-radius: 1000px; background: #fff;
+  color: var(--subject-700);
+  font-family: Calibri, Arial, sans-serif; font-size: 20px; font-weight: 400;
+  cursor: pointer; direction: rtl;
+}
+/* Figma 196:6024 — bulb icon sits to the RIGHT of the text (first flex item in RTL) */
+.scq-hint .scq-hint-ico { width: 26px; height: 22.3px; order: -1; }
+/* Figma 1645:18704 — hint hover: text goes SemiBold, border/colors unchanged */
+.scq-hint:hover:not(:disabled) { font-weight: 600; }
+.scq-hint:disabled { border-color: #aeaeae; color: #aeaeae; cursor: default; }
+/* Figma 196:6021 — disabled bulb is solid #aeaeae (black → invert 68.2% = rgb(174,174,174)) */
+.scq-hint:disabled .scq-hint-ico { filter: brightness(0) invert(0.682); }
+/* ── Hint popup (modal) ── */
+.scq-hint-overlay {
+  position: absolute; inset: 0; z-index: 60;
+  background: rgba(255, 255, 255, 0.78);
+  display: flex; align-items: center; justify-content: center;
+}
+.scq-hint-overlay.hidden { display: none !important; }
+.scq-hint-popup {
+  background: var(--subject-500); border-radius: 48px;
+  padding: 40px;
+  display: flex; flex-direction: column; align-items: center; gap: 24px;
+  width: 546px; max-width: 92%;
+}
+.scq-hint-content {
+  /* align-items: stretch (default) — NOT flex-end. With a single column
+     child (.scq-hint-text) and no explicit width, flex-end shrink-wraps
+     the child to its content width, then (direction: rtl) anchors that
+     shrunk box to the physical LEFT — so short hint text renders
+     right-aligned WITHIN a box that itself sits away from the popup's
+     right edge, reading as "right-aligned but starting from the middle."
+     Stretch keeps the child at the full 462px width so text-align: right
+     on the title/body always hugs the real right edge, regardless of
+     text length. */
+  display: flex; flex-direction: column; gap: 24px;
+  width: 462px; max-width: 100%; direction: rtl;
+}
+.scq-hint-text {
+  flex: 1; min-width: 0; direction: rtl;
+  display: flex; flex-direction: column; gap: 24px;
+  color: #fff;
+}
+.scq-hint-title {
+  width: 100%; text-align: right; position: relative;
+  padding-right: 56px;
+  font-family: Calibri, Arial, sans-serif; font-weight: 700; font-size: 32px;
+  color: #fff; line-height: normal;
+}
+.scq-hint-title::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 34.3px;
+  background: url("../unit-assets/img/icon-idea-blue.svg") no-repeat center / contain;
+  filter: brightness(0) invert(1);
+}
+.scq-hint-body {
+  width: 100%; text-align: right;
+  font-family: Calibri, Arial, sans-serif; font-weight: 400; font-size: 24px;
+  color: #fff; line-height: normal;
+}
+.scq-hint-body p { line-height: normal; }
+.scq-hint-close {
+  width: 196px; padding: 16px 40px;
+  border: none; border-radius: 1000px; background: #fff;
+  color: #303030;
+  font-family: Calibri, Arial, sans-serif; font-size: 24px; font-weight: 400;
+  cursor: pointer;
+}

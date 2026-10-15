@@ -1,0 +1,97 @@
+/* ═══════════════════════════════════════════════════════
+   unit-css/img-zoom.css  —  image-zoom button + modal core, shared by the
+   parts that zoom question images (01, 02, 03, 05, 06). Linked from those
+   index.html files right after scq.css, before the part's css/style.css;
+   per-part modal variants (panel, caption, stage) stay in each part.
+   Rules identical in all five parts, moved verbatim (part 01's copy).
+   ═══════════════════════════════════════════════════════ */
+
+.scq-img-inner {
+  width: 100%; height: 100%;
+  position: relative;            /* anchor for the zoom button */
+  background: #fff; border: 0.5px solid rgba(174, 174, 174, 0.5);
+  border-radius: 16px; overflow: hidden;
+}
+.scq-img-inner img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+/* ── GLOBAL COMPONENT — Image zoom (button + modal) ──
+   44px circle button pinned top-right inside the image frame; one shared
+   light-backdrop modal per part with a clone-based stage. Spec:
+   720-templates → _global-components.md → "Image zoom". ── */
+.img-zoom-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--subject-500);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--subject-500);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 10;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  pointer-events: auto;
+}
+/* Hover (Figma Zoom component, State=Hover): solid Subject/500 circle,
+   white icon. Border keeps the fill color so the 44px size doesn't shift. */
+.img-zoom-btn:hover {
+  background: var(--subject-500);
+  border-color: var(--subject-500);
+  color: #fff;
+}
+.img-zoom-btn__icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+.img-zoom-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+}
+.img-zoom-modal.hidden {
+  display: none !important;
+}
+.img-zoom-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.78);
+}
+.img-zoom-modal__close {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--subject-500);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--subject-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+}
+.img-zoom-modal__close:hover {
+  background: var(--subject-500);
+  border-color: var(--subject-500);
+  color: #fff;
+}
+/* X icon — 15×15 vector from the Figma Close component, uses currentColor */
+.img-zoom-modal__close-icon {
+  width: 15px;
+  height: 15px;
+  display: block;
+}

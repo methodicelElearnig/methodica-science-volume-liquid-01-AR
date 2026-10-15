@@ -1,0 +1,97 @@
+{
+  "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-03/",
+  "title": "זמן תרגול 2",
+  "learningUnitId": "methodica-science-volume-liquid-01",
+  "componentPurpose": "practice",
+  "isAssessment": false,
+  "recommendedAfterFail": ["https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-02/"],
+  "isRequired": true,
+  "relativeDifficulty": 2,
+  "masteryLevel": null,
+  "order": 3,
+  "depthLevel": "core-curriculum-basic",
+  "cognitiveLevels": ["applying-a-model-or-procedure"],
+  "languages": ["Hebrew"],
+  "skills": [],
+  "estimatedTimeInMinutes": 10,
+  "createdAt": "2026-09-24T00:00:00.000Z",
+  "updatedAt": "2026-09-24T00:00:00.000Z",
+  "subContent": [
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-03/methodica-science-volume-liquid-01-03-001/",
+      "title": "כלי מדידה לכוס מיץ תפוזים",
+      "informationToBot": "מטרת הפריט: תרגול בסיסי לבחירת כלי המדידה המתאים למדידת כמות המיץ בכוס מלאה. מה התלמיד אמור להבין/לתרגל: משורה היא הכלי המתאים למדידת נפח נוזל, בעוד כף, סרגל ומאזניים דיגיטליים אינם כלים למדידת נפח (כף - כלי אכילה, סרגל - מדידת אורך, מאזניים - מדידת מסה). טעויות נפוצות: בלבול בין כלי מדידת נפח לכלי מדידת אורך/מסה.",
+      "contentType": "practice",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-03/methodica-science-volume-liquid-01-03-001/q1",
+          "questionType": "choice",
+          "questionText": "מהו הכלי המתאים בדיוק למדוד את כמות המיץ בכוס המלאה במיץ תפוזים? לחצו על התשובה הנכונה.",
+          "answers": ["משורה", "כף", "סרגל", "מאזניים דיגיטליים"],
+          "correctAnswers": ["משורה"]
+        }
+      ]
+    },
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-03/methodica-science-volume-liquid-01-03-002/",
+      "title": "זיהוי כלי מדידת נפח מבין מספר כלים",
+      "informationToBot": "מטרת הפריט: תרגול בסיסי בזיהוי כלים המיועדים למדידת נפח נוזל מתוך רשימה מעורבת של כלי מדידה. מה התלמיד אמור להבין/לתרגל: משורה, מזרק וכוס מדידה הם כלים המודדים נפח נוזל; סרגל מודד אורך, מאזניים דיגיטליים מודדים מסה, ושעון עצר מודד זמן - אף אחד מהם אינו כלי למדידת נפח. טעויות נפוצות: בחירת פחות/יותר משלושה כלים; בחירת כלי ממקצוע מדידה אחר (אורך/מסה/זמן) מתוך הרגל.",
+      "contentType": "practice",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-03/methodica-science-volume-liquid-01-03-002/q1",
+          "questionType": "choice",
+          "questionText": "סמנו את 3 הכלים שמודדים נפח של נוזלים. ניתן לבחור עד 3 תשובות.",
+          "answers": ["משורה", "סרגל", "מאזניים דיגיטליים", "שעון עצר", "כוס מדידה", "מזרק"],
+          "correctAnswers": ["משורה", "כוס מדידה", "מזרק"]
+        }
+      ]
+    },
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-03/methodica-science-volume-liquid-01-03-003/",
+      "title": "ממוצע שתי מדידות ומספיקותן",
+      "informationToBot": "מטרת הפריט: תרגול בסיסי בחישוב ממוצע והבנת החשיבות של שלוש מדידות (ולא שתיים) למהימנות. מה התלמיד אמור להבין/לתרגל: סעיף א - ממוצע של 20 ו-22 מ״ל הוא 21 מ״ל. סעיף ב - שתי מדידות אינן מספיקות לקביעת מהימנות; עדיף לבצע שלוש מדידות כדי לדייק. טעויות נפוצות: חישוב שגוי של הממוצע; הנחה ששתי מדידות מספיקות כי הן 'קרובות'.",
+      "contentType": "practice",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-03/methodica-science-volume-liquid-01-03-003/q1",
+          "questionType": "numeric",
+          "questionText": "תלמידה מדדה אותה כמות פעמיים: 20 ו-22 מ״ל. א. מהו הממוצע?",
+          "answers": [],
+          "correctAnswers": [21]
+        },
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-03/methodica-science-volume-liquid-01-03-003/q2",
+          "questionType": "choice",
+          "questionText": "ב. האם 2 מדידות מספיקות?",
+          "answers": ["כן, 2 זה מספיק", "לא, עדיף 3 כדי לדייק", "אין הבדל"],
+          "correctAnswers": ["לא, עדיף 3 כדי לדייק"]
+        }
+      ]
+    },
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-03/methodica-science-volume-liquid-01-03-004/",
+      "title": "מהימנות מדידות של עדי ואלמוג",
+      "informationToBot": "מטרת הפריט: תרגיל ברמת קושי גבוהה יותר (בונוס בתוך רכיב התרגול הבסיסי) - עדי ואלמוג מדדו כל אחת 3 פעמים את אותה כמות נוזל, ולשתיהן אותו ממוצע (50 מ״ל) אך פיזור תוצאות שונה. מה התלמיד אמור להבין/לתרגל: מהימנות נמדדת לפי קרבת התוצאות זו לזו (טווח קטן), ולא רק לפי הממוצע - גם כשהממוצע זהה, מדידות עם טווח קטן יותר (של עדי) מהימנות יותר. טעויות נפוצות: הנחה שממוצע זהה משמעו מהימנות זהה, בלי להתייחס לפיזור התוצאות.",
+      "contentType": "practice",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-03/methodica-science-volume-liquid-01-03-004/q1",
+          "questionType": "choice",
+          "questionText": "הלוח של עדי, הלוח של אלמוג: עדי ואלמוג מדדו כל אחת 3 פעמים את אותה כמות נוזל. כל אחת כתבה על הלוח שלה את תוצאות המדידה. לשתיהן ממוצע 50 מ״ל. למי יש תוצאות יותר אמינות?",
+          "answers": [
+            "אלמוג כי הטווח גדול יותר",
+            "עדי, כי המדידות קרובות זו לזו",
+            "אין הבדל במהימנות כי הממוצע זהה",
+            "אי אפשר לדעת"
+          ],
+          "correctAnswers": ["עדי, כי המדידות קרובות זו לזו"]
+        }
+      ]
+    }
+  ]
+}

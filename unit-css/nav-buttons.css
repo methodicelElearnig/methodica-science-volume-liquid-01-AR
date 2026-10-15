@@ -1,0 +1,54 @@
+/* ═══════════════════════════════════════════════════════
+   unit-css/nav-buttons.css  —  back / hint button sizing and nav labels.
+   Loaded LAST in every index.html: in each part these rules sat at the END
+   of css/style.css and override base .scq-back / .scq-hint rules of the same
+   specificity, so they must stay after the part's own stylesheet.
+   ═══════════════════════════════════════════════════════ */
+
+/* =======================================================
+   Navigation-button width consistency
+   -------------------------------------------------------
+   Design rule (Foundation, approved 2026-07-28):
+     W(label) = max(140px, intrinsic width of the SAME label
+                rendered in the hover weight, SemiBold 600)
+   The rendered width must be identical in Default and Hover for
+   ANY label, in any language -- not merely for the labels this
+   module happens to use today.
+
+   Mechanism: .nav-label stacks an invisible SemiBold copy of the
+   label (a ::before pseudo-element fed by attr(data-label)) into
+   the same grid cell as the visible text, so the box always sizes
+   to the SemiBold measurement. The reserve is not a DOM node, and
+   visibility:hidden keeps it out of the accessibility tree, so the
+   accessible label stays single-sourced. data-label is populated
+   from each button's own existing text by initNavLabels() in
+   js/main.js -- it is never authored by hand, and must never be
+   adjusted for visual balance.
+
+   Height/positioning migrated to Foundation (2026-08-16): nav pills
+   are now explicit 39px tall, flex-centered, vertically centered in
+   the 74px bar (17.5px top/bottom). Still deliberately NOT changed
+   (recorded production/Foundation divergence, tracked as a separate
+   future migration item):
+     - horizontal padding stays 40px on .btn-continue / .scq-back
+       and 20px on .scq-hint   (Foundation specifies 20px)
+   ======================================================= */
+
+/* Back was width:140px with white-space:normal, which wrapped any
+   label containing a space (2-4 lines tall) and overflowed labels
+   without one. No visual change for the current label. */
+.scq-back { width: auto; min-width: 140px; white-space: nowrap; }
+/* Hint had no 140px floor. Inert for the current label (already
+   wider); required so the rule also holds for shorter labels. */
+.scq-hint { min-width: 140px; justify-content: center; }
+/* Width reservation. */
+.nav-label { display: inline-grid; }
+.nav-label::before {
+  content: attr(data-label);
+  grid-area: 1 / 1;
+  font-weight: 600;
+  block-size: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.nav-label > span { grid-area: 1 / 1; }

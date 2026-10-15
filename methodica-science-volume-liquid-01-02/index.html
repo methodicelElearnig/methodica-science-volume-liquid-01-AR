@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>وحدة تعليمية — قياس حجم السائل وأدوات القياس · الجزء 02</title>
+  <link rel="stylesheet" href="../unit-css/base.css?v=3">
+  <link rel="stylesheet" href="../unit-css/scq.css?v=1">
+  <link rel="stylesheet" href="../unit-css/img-zoom.css?v=1">
+  <link rel="stylesheet" href="../unit-css/progress-question.css?v=1">
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="../unit-css/25-report.css?v=1">
+  <link rel="stylesheet" href="../unit-css/motion.css?v=1">
+  <link rel="stylesheet" href="../unit-css/nav-buttons.css?v=1">
+</head>
+<body>
+<!-- Boot cover (guide §8.11): hides screen 0 until the resume decision, so a restored learner
+     never sees the first screen flash before their own. Inline-styled and a sibling of #app (not a
+     child: #app is scaled). 50-loader.js drops it on every exit path; this failsafe lifts it after
+     800 ms, or up to 6 s while a restore is actually in flight (window.__resumeInFlight). -->
+<div id="boot-cover" style="position:fixed;inset:0;z-index:9999;background:#fff"></div>
+<script>
+(function () {
+  var t0 = Date.now();
+  function tick() {
+    var c = document.getElementById('boot-cover');
+    if (!c || !c.parentNode) return;
+    if (window.__resumeInFlight && Date.now() - t0 < 6000) { setTimeout(tick, 100); return; }
+    c.parentNode.removeChild(c);
+  }
+  setTimeout(tick, 800);
+})();
+</script><div id="app">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       GLOBAL — Report / Issue button (Figma "issue button" component).
+       Appears on EVERY screen. Lives OUTSIDE all .screen divs so it
+       is shared, not duplicated per screen. Visual only for now;
+       no click behavior wired.
+       States: default (gray circle) → hover (blue circle + label).
+       Icon shapes are the exact Figma assets; the "מצאתם בעיה?" label
+       is live HTML (shown on hover) — text is never baked into the PNG.
+       Pop-up variant is intentionally NOT implemented.
+       ═══════════════════════════════════════════════════════════ -->
+  <button class="flag-btn" id="flag-btn" type="button" aria-label="هل وجدتم مشكلة؟">
+    <span class="flag-btn-icon"></span>
+    <span class="flag-btn-label">هل وجدتم مشكلة؟</span>
+  </button>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S0 — TransitionScreen (slide 22) — second instance (S13
+       pattern; Target-01 S10 named as the reference). Adds a lead-in
+       line above the title. Character video: Read variant.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen active" data-screen="0" id="s0">
+
+    <div class="s13tr-content">
+      <div class="s13tr-text" data-reveal="1">
+        <p class="s15tr-lead">أنهينا مرحلة التعلم، سننتقل إلى التمرين الأول ونجيب عن</p>
+        <h1 class="s13tr-title">5 أسئلة</h1>
+        <p class="s13tr-subtitle">يجب الإجابة بشكل صحيح عن 4 أسئلة على الأقل.</p>
+      </div>
+      <!-- Motion v0.1 (video-zone fade): gentle fade only, starts with the
+           screen entrance; autoplay untouched. -->
+      <div class="s13tr-video-wrap" data-reveal="1" data-reveal-fade>
+        <video id="s15tr-video" class="s13tr-video" autoplay muted playsinline
+               disablepictureinpicture disableremoteplayback
+               controlsList="nodownload noremoteplayback nofullscreen noplaybackrate"></video>
+      </div>
+    </div>
+
+    <button class="btn-continue" id="s15-continue" onclick="advanceFromS15()">متابعة</button>
+    <button class="scq-back" id="s15-back" type="button" onclick="goBack()">عودة</button>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S1 — ImageHotspotQuestion, practice Q1/5 (slide 23).
+       Same template as S8 with two producer-noted changes:
+       (1) a Progress Question nav (שאלה 1 מתוך 5 — component ported
+       from Target-01, the reference named in the notes); (2) the
+       hotspot dots carry letters (א/ב/ג) matching the options line.
+       Correct: ג (הנקודה הנמוכה בעקומה). Hint appears only AFTER a
+       first wrong answer (producer note for this 5-question series).
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="1" id="s1">
+
+    <!-- Progress Question nav — Q1 first in DOM = physically RIGHT (RTL) -->
+    <nav class="progress-question" aria-label="التنقُّل بين الأسئلة">
+      <div class="progress-question__item" data-question="1">
+        <div class="progress-question__icon progress-question__icon--current"></div>
+        <span class="progress-question__label progress-question__label--visited">سؤال 1</span>
+      </div>
+      <div class="progress-question__connector" data-connector="1"></div>
+      <div class="progress-question__item" data-question="2">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 2</span>
+      </div>
+      <div class="progress-question__connector" data-connector="2"></div>
+      <div class="progress-question__item" data-question="3">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 3</span>
+      </div>
+      <div class="progress-question__connector" data-connector="3"></div>
+      <div class="progress-question__item" data-question="4">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 4</span>
+      </div>
+      <div class="progress-question__connector" data-connector="4"></div>
+      <div class="progress-question__item" data-question="5">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 5</span>
+      </div>
+    </nav>
+
+    <div class="s16q-content">
+      <div class="s16q-text" data-reveal="1">
+        <p class="s16q-title">الجزء المقعر من السائل</p>
+        <p class="s16q-body">يظهر في الصورة مخبار مدرّج يحتوي على ماء. يلتصق الماء قليلًا بالجدار، ولذلك يشكل سطح السائل انحناءً‎.</p>
+        <p class="s16q-body"><strong>اضغطوا على نقطة القراءة التي نقيس عندها‎.</strong></p>
+        <p class="s16q-body">أ. فوق الانحناء&nbsp;&nbsp;&nbsp;ب. على مستوى الانحناء&nbsp;&nbsp;&nbsp;ت. عند أدنى نقطة في الانحناء</p>
+      </div>
+      <!-- Motion: fade-only — hotspot dots are absolutely positioned (static
+           inline coords) and pulse with their own animation; never transform. -->
+      <div class="s16q-img-wrap" data-reveal="2" data-reveal-fade>
+        <img class="s16q-img" src="assets/img/meniscus-cylinder.png"
+             alt="مخبار مدرّج يحتوي على ماء — سطح الماء يشكل انحناءً مقعرًا">
+        <button class="s16q-hotspot" type="button" data-id="a"
+                aria-label="أ — فوق الانحناء" style="left:290.5px; top:91px;"
+                onclick="s16qSelect('a')">
+          <span class="s16q-hotspot-dot" aria-hidden="true">أ</span>
+        </button>
+        <button class="s16q-hotspot" type="button" data-id="b"
+                aria-label="ب — على مستوى الانحناء" style="left:379.5px; top:102px;"
+                onclick="s16qSelect('b')">
+          <span class="s16q-hotspot-dot" aria-hidden="true">ب</span>
+        </button>
+        <button class="s16q-hotspot" type="button" data-id="c"
+                aria-label="ت — عند أدنى نقطة في الانحناء" style="left:305.5px; top:130px;"
+                onclick="s16qSelect('c')">
+          <span class="s16q-hotspot-dot" aria-hidden="true">ت</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom action bar — hint hidden until the first wrong answer -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s16q-check" type="button" disabled
+                onclick="s16qCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="s16q-hint" type="button"
+                style="visibility:hidden" onclick="s16qOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s16-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+  </section>
+
+  <!-- S16 feedback popup — outside .screen so display:none never hides it -->
+  <div class="scq-popup m-popup hidden" id="s16q-popup"
+       onpointerdown="s16qPopupMouseDown(event)"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s16q-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s16q-popup-body"></div>
+  </div>
+
+  <!-- S16 hint popup (modal) — outside .screen divs, inside #app -->
+  <div class="scq-hint-overlay m-popup hidden" id="s16q-hint-overlay"
+       onclick="s16qCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="s16q-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="s16q-hint-title">تلميح</h2>
+          <div class="scq-hint-body">
+            <p>انتبهوا إلى شكل سطح الماء. حاولوا أن تتذكروا‎ أي نقطة في الانحناء يمكن أن تُستخدم لقراءة دقيقة ومتّسقة؟</p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="s16qCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S2 — SingleChoiceQuestion dual-part variant, practice Q2/5
+       (slide 24). Producer: "וריאנט קטן של SingleChoiceQuestion —
+       שתי שאלות במסך; צדקתי? נהיה פעיל רק אחרי מענה על שתיהן".
+       Correct: א=30, ב=כן (both must be right). 2 attempts, hint
+       after the first wrong answer (series rule).
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="2" id="s2">
+
+    <!-- Progress Question nav — shared component, Q1 first in DOM = RIGHT (RTL) -->
+    <nav class="progress-question" aria-label="التنقُّل بين الأسئلة">
+      <div class="progress-question__item" data-question="1">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 1</span>
+      </div>
+      <div class="progress-question__connector" data-connector="1"></div>
+      <div class="progress-question__item" data-question="2">
+        <div class="progress-question__icon progress-question__icon--current"></div>
+        <span class="progress-question__label progress-question__label--visited">سؤال 2</span>
+      </div>
+      <div class="progress-question__connector" data-connector="2"></div>
+      <div class="progress-question__item" data-question="3">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 3</span>
+      </div>
+      <div class="progress-question__connector" data-connector="3"></div>
+      <div class="progress-question__item" data-question="4">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 4</span>
+      </div>
+      <div class="progress-question__connector" data-connector="4"></div>
+      <div class="progress-question__item" data-question="5">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 5</span>
+      </div>
+    </nav>
+
+    <div class="s17q-content">
+      <p class="s17q-title" data-reveal="1">نتيجة موثوقة</p>
+      <p class="s17q-body" data-reveal="1">قاست دنيا كمية الماء نفسها 3 مرات وحصلت على النتائج التالية: 30، 28، 32 ملل.</p>
+
+      <p class="s17q-part" data-reveal="2">أ. ما هو معدل القياسات الثلاثة؟</p>
+      <div class="s17q-answers" role="radiogroup" aria-label="أ. ما هو معدل القياسات الثلاثة؟" data-reveal="2">
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-part="a" data-id="30" onclick="s17qSelect('a','30')">
+          <span class="scq-opt-text">30</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-part="a" data-id="31" onclick="s17qSelect('a','31')">
+          <span class="scq-opt-text">31</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-part="a" data-id="32" onclick="s17qSelect('a','32')">
+          <span class="scq-opt-text">32</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <p class="s17q-part" data-reveal="3">ب. هل القياسات موثوقة؟</p>
+      <div class="s17q-answers" role="radiogroup" aria-label="ب. هل القياسات موثوقة؟" data-reveal="3">
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-part="b" data-id="yes" onclick="s17qSelect('b','yes')">
+          <span class="scq-opt-text">نعم</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-part="b" data-id="no" onclick="s17qSelect('b','no')">
+          <span class="scq-opt-text">لا</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom action bar — hint hidden until the first wrong answer -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s17q-check" type="button" disabled
+                onclick="s17qCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="s17q-hint" type="button"
+                style="visibility:hidden" onclick="s17qOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s17-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+  </section>
+
+  <!-- S17 feedback popup — outside .screen so display:none never hides it -->
+  <div class="scq-popup m-popup hidden" id="s17q-popup"
+       onpointerdown="s17qPopupMouseDown(event)"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s17q-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s17q-popup-body"></div>
+  </div>
+
+  <!-- S17 hint popup (modal) — outside .screen divs, inside #app -->
+  <div class="scq-hint-overlay m-popup hidden" id="s17q-hint-overlay"
+       onclick="s17qCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="s17q-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="s17q-hint-title">تلميح</h2>
+          <div class="scq-hint-body">
+            <p>أ. لحساب المعدل، نجمع جميع القياسات ونقسم على عدد القياسات‎.</p>
+            <p>ب. افحصوا مدى تقارب النتائج من بعضها البعض. كلما كانت الفروق أصغر، كان القياس أكثر موثوقية‎.</p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="s17qCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S3 — SingleChoiceQuestion with content image, practice Q3/5
+       (slide 25). S1 template layout (image left + question/options
+       right, flow-stacked). Correct: של מאיה. 2 attempts, hint after
+       the first wrong answer (series rule).
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="3" id="s3">
+
+    <!-- Progress Question nav — shared component -->
+    <nav class="progress-question" aria-label="التنقُّل بين الأسئلة">
+      <div class="progress-question__item" data-question="1">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 1</span>
+      </div>
+      <div class="progress-question__connector" data-connector="1"></div>
+      <div class="progress-question__item" data-question="2">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 2</span>
+      </div>
+      <div class="progress-question__connector" data-connector="2"></div>
+      <div class="progress-question__item" data-question="3">
+        <div class="progress-question__icon progress-question__icon--current"></div>
+        <span class="progress-question__label progress-question__label--visited">سؤال 3</span>
+      </div>
+      <div class="progress-question__connector" data-connector="3"></div>
+      <div class="progress-question__item" data-question="4">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 4</span>
+      </div>
+      <div class="progress-question__connector" data-connector="4"></div>
+      <div class="progress-question__item" data-question="5">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 5</span>
+      </div>
+    </nav>
+
+    <div class="scq-question">
+      <!-- Content image (producer: OriMaya.jpg) — zoom is a template default.
+           Motion: fade-only (zoom clones this wrapper); group 3 per RTL order —
+           right-side text/answers first, left image after. -->
+      <div class="scq-img" data-reveal="3" data-reveal-fade>
+        <div class="scq-img-inner">
+          <button class="img-zoom-btn" type="button" aria-label="تكبير الصورة"
+                  data-zoom-src="assets/img/OriMaya.jpg"
+                  data-zoom-alt="فادي وياسمين يقيسان حجم سائل في مخبار مدرّج — فادي ينظر من الأعلى وياسمين على مستوى العين">
+            <svg class="img-zoom-btn__icon" aria-hidden="true" width="20" height="20" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1C11.8661 1 15 4.13371 15 7.99902C15 11.8643 11.8661 14.998 8 14.998C4.1339 14.998 1.00002 11.8643 1 7.99902C1 4.13371 4.13389 1 8 1Z" stroke="currentColor" stroke-width="2"/><path d="M12.6221 14.188L14.2657 12.6141L19.928 18.5274C20.3626 18.9813 20.347 19.7016 19.8931 20.1362C19.4392 20.5708 18.7189 20.5552 18.2843 20.1013L12.6221 14.188Z" fill="currentColor"/></svg>
+          </button>
+          <img src="assets/img/OriMaya.jpg"
+               alt="فادي وياسمين يقيسان حجم سائل في مخبار مدرّج — فادي ينظر من الأعلى وياسمين على مستوى العين"
+               onerror="this.style.display='none'">
+        </div>
+      </div>
+
+      <!-- Question text (flow-stacked with the answers, per template contract) -->
+      <div class="scq-qtext s18q-qtext" data-reveal="1">
+        <p>انظروا إلى الصورة</p>
+        <p class="s18q-body">قاس فادي وياسمين حجم سائل معين.</p>
+        <p class="s18q-body">قرأ فادي 50 ملل. وقرأت ياسمين 48 ملل.</p>
+        <p class="s18q-strong">أي قياس صحيح؟</p>
+      </div>
+
+      <div class="scq-answers s18q-answers" role="radiogroup" aria-label="أي قياس صحيح؟" data-reveal="2">
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="ori" onclick="s18qSelect('ori')">
+          <span class="scq-opt-text">قياس فادي - يمكن الرؤية بشكل أفضل من الأعلى</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="maya" onclick="s18qSelect('maya')">
+          <span class="scq-opt-text">قياس ياسمين - القراءة على مستوى العين هي الطريقة المتّبعة</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="both" onclick="s18qSelect('both')">
+          <span class="scq-opt-text">النتيجتان صحيحتان ولا مشكلة في ذلك</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="bigger" onclick="s18qSelect('bigger')">
+          <span class="scq-opt-text">على الأرجح قياس فادي - لأن الرقم الذي حصل عليه أكبر</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom action bar — hint hidden until the first wrong answer -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s18q-check" type="button" disabled
+                onclick="s18qCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="s18q-hint" type="button"
+                style="visibility:hidden" onclick="s18qOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s18-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+  </section>
+
+  <!-- S18 feedback popup — outside .screen so display:none never hides it -->
+  <div class="scq-popup m-popup hidden" id="s18q-popup"
+       onpointerdown="s18qPopupMouseDown(event)"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s18q-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s18q-popup-body"></div>
+  </div>
+
+  <!-- S18 hint popup (modal) — outside .screen divs, inside #app -->
+  <div class="scq-hint-overlay m-popup hidden" id="s18q-hint-overlay"
+       onclick="s18qCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="s18q-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="s18q-hint-title">تلميح</h2>
+          <div class="scq-hint-body">
+            <p>تذكروا قاعدة قراءة المخبار المدرّج.</p>
+            <p>هل تؤثر زاوية النظر على شكل الانحناء؟</p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="s18qCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S4 — SingleChoiceQuestion image-cards variant, practice Q4/5
+       (slide 26). S5 template (image cards + צדקתי?), reusing the same
+       assets. TWO options and ONE attempt (producer fix — the משורה
+       card and the retry attempt were removed): the first answer is
+       final, so the feedback popup is immediately the correct/wrong
+       verdict. Hint available from the start (a one-shot question has
+       no "after the first wrong" moment). Correct: פיפטה.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="4" id="s4">
+
+    <!-- Progress Question nav — shared component -->
+    <nav class="progress-question" aria-label="التنقُّل بين الأسئلة">
+      <div class="progress-question__item" data-question="1">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 1</span>
+      </div>
+      <div class="progress-question__connector" data-connector="1"></div>
+      <div class="progress-question__item" data-question="2">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 2</span>
+      </div>
+      <div class="progress-question__connector" data-connector="2"></div>
+      <div class="progress-question__item" data-question="3">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 3</span>
+      </div>
+      <div class="progress-question__connector" data-connector="3"></div>
+      <div class="progress-question__item" data-question="4">
+        <div class="progress-question__icon progress-question__icon--current"></div>
+        <span class="progress-question__label progress-question__label--visited">سؤال 4</span>
+      </div>
+      <div class="progress-question__connector" data-connector="4"></div>
+      <div class="progress-question__item" data-question="5">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 5</span>
+      </div>
+    </nav>
+
+    <div class="s5q-content s19q-content">
+
+      <div class="s5q-header" data-reveal="1">
+        <p class="s5q-body">علينا قياس 10 ملل من السائل.<br><strong>بأي أداة يمكننا قياس الكمية بدقّة أكبر؟</strong></p>
+      </div>
+
+      <!-- Image cards, right→left: כוס כימית · פיפטה.
+           direction:ltr → first DOM child = leftmost.
+           Motion: ltr grid reveals as ONE group. -->
+      <div class="s5q-cards" role="radiogroup" aria-label="بأي أداة يمكننا قياس الكمية بدقّة أكبر" data-reveal="2">
+
+        <button class="s5q-card" type="button" role="radio" aria-checked="false"
+                data-id="pipette" onclick="s19qSelect('pipette')">
+          <span class="s5q-card-frame">
+            <img src="../unit-assets/img/pipette.png" alt="ماصّة">
+          </span>
+          <span class="s5q-card-label">ماصّة</span>
+        </button>
+
+        <button class="s5q-card" type="button" role="radio" aria-checked="false"
+                data-id="beaker" onclick="s19qSelect('beaker')">
+          <span class="s5q-card-frame">
+            <img src="../unit-assets/img/ChemicalBeaker2.png" alt="دورق بسِعة 500 ملل">
+          </span>
+          <span class="s5q-card-label">دورق بسِعة 500 ملل</span>
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- Bottom action bar — hint visible from the start (one attempt:
+         there is no "after the first wrong" moment to reveal it) -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s19q-check" type="button" disabled
+                onclick="s19qCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="s19q-hint" type="button" onclick="s19qOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s19-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+  </section>
+
+  <!-- S19 feedback popup — outside .screen so display:none never hides it -->
+  <div class="scq-popup m-popup hidden" id="s19q-popup"
+       onpointerdown="s19qPopupMouseDown(event)"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s19q-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s19q-popup-body"></div>
+  </div>
+
+  <!-- S19 hint popup (modal) — outside .screen divs, inside #app -->
+  <div class="scq-hint-overlay m-popup hidden" id="s19q-hint-overlay"
+       onclick="s19qCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="s19q-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="s19q-hint-title">تلميح</h2>
+          <div class="scq-hint-body">
+            <p>ما الذي يحدّد الدقّة - حجم الأداة أم المسافة بين علامات التدريج؟</p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="s19qCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S5 — SingleChoiceQuestion + content image, practice Q5/5
+       (slide 27). S1 template layout (dog.png left, flow-stacked
+       question/options right). Correct: מזרק 5 מ״ל. 2 attempts,
+       hint after the first wrong answer (series rule).
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="5" id="s5">
+
+    <!-- Progress Question nav — shared component -->
+    <nav class="progress-question" aria-label="التنقُّل بين الأسئلة">
+      <div class="progress-question__item" data-question="1">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 1</span>
+      </div>
+      <div class="progress-question__connector" data-connector="1"></div>
+      <div class="progress-question__item" data-question="2">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 2</span>
+      </div>
+      <div class="progress-question__connector" data-connector="2"></div>
+      <div class="progress-question__item" data-question="3">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 3</span>
+      </div>
+      <div class="progress-question__connector" data-connector="3"></div>
+      <div class="progress-question__item" data-question="4">
+        <div class="progress-question__icon"></div>
+        <span class="progress-question__label">سؤال 4</span>
+      </div>
+      <div class="progress-question__connector" data-connector="4"></div>
+      <div class="progress-question__item" data-question="5">
+        <div class="progress-question__icon progress-question__icon--current"></div>
+        <span class="progress-question__label progress-question__label--visited">سؤال 5</span>
+      </div>
+    </nav>
+
+    <div class="scq-question">
+      <!-- Content image (producer: dog.png) — decorative illustration only,
+           no data to inspect, so unlike the template default this image
+           has no zoom button and no frame border (see #s20 .scq-img-inner
+           override in style.css). Motion: fade-only, group 3 per RTL order —
+           right-side text/answers first, left image after. (Flagged for
+           review: now that zoom is removed, this could arguably switch to
+           plain float-in like other decorative images — kept fade-only
+           conservatively during the main-merge to avoid changing behavior
+           as a side effect.) -->
+      <div class="scq-img" data-reveal="3" data-reveal-fade>
+        <div class="scq-img-inner">
+          <img src="assets/img/dog.png"
+               alt="كلب صغير يتلقى دواء"
+               onerror="this.style.display='none'">
+        </div>
+      </div>
+
+      <!-- Question text — no title line on this slide: lead-in regular,
+           question bold (source formatting) -->
+      <div class="scq-qtext s20q-qtext" data-reveal="1">
+        <p class="s20q-body">يعطي طبيب بيطري كلبًا صغيرًا دواء بجرعة 1.5 ملل.</p>
+        <p class="s20q-strong">أي أداة عليه أن يختار لقياس كمية الدواء بدقّة؟</p>
+      </div>
+
+      <div class="scq-answers s20q-answers" role="radiogroup" data-reveal="2"
+           aria-label="أي أداة عليه أن يختار لقياس كمية الدواء بدقّة؟">
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="cylinder" onclick="s20qSelect('cylinder')">
+          <span class="scq-opt-text">مخبار مدرّج بسِعة لتر واحد (1000 ملل)</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="syringe" onclick="s20qSelect('syringe')">
+          <span class="scq-opt-text">محقنة بسِعة 5 ملل</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="beaker" onclick="s20qSelect('beaker')">
+          <span class="scq-opt-text">دورق بسِعة 100 ملل</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="pipette" onclick="s20qSelect('pipette')">
+          <span class="scq-opt-text">ماصّة بسِعة 25 ملل</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom action bar — hint hidden until the first wrong answer -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s20q-check" type="button" disabled
+                onclick="s20qCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="s20q-hint" type="button"
+                style="visibility:hidden" onclick="s20qOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s20-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+  </section>
+
+  <!-- S20 feedback popup — outside .screen so display:none never hides it -->
+  <div class="scq-popup m-popup hidden" id="s20q-popup"
+       onpointerdown="s20qPopupMouseDown(event)"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s20q-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s20q-popup-body"></div>
+  </div>
+
+  <!-- S20 hint popup (modal) — outside .screen divs, inside #app -->
+  <div class="scq-hint-overlay m-popup hidden" id="s20q-hint-overlay"
+       onclick="s20qCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="s20q-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="s20q-hint-title">تلميح</h2>
+          <div class="scq-hint-body">
+            <p>1.5 ملل - كمية صغيرة. نحتاج إلى أداة دقيقة ومريحة لإدخال الدواء إلى فم الكلب‎.</p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="s20qCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       Image zoom modal — ONE shared instance per part, outside all
+       .screen divs (global component). Opens via any [data-zoom-src]
+       button; closes via backdrop / X / Escape. Clone-based stage:
+       the image WRAPPER is cloned so overlays inside it are included.
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="img-zoom-modal hidden" id="img-zoom-modal" aria-hidden="true">
+    <div class="img-zoom-modal__backdrop" data-zoom-close="true"></div>
+    <div class="img-zoom-modal__panel" role="dialog" aria-modal="true" aria-label="عرض الصورة المكبَّرة">
+      <button class="img-zoom-modal__close" type="button" aria-label="إغلاق الصورة" data-zoom-close="true"><svg class="img-zoom-modal__close-icon" aria-hidden="true" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.192 1.192L13.808 13.808M13.808 1.192L1.192 13.808" stroke="currentColor" stroke-width="2.383" stroke-linecap="round"/></svg></button>
+      <div class="img-zoom-modal__stage" id="img-zoom-modal-stage"></div>
+    </div>
+  </div>
+
+  <!-- ═══ "מצאתם בעיה?" — the shared 720 issue-report dialogs (unit-js/25-report.js,
+       unit-css/25-report.css). Copied unchanged from methodica-science-mass-measure-03; inside
+       #app (the overlay aligns with the scaled canvas) and outside every .screen (always
+       available). Guide §7.1. ═══ -->
+  <div id="report-modal"
+       class="report-modal-overlay"
+       hidden
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="report-modal-title">
+    <div class="report-modal-box">
+      <button class="report-close-btn" type="button" onclick="tryCloseReportModal()" aria-label="إغلاق">&#10005;</button>
+      <h2 class="report-modal-title" id="report-modal-title">الإبلاغ عن مشكلة</h2>
+      <p class="report-modal-body">هل هناك شيء غير واضح أو لا يعمل كما ينبغي؟<br>أخبرونا بما حدث لنعالج المشكلة.</p>
+
+      <div class="report-field">
+        <label class="report-label" for="report-type"><span class="required-star">*</span> ما نوع المشكلة</label>
+        <div class="report-custom-select" id="report-type-wrapper">
+          <button class="report-select-btn is-placeholder" type="button" aria-haspopup="listbox" aria-expanded="false">
+            <span class="report-select-value">اختاروا نوع المشكلة</span>
+          </button>
+          <ul class="report-select-list" role="listbox" hidden>
+            <li class="report-select-option" data-value="technical" role="option">عطل تقني أو شيء لا يعمل</li>
+            <li class="report-select-option" data-value="unclear" role="option">شيء غير واضح لي</li>
+            <li class="report-select-option" data-value="other" role="option">أخرى</li>
+          </ul>
+          <input type="hidden" id="report-type" value="">
+        </div>
+        <span class="report-field-error" id="report-type-error" hidden>اختاروا نوع المشكلة</span>
+      </div>
+
+      <div class="report-field">
+        <label class="report-label" for="report-text"><span class="required-star">*</span> ماذا حدث؟</label>
+        <textarea class="report-textarea" id="report-text" maxlength="250" rows="4" placeholder="اشرحوا ما حدث لنتمكن من فهم المشكلة" onblur="reportTextBlur()"></textarea>
+        <span class="report-field-error" id="report-text-error" hidden>اكتبوا ما حدث</span>
+        <span class="report-char-count" id="report-char-count">0 / 250</span>
+      </div>
+
+      <div class="report-actions">
+        <button class="report-cancel-btn" type="button" onclick="tryCloseReportModal()">إلغاء</button>
+        <button class="report-submit-btn" type="button" onclick="submitReport()" disabled>إرسال البلاغ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- מצב "הדיווח נשלח". דיאלוג נפרד מדיאלוג הנטישה שמתחתיו — אין לאחד ביניהם. -->
+  <div id="report-thanks-modal"
+       class="report-modal-overlay"
+       hidden
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="report-thanks-title">
+    <div class="report-modal-box report-confirm-box">
+      <h2 class="report-modal-title" id="report-thanks-title">تم إرسال البلاغ، شكرًا!</h2>
+      <p class="report-modal-body">استلمنا بلاغكم وسنعالجه في أقرب وقت.</p>
+      <div class="report-actions">
+        <button class="report-submit-btn" type="button" onclick="closeReportThanks()">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- אישור נטישה: נפתח רק כשיש קלט שלא נשלח. -->
+  <div id="report-confirm-modal"
+       class="report-modal-overlay"
+       hidden
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="report-confirm-title">
+    <div class="report-modal-box report-confirm-box">
+      <h2 class="report-modal-title" id="report-confirm-title">هل أنتم متأكدون من إغلاق النافذة؟</h2>
+      <p class="report-modal-body">عند الضغط على إغلاق لن يُرسل البلاغ</p>
+      <div class="report-actions">
+        <button class="report-cancel-btn" type="button" onclick="forceCloseReportModal()">إغلاق النافذة</button>
+        <button class="report-submit-btn" type="button" onclick="backToReportForm()">أريد الإبلاغ</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /#app -->
+<script src="../unit-js/10-identity.js?v=2"></script>
+<script src="../unit-js/20-xapi.js?v=2"></script>
+<script src="../unit-js/25-report.js?v=1"></script>
+<script src="../unit-js/40-resume.js?v=2"></script>
+<script src="../unit-js/45-resume-paint.js?v=1"></script>
+<script src="../unit-js/50-loader.js?v=1"></script>
+<script src="../unit-js/05-motion.js?v=1"></script>
+<script src="../unit-js/00-util.js?v=2"></script>
+<script src="../unit-js/30-nav.js?v=2"></script>
+<script src="../unit-js/32-navlabels.js?v=1"></script>
+<script src="../unit-js/35-popup.js?v=1"></script>
+<script src="../unit-js/38-progress.js?v=1"></script>
+<script src="js/main.js?v=12"></script>
+<script src="../unit-js/90-boot.js?v=2"></script>
+</body>
+</html>

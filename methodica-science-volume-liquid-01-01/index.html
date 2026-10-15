@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>وحدة تعليمية — قياس حجم السائل وأدوات القياس · الجزء 01</title>
+  <link rel="stylesheet" href="../unit-css/base.css?v=3">
+  <link rel="stylesheet" href="../unit-css/scq.css?v=1">
+  <link rel="stylesheet" href="../unit-css/img-zoom.css?v=1">
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="../unit-css/25-report.css?v=1">
+  <link rel="stylesheet" href="../unit-css/motion.css?v=1">
+  <link rel="stylesheet" href="../unit-css/nav-buttons.css?v=1">
+</head>
+<body>
+<!-- Boot cover (guide §8.11): hides screen 0 until the resume decision, so a restored learner
+     never sees the first screen flash before their own. Inline-styled and a sibling of #app (not a
+     child: #app is scaled). 50-loader.js drops it on every exit path; this failsafe lifts it after
+     800 ms, or up to 6 s while a restore is actually in flight (window.__resumeInFlight). -->
+<div id="boot-cover" style="position:fixed;inset:0;z-index:9999;background:#fff"></div>
+<script>
+(function () {
+  var t0 = Date.now();
+  function tick() {
+    var c = document.getElementById('boot-cover');
+    if (!c || !c.parentNode) return;
+    if (window.__resumeInFlight && Date.now() - t0 < 6000) { setTimeout(tick, 100); return; }
+    c.parentNode.removeChild(c);
+  }
+  setTimeout(tick, 800);
+})();
+</script><div id="app">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       GLOBAL — Report / Issue button (Figma "issue button" component).
+       Appears on EVERY screen. Lives OUTSIDE all .screen divs so it
+       is shared, not duplicated per screen. Visual only for now;
+       no click behavior wired.
+       States: default (gray circle) → hover (blue circle + label).
+       Icon shapes are the exact Figma assets; the "מצאתם בעיה?" label
+       is live HTML (shown on hover) — text is never baked into the PNG.
+       Pop-up variant is intentionally NOT implemented.
+       ═══════════════════════════════════════════════════════════ -->
+  <button class="flag-btn" id="flag-btn" type="button" aria-label="هل وجدتم مشكلة؟">
+    <span class="flag-btn-icon"></span>
+    <span class="flag-btn-label">هل وجدتم مشكلة؟</span>
+  </button>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S0 — Screen 01 · TwoOptionSelection
+       "בחרו מי תצעד לצידכם ביחידה הזו" — choose a learning companion.
+       Producer notes (notesSlide1): the character chosen here appears
+       in every screen throughout the unit.
+       First screen: NO back button. Single selection enables בחרתי.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen active" data-screen="0" id="s0">
+
+    <div class="select-content">
+      <div class="select-head" data-reveal="1">
+        <h1 class="select-title">اختاروا من سيرافقكم في هذه الوحدة</h1>
+        <p class="select-subtitle">اختاروا شخصية</p>
+      </div>
+
+      <!-- TwoOptionSelection cards — single-select, role=radiogroup for a11y.
+           Right = character-1 (purple), left = character-2 (pink), per
+           producer notes ("שם התמונה בצד ימין character-1-selection"). -->
+      <!-- Motion: fade-only group (video zone rule — the card visuals are
+           <video>, which must never get a float/transform reveal). -->
+      <div class="option-cards" role="radiogroup" aria-label="اختاروا شخصية" data-reveal="2" data-reveal-fade>
+        <div class="option-card" role="radio" aria-checked="false" tabindex="0"
+             data-value="character-2" aria-label="شخصية وحش له فروة زهرية تمسك إبريق قياس فيه ماء" onclick="selectOption(this)">
+          <div class="option-card-img">
+            <!-- Character video (replaces the earlier still .webp). Muted +
+                 playsinline; plays once and freezes on its opening frame
+                 (companion-video convention). Decorative — the accessible
+                 name lives on the card's aria-label. -->
+            <video class="option-card-video" id="s0-video-character-2" aria-hidden="true"
+                   src="assets/video/character-2-selection.mp4"
+                   autoplay muted playsinline preload="auto"
+                   disablepictureinpicture disableremoteplayback
+                   controlsList="nodownload noremoteplayback nofullscreen noplaybackrate"></video>
+          </div>
+        </div>
+
+        <div class="option-card" role="radio" aria-checked="false" tabindex="0"
+             data-value="character-1" aria-label="شخصية وحش له فروة بنفسجية تمسك مقياس حجم مدرّج وقطّارة" onclick="selectOption(this)">
+          <div class="option-card-img">
+            <video class="option-card-video" id="s0-video-character-1" aria-hidden="true"
+                   src="assets/video/character-1-selection.mp4"
+                   autoplay muted playsinline preload="auto"
+                   disablepictureinpicture disableremoteplayback
+                   controlsList="nodownload noremoteplayback nofullscreen noplaybackrate"></video>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Continue button: visible immediately, disabled until a selection is made.
+         No Back button — this is the first screen. -->
+    <button class="btn-continue" id="s0-continue" disabled onclick="advanceFromS0()">اخترتُ</button>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S1 — Screen 02 · SingleChoiceQuestion
+       "באיזו כוס המשקה תופס יותר מקום?" — comparing liquid volume
+       across two differently-shaped cups. Correct answer: "לא ניתן לדעת"
+       (option d) — added in client QA (2026-09-23); the script had only
+       three options and wrongly marked "הכמות זהה" (c) as correct.
+       Content image: producer notes name it "placeholder" — no real
+       photo supplied yet, so the frame stays gray (per template
+       convention) until one is provided.
+       Hint policy: visible from the start (template default).
+       Bottom bar: צדקתי? / אפשר רמז? / חזרה. No progress bar.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="1" id="s1">
+
+    <div class="scq-question">
+      <!-- Content image (Drinks.png — supplied by the producer, replacing
+           the pending placeholder). Zoom button is required for any
+           question content image (template default). -->
+      <!-- Motion: fade-only (zoom clones this wrapper — geometry must never move);
+           group 3 per RTL order: right-side text/answers first, left image after. -->
+      <div class="scq-img" data-reveal="3" data-reveal-fade>
+        <div class="scq-img-inner">
+          <button class="img-zoom-btn" type="button" aria-label="تكبير الصورة"
+                  data-zoom-src="assets/img/Drinks.png"
+                  data-zoom-alt="كوبان يحتويان على مشروب داكن: كوب طويل وضيّق وكوب منخفض وعريض">
+            <svg class="img-zoom-btn__icon" aria-hidden="true" width="20" height="20" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1C11.8661 1 15 4.13371 15 7.99902C15 11.8643 11.8661 14.998 8 14.998C4.1339 14.998 1.00002 11.8643 1 7.99902C1 4.13371 4.13389 1 8 1Z" stroke="currentColor" stroke-width="2"/><path d="M12.6221 14.188L14.2657 12.6141L19.928 18.5274C20.3626 18.9813 20.347 19.7016 19.8931 20.1362C19.4392 20.5708 18.7189 20.5552 18.2843 20.1013L12.6221 14.188Z" fill="currentColor"/></svg>
+          </button>
+          <img src="assets/img/Drinks.png"
+               alt="كوبان يحتويان على مشروب داكن: كوب طويل وضيّق وكوب منخفض وعريض"
+               onerror="this.style.display='none'">
+        </div>
+      </div>
+
+      <!-- Question text (live HTML) -->
+      <div class="scq-qtext" data-reveal="1">
+        <p>في أي كوب يُشغِل المشروب حيزًا أكبر؟ (أي يحتوي على كمية أكبر من المشروب)</p>
+      </div>
+
+      <!-- Four single-choice options (live HTML text, radio semantics) -->
+      <div class="scq-answers" id="scq-answers" role="radiogroup" data-reveal="2"
+           aria-label="في أي كوب يُشغِل المشروب حيزًا أكبر؟ (أي يحتوي على كمية أكبر من المشروب)">
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="a" onclick="scqSelect('a')">
+          <span class="scq-opt-text">في الكوب الطويل</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="b" onclick="scqSelect('b')">
+          <span class="scq-opt-text">في الكوب المنخفض</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="c" onclick="scqSelect('c')">
+          <span class="scq-opt-text">الكمية متساوية في الكوبين</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="d" onclick="scqSelect('d')">
+          <span class="scq-opt-text">لا يمكن المعرفة</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Companion character + speech bubble (ported from the reference S18
+         "remember video" stage). VISIBLE FROM THE INITIAL STATE of the
+         question (per producer instruction) — unlike the reference, where
+         it appears only at the final state. Video resolves per the selected
+         character (companion character system); plays once, freezes on its
+         rest frame. Sits in the left column (the producer's image slot,
+         named "placeholder" — no real photo was ever supplied for it). -->
+    <!-- Motion v0.1 (video-zone fade): character video + speech bubble fade
+         in TOGETHER as one gentle group (fade only, no float, no stagger
+         between them); playback logic untouched. -->
+    <div class="s1-talk-stage" id="s1-talk-stage" aria-hidden="true" data-reveal="1" data-reveal-fade>
+      <div class="s1-talk-bubble" id="s1-talk-bubble">
+        <span class="s1-talk-bubble-text">أنا أخطئ في هذا السؤال دائمًا تقريبًا</span>
+      </div>
+      <video id="s1-talk-video" class="s1-talk-video" muted playsinline preload="auto"
+             disablepictureinpicture disableremoteplayback
+             controlsList="nodownload noremoteplayback nofullscreen noplaybackrate"></video>
+    </div>
+
+    <!-- Bottom action bar: [check + hint] (left) · [back] (right).
+         Hint is available from the start (template default). -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="scq-check" type="button" disabled
+                onclick="scqCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="scq-hint" type="button" onclick="scqOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s1-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+  </section>
+
+  <!-- S1 feedback popup — outside .screen so display:none on inactive screens never hides it -->
+  <div class="scq-popup m-popup hidden" id="scq-popup"
+       onpointerdown="scqPopupMouseDown(event)"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="scq-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="scq-popup-body"></div>
+  </div>
+
+  <!-- Hint popup (modal) — lives OUTSIDE .screen divs, inside #app
+       so it is never clipped by a hidden screen. -->
+  <div class="scq-hint-overlay m-popup hidden" id="scq-hint-overlay"
+       onclick="scqCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="scq-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="scq-hint-title">تلميح</h2>
+          <div class="scq-hint-body">
+            <p>أحيانًا قد يخدعنا شكل الكوب أو ارتفاع السائل. <strong>كيف يمكننا أن نعرف "بشكل مؤكد"؟</strong></p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="scqCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S2 — Screen 03 · FlipCardsReveal
+       "באילו כלים נמדוד נפח של נוזל?" — one screen, spanning the
+       PPT's last two slides (slide 4 = card fronts, slide 5 = card
+       backs — one flip-card screen shown in two states, not two
+       screens). Cards flip back and forth freely (producer notes:
+       "קלפים מתהפכים... ניתנים להיפוך חזרה"); frcRevealed tracks
+       "seen at least once" for the unlock, independent of the
+       card's current visual flip state — see frcFlip() in main.js.
+       Continue label from source: "המשך".
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="2" id="s2">
+
+    <div class="select-content">
+      <div class="select-head" data-reveal="1">
+        <h1 class="select-title">بأي أدوات نقيس حجم السائل؟</h1>
+        <p class="select-subtitle frc-instructions">قياس حجم السائل يعني قياس كميته. رأينا أن أعيننا قد تخدعنا.<br>لكي نقيس بدقة – نحتاج إلى الأداة المناسبة.<br>أمامكم أدوات لقياس كميات <strong>صغيرة</strong> من السوائل. اضغطوا للتعرّف إليها‎.</p>
+      </div>
+
+      <!-- Cards, right→left per producer notes: מזרק (right) · פיפטה (middle) · כפית מדידה רפואית (left).
+           direction:ltr on .option-cards → first DOM child = leftmost.
+           Motion: ONE group (ltr grid), fade-only — flip cards have their own
+           functional transform animation, so they stay out of float transforms. -->
+      <div class="option-cards" role="group" aria-label="بطاقات — اضغطوا للاكتشاف"
+           data-flip-hint="اضغطوا لقلب البطاقة" data-unflip-hint="اضغطوا لقلب البطاقة مجددًا" data-reveal="2" data-reveal-fade>
+
+        <!-- Card 0: כפית מדידה רפואית (leftmost) -->
+        <div class="frc-card-wrap">
+          <button class="frc-card" data-index="0"
+                  data-base-label="بطاقة — ملعقة قياس طبّية"
+                  type="button" aria-expanded="false"
+                  aria-label="بطاقة — ملعقة قياس طبّية. اضغطوا لقلب البطاقة"
+                  onclick="frcFlip(this)">
+            <div class="frc-card-inner">
+              <div class="frc-card-front">
+                <img class="img-contain" src="../unit-assets/img/MedicineSpoon.png" alt="ملعقة قياس طبّية">
+              </div>
+              <div class="frc-card-back" aria-hidden="true">
+                <div class="frc-card-back-content">
+                  <p>ملعقة تقيس 5 ملل.</p>
+                  <p><strong>الاستخدام:</strong> بالأساس للأغراض الطبية</p>
+                </div>
+              </div>
+            </div>
+          </button>
+          <p class="frc-card-caption">ملعقة قياس طبّية</p>
+        </div>
+
+        <!-- Card 1: פיפטה (middle) -->
+        <div class="frc-card-wrap">
+          <button class="frc-card" data-index="1"
+                  data-base-label="بطاقة — ماصّة"
+                  type="button" aria-expanded="false"
+                  aria-label="بطاقة — ماصّة. اضغطوا لقلب البطاقة"
+                  onclick="frcFlip(this)">
+            <div class="frc-card-inner">
+              <div class="frc-card-front">
+                <img src="../unit-assets/img/pipette.png" alt="ماصّة">
+              </div>
+              <div class="frc-card-back" aria-hidden="true">
+                <div class="frc-card-back-content">
+                  <p>أنبوب ضيّق وطويل عليه <span class="tooltip-word"><strong class="term-underline">علامات تدريج</strong><span class="term-info" tabindex="0" role="button" aria-label="علامات التدريج هي خطوط قصيرة مرسومة على جدار أداة القياس، وتشير إلى قيَم حجم ثابتة. المسافة بين علمات التدريج تمثّل وحدة قياس ثابتة. كلما كانت التدريجات أكثر تقاربًا – كانت الأداة أدقّ."><svg class="term-info-i" aria-hidden="true" width="15" height="15" viewBox="0 0 15 15" fill="none"><rect width="15" height="15" rx="7.5" fill="#019DE5"/><path d="M7.12194 12.3271C6.88994 12.3271 6.69394 12.2931 6.53394 12.2251C6.37794 12.1571 6.26394 12.0631 6.19194 11.9431C6.11994 11.8191 6.09394 11.6731 6.11394 11.5051C6.13394 11.3251 6.16194 11.1051 6.19794 10.8451C6.23794 10.5851 6.27994 10.2931 6.32394 9.9691C6.37194 9.6451 6.42394 9.2951 6.47994 8.9191C6.53594 8.5431 6.58994 8.1511 6.64194 7.7431C6.69794 7.3351 6.75394 6.9191 6.80994 6.4951L6.11394 6.1651L6.19794 5.6911L8.27994 5.3971L8.57394 5.5351L7.78194 10.9951C7.76194 11.1391 7.76994 11.2491 7.80594 11.3251C7.84194 11.3971 7.89994 11.4331 7.97994 11.4331C8.05194 11.4331 8.12994 11.4111 8.21394 11.3671C8.30194 11.3191 8.41394 11.2391 8.54994 11.1271L8.70594 11.4931C8.66194 11.5531 8.57194 11.6491 8.43594 11.7811C8.30394 11.9131 8.12794 12.0371 7.90794 12.1531C7.68794 12.2691 7.42594 12.3271 7.12194 12.3271ZM7.84194 4.5931C7.60594 4.5931 7.40394 4.5051 7.23594 4.3291C7.07194 4.1531 6.99594 3.9471 7.00794 3.7111C7.01994 3.4191 7.11594 3.1731 7.29594 2.9731C7.47994 2.7731 7.72594 2.6731 8.03394 2.6731C8.29794 2.6731 8.50794 2.7591 8.66394 2.9311C8.81994 3.0991 8.89594 3.2931 8.89194 3.5131C8.88794 3.8171 8.79794 4.0731 8.62194 4.2811C8.44594 4.4891 8.18594 4.5931 7.84194 4.5931Z" fill="white"/></svg><span class="term-tooltip" role="tooltip"><strong>علامات التدريج</strong> هي خطوط قصيرة مرسومة على جدار أداة القياس، وتشير إلى قيَم حجم ثابتة. المسافة بين علمات التدريج تمثّل وحدة قياس ثابتة. كلما كانت التدريجات أكثر تقاربًا – كانت الأداة أدقّ.</span></span></span> متقاربة. للكميات الصغيرة جدًا (5-0.1 ملل) وبدقة عالية‎.</p>
+                  <p><strong>الاستخدام:</strong> بالأساس للأغراض الطبّية وفي المختبر</p>
+                </div>
+              </div>
+            </div>
+          </button>
+          <p class="frc-card-caption">ماصّة</p>
+        </div>
+
+        <!-- Card 2: מזרק (rightmost) -->
+        <div class="frc-card-wrap">
+          <button class="frc-card" data-index="2"
+                  data-base-label="بطاقة — محقنة"
+                  type="button" aria-expanded="false"
+                  aria-label="بطاقة — محقنة. اضغطوا لقلب البطاقة"
+                  onclick="frcFlip(this)">
+            <div class="frc-card-inner">
+              <div class="frc-card-front">
+                <img src="assets/img/syringe.png" alt="محقنة">
+              </div>
+              <div class="frc-card-back" aria-hidden="true">
+                <div class="frc-card-back-content">
+                  <p>أنبوب مزوّد بمكبس. دقّة عالية للكميات الصغيرة-المتوسطة (10-0.5 ملل)‎.</p>
+                  <p><strong>الاستخدام:</strong> بالأساس للأغراض الطبية</p>
+                </div>
+              </div>
+            </div>
+          </button>
+          <p class="frc-card-caption">محقنة</p>
+        </div>
+
+      </div>
+
+      <!-- Footnote — revealed only after all 3 cards have been flipped at least once
+           (producer notes: "מופיע אחרי לחיצה על כל הקלפים"). Uses visibility
+           (invisible), not display (hidden), so it reserves its space from the
+           start and the title/cards never shift when it appears. -->
+      <p class="frc-footnote invisible" id="s2-footnote">‎*‎يمكن أحيانًا قياس نفس الكمية بعدة أدوات. في هذه الحالة نختار وفقًا لمستوى الدقّة المطلوب وهدف الاستخدام‎.</p>
+    </div>
+
+    <button class="btn-continue" id="s2-continue" disabled onclick="advanceFromS2()">متابعة</button>
+    <button class="scq-back" id="s2-back" type="button" onclick="goBack()">عودة</button>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S3 — Screen 04 · DragAndDropQuestion (Image Top variant)
+       Producer name: ImageTopDragAndDropQuestion (slide 6).
+       3 fixed tool images (right→left: מזרק · פיפטה · כפית מדידה
+       רפואית — same order/images as S2), each with a drop zone.
+       3 draggable scenario text cards (tray order right→left per
+       producer notes: גור חתולים · ילד סירופ · מעבדה).
+       Two attempts (deck general convention); hint available from
+       the start (user decision, consistent with S1). Pointer-based
+       DnD (touch-compatible). correctMap from producer notes.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="3" id="s3">
+
+    <div class="s3ddq-content">
+
+      <!-- Text header — Figma node 2462:4888: line 1 blue bold, line 2 dark bold -->
+      <div class="s3ddq-qtext" data-reveal="1">
+        <p class="s3ddq-instructions">في جميع الحالات التالية يجب قياس 5 ملل.</p>
+        <p class="s3ddq-question">اسحبوا كل حالة إلى الأداة الأنسب لها. انتبهوا إلى هدف الاستخدام‎.</p>
+      </div>
+
+      <!-- Targets row: 3 tool images, drop zone + name label beneath each.
+           direction:ltr → first DOM child = leftmost. Right→left: מזרק · פיפטה · כפית.
+           Motion: fade-only, ONE group with the source tray — drop targets and
+           drag cards are JS-measured (ghost math / elementFromPoint), so their
+           geometry must never be mid-transform. -->
+      <div class="s3ddq-targets-row" data-reveal="2" data-reveal-fade>
+
+        <div class="s3ddq-target-col">
+          <div class="s3ddq-img-frame">
+            <img class="s3ddq-target-img img-contain" src="../unit-assets/img/MedicineSpoon.png" alt="ملعقة قياس طبّية">
+          </div>
+          <p class="s3ddq-target-label">ملعقة قياس طبّية</p>
+          <div class="s3ddq-target" id="target-s3-spoon"></div>
+        </div>
+
+        <div class="s3ddq-target-col">
+          <div class="s3ddq-img-frame">
+            <img class="s3ddq-target-img" src="../unit-assets/img/pipette.png" alt="ماصّة">
+          </div>
+          <p class="s3ddq-target-label">ماصّة</p>
+          <div class="s3ddq-target" id="target-s3-pipette"></div>
+        </div>
+
+        <div class="s3ddq-target-col">
+          <div class="s3ddq-img-frame">
+            <img class="s3ddq-target-img" src="assets/img/syringe.png" alt="محقنة">
+          </div>
+          <p class="s3ddq-target-label">محقنة</p>
+          <div class="s3ddq-target" id="target-s3-syringe"></div>
+        </div>
+
+      </div><!-- /.s3ddq-targets-row -->
+
+      <!-- Draggable scenario cards. direction:ltr → right→left: גור · ילד · מעבדה.
+           Motion: same fade-only group as the targets row (see above). -->
+      <div class="s3ddq-source" id="s3ddq-source" data-reveal="2" data-reveal-fade>
+
+        <div class="s3ddq-source-slot">
+          <div class="s3ddq-drag-card" id="drag-s3-lab">
+            <span class="s3ddq-card-text">في المختبر يجب إضافة 5 ملل بالضبط من محلول الصبغة إلى السائل الموجود في أنبوب الاختبار‎.</span>
+          </div>
+        </div>
+
+        <div class="s3ddq-source-slot">
+          <div class="s3ddq-drag-card" id="drag-s3-child">
+            <span class="s3ddq-card-text">يحتاج طفل إلى تناول جرعة مقدارها 5 ملل من شراب الدواء باستخدام الأداة المرفقة للعبوة.</span>
+          </div>
+        </div>
+
+        <div class="s3ddq-source-slot">
+          <div class="s3ddq-drag-card" id="drag-s3-kitten">
+            <span class="s3ddq-card-text">يجب إعطاء قطّ صغير 5 ملل من بديل الحليب مباشرةً في فمه‎.</span>
+          </div>
+        </div>
+
+      </div><!-- /.s3ddq-source -->
+
+    </div><!-- /.s3ddq-content -->
+
+    <!-- Bottom action bar — צדקתי? (disabled until all 3 zones filled) · רמז (from start) · חזרה -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s3ddq-check" type="button" disabled
+                onclick="s3ddqCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="s3ddq-hint" type="button" onclick="s3ddqOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s3-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+
+  </section>
+
+  <!-- S3 feedback popup — outside .screen so display:none never hides it -->
+  <div class="scq-popup m-popup hidden" id="s3ddq-popup"
+       onpointerdown="s3ddqPopupMouseDown(event)"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s3ddq-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s3ddq-popup-body"></div>
+  </div>
+
+  <!-- S3 hint popup (modal) — outside .screen divs, inside #app -->
+  <div class="scq-hint-overlay m-popup hidden" id="s3ddq-hint-overlay"
+       onclick="s3ddqCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="s3ddq-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="s3ddq-hint-title">تعالوا نفكر‎:</h2>
+          <div class="scq-hint-body">
+            <p>أي أداة مخصصة للعمل الدقيق في المختبر؟</p>
+            <p>أي أداة تسمح بإعطاء السائل مباشرةً في الفم بطريقة مضبوطة؟</p>
+            <p>وأي أداة تقيس جرعة ثابتة مقدارها 5 ملل؟</p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="s3ddqCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S4 — Screen 05 · FlipCardsReveal (second instance)
+       "באילו כלים נמדוד נפח גדול של נוזל?" — slides 7 (fronts) + 8
+       (backs) are one screen. 2 cards, right→left per producer notes:
+       כוס כימית (ChemicalBeaker.png) · משורה (MeasuringCylinder.png).
+       Cards flip both ways; footnote reveals when both seen (same
+       space-reserving visibility pattern as S2). Tooltip on "שנתות"
+       in BOTH card backs (user decision). Continue: "המשך".
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="4" id="s4">
+
+    <div class="select-content">
+      <div class="select-head" data-reveal="1">
+        <h1 class="select-title">بأي أدوات نقيس حجمًا كبيرًا من السائل؟</h1>
+        <p class="select-subtitle frc-instructions">بأي أدوات نقيس كميات <strong>أكبر</strong> من السوائل؟ اضغطوا للتعرّف عليها.</p>
+      </div>
+
+      <!-- Cards, right→left: כוס כימית (right) · משורה (left).
+           direction:ltr on .option-cards → first DOM child = leftmost.
+           Motion: ONE group (ltr grid), fade-only — flip cards have their own
+           functional transform animation, so they stay out of float transforms. -->
+      <div class="option-cards" role="group" aria-label="بطاقات — اضغطوا للاكتشاف"
+           data-flip-hint="اضغطوا لقلب البطاقة" data-unflip-hint="اضغطوا لقلب البطاقة مجددًا" data-reveal="2" data-reveal-fade>
+
+        <!-- Card 0: משורה (left) -->
+        <div class="frc-card-wrap">
+          <button class="frc-card" data-index="0"
+                  data-base-label="بطاقة — مخبار مدرّج"
+                  type="button" aria-expanded="false"
+                  aria-label="بطاقة — مخبار مدرّج. اضغطوا لقلب البطاقة"
+                  onclick="s4frcFlip(this)">
+            <div class="frc-card-inner">
+              <div class="frc-card-front">
+                <img src="../unit-assets/img/MeasuringCylinder.png" alt="مخبار مدرّج">
+              </div>
+              <div class="frc-card-back" aria-hidden="true">
+                <div class="frc-card-back-content">
+                  <p>وعاء أسطواني شفاف عليه <span class="tooltip-word"><strong class="term-underline">علامات تدريج</strong><span class="term-info" tabindex="0" role="button" aria-label="علامات التدريج هي خطوط قصيرة مرسومة على جدار أداة القياس، وتشير إلى قيَم حجم ثابتة. المسافة بين علمات التدريج تمثّل وحدة قياس ثابتة. كلما كانت التدريجات أكثر تقاربًا – كانت الأداة أدقّ."><svg class="term-info-i" aria-hidden="true" width="15" height="15" viewBox="0 0 15 15" fill="none"><rect width="15" height="15" rx="7.5" fill="#019DE5"/><path d="M7.12194 12.3271C6.88994 12.3271 6.69394 12.2931 6.53394 12.2251C6.37794 12.1571 6.26394 12.0631 6.19194 11.9431C6.11994 11.8191 6.09394 11.6731 6.11394 11.5051C6.13394 11.3251 6.16194 11.1051 6.19794 10.8451C6.23794 10.5851 6.27994 10.2931 6.32394 9.9691C6.37194 9.6451 6.42394 9.2951 6.47994 8.9191C6.53594 8.5431 6.58994 8.1511 6.64194 7.7431C6.69794 7.3351 6.75394 6.9191 6.80994 6.4951L6.11394 6.1651L6.19794 5.6911L8.27994 5.3971L8.57394 5.5351L7.78194 10.9951C7.76194 11.1391 7.76994 11.2491 7.80594 11.3251C7.84194 11.3971 7.89994 11.4331 7.97994 11.4331C8.05194 11.4331 8.12994 11.4111 8.21394 11.3671C8.30194 11.3191 8.41394 11.2391 8.54994 11.1271L8.70594 11.4931C8.66194 11.5531 8.57194 11.6491 8.43594 11.7811C8.30394 11.9131 8.12794 12.0371 7.90794 12.1531C7.68794 12.2691 7.42594 12.3271 7.12194 12.3271ZM7.84194 4.5931C7.60594 4.5931 7.40394 4.5051 7.23594 4.3291C7.07194 4.1531 6.99594 3.9471 7.00794 3.7111C7.01994 3.4191 7.11594 3.1731 7.29594 2.9731C7.47994 2.7731 7.72594 2.6731 8.03394 2.6731C8.29794 2.6731 8.50794 2.7591 8.66394 2.9311C8.81994 3.0991 8.89594 3.2931 8.89194 3.5131C8.88794 3.8171 8.79794 4.0731 8.62194 4.2811C8.44594 4.4891 8.18594 4.5931 7.84194 4.5931Z" fill="white"/></svg><span class="term-tooltip" role="tooltip"><strong>علامات التدريج</strong> هي خطوط قصيرة مرسومة على جدار أداة القياس، وتشير إلى قيَم حجم ثابتة. المسافة بين علمات التدريج تمثّل وحدة قياس ثابتة. كلما كانت التدريجات أكثر تقاربًا – كانت الأداة أدقّ.</span></span></span><br>متساوية المسافات. يُستخدم لقياس الاحجام المتوسطة بشكل دقيق. (1000-10 ملل).</p>
+                  <p><strong>الاستخدام:</strong> بالأساس في المختبر</p>
+                </div>
+              </div>
+            </div>
+          </button>
+          <p class="frc-card-caption">مخبار مدرّج</p>
+        </div>
+
+        <!-- Card 1: כוס כימית (right) -->
+        <div class="frc-card-wrap">
+          <button class="frc-card" data-index="1"
+                  data-base-label="بطاقة — دورق"
+                  type="button" aria-expanded="false"
+                  aria-label="بطاقة — دورق. اضغطوا لقلب البطاقة"
+                  onclick="s4frcFlip(this)">
+            <div class="frc-card-inner">
+              <div class="frc-card-front">
+                <img src="assets/img/ChemicalBeaker.png" alt="دورق">
+              </div>
+              <div class="frc-card-back" aria-hidden="true">
+                <div class="frc-card-back-content">
+                  <p>وعاء عريض عليه <span class="tooltip-word"><strong class="term-underline">علامات تدريج</strong><span class="term-info" tabindex="0" role="button" aria-label="علامات التدريج هي خطوط قصيرة مرسومة على جدار أداة القياس، وتشير إلى قيَم حجم ثابتة. المسافة بين علمات التدريج تمثّل وحدة قياس ثابتة. كلما كانت التدريجات أكثر تقاربًا – كانت الأداة أدقّ."><svg class="term-info-i" aria-hidden="true" width="15" height="15" viewBox="0 0 15 15" fill="none"><rect width="15" height="15" rx="7.5" fill="#019DE5"/><path d="M7.12194 12.3271C6.88994 12.3271 6.69394 12.2931 6.53394 12.2251C6.37794 12.1571 6.26394 12.0631 6.19194 11.9431C6.11994 11.8191 6.09394 11.6731 6.11394 11.5051C6.13394 11.3251 6.16194 11.1051 6.19794 10.8451C6.23794 10.5851 6.27994 10.2931 6.32394 9.9691C6.37194 9.6451 6.42394 9.2951 6.47994 8.9191C6.53594 8.5431 6.58994 8.1511 6.64194 7.7431C6.69794 7.3351 6.75394 6.9191 6.80994 6.4951L6.11394 6.1651L6.19794 5.6911L8.27994 5.3971L8.57394 5.5351L7.78194 10.9951C7.76194 11.1391 7.76994 11.2491 7.80594 11.3251C7.84194 11.3971 7.89994 11.4331 7.97994 11.4331C8.05194 11.4331 8.12994 11.4111 8.21394 11.3671C8.30194 11.3191 8.41394 11.2391 8.54994 11.1271L8.70594 11.4931C8.66194 11.5531 8.57194 11.6491 8.43594 11.7811C8.30394 11.9131 8.12794 12.0371 7.90794 12.1531C7.68794 12.2691 7.42594 12.3271 7.12194 12.3271ZM7.84194 4.5931C7.60594 4.5931 7.40394 4.5051 7.23594 4.3291C7.07194 4.1531 6.99594 3.9471 7.00794 3.7111C7.01994 3.4191 7.11594 3.1731 7.29594 2.9731C7.47994 2.7731 7.72594 2.6731 8.03394 2.6731C8.29794 2.6731 8.50794 2.7591 8.66394 2.9311C8.81994 3.0991 8.89594 3.2931 8.89194 3.5131C8.88794 3.8171 8.79794 4.0731 8.62194 4.2811C8.44594 4.4891 8.18594 4.5931 7.84194 4.5931Z" fill="white"/></svg><span class="term-tooltip" role="tooltip"><strong>علامات التدريج</strong> هي خطوط قصيرة مرسومة على جدار أداة القياس، وتشير إلى قيَم حجم ثابتة. المسافة بين علمات التدريج تمثّل وحدة قياس ثابتة. كلما كانت التدريجات أكثر تقاربًا – كانت الأداة أدقّ.</span></span></span> متباعدة.<br>أقل دقّة لقراءة القيَم.</p>
+                  <p><strong>الاستخدام:</strong> للقياس التقريبي والخلط‎.</p>
+                </div>
+              </div>
+            </div>
+          </button>
+          <p class="frc-card-caption">دورق</p>
+        </div>
+
+      </div>
+
+      <!-- Footnote — revealed after both cards flipped at least once.
+           visibility-based (reserves space) so the layout never shifts. -->
+      <p class="frc-footnote invisible" id="s4-footnote">‎*‎كلما كانت الأداة أكبر – كانت الدقّة أقل، لكنها تستوعب كمية أكبر من السائل‎.</p>
+    </div>
+
+    <button class="btn-continue" id="s4-continue" disabled onclick="advanceFromS4()">متابعة</button>
+    <button class="scq-back" id="s4-back" type="button" onclick="goBack()">عودة</button>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S5 — Screen 06 · Image-choice SingleChoiceQuestion (slide 9)
+       Producer: "TwoOptionSelectio + SingleChoiceQuestion" — a
+       composition of two existing templates: TwoOptionSelection's
+       image cards as the answer options, driven by the standard
+       SingleChoiceQuestion state machine (two attempts, hint,
+       feedback popups). Correct answer: משורה.
+       Quantity unified to 100 מ"ל everywhere (instructional designer's
+       intent — the 120 that appeared in some places was a mistake).
+       Check button label from source: "בחרתי" → "שנמשיך?" when done.
+       Images reuse existing assets (producer notes).
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="5" id="s5">
+
+    <!-- Companion character hanging from the top edge (rope variant).
+         Asset resolves per the S0-selected character (companion character
+         system — never hardcoded); src set in resetScreenState(5). -->
+    <img class="s5-rope-char" id="s5-rope-char" src="" alt="" aria-hidden="true">
+
+    <!-- Speech bubble next to the hanging character — Figma "Image Text
+         Bubble States" node 2500:5858 (tail on the left, toward the
+         character). Static text from the Figma component. -->
+    <div class="s5-rope-bubble" aria-hidden="true">
+      <span class="s5-rope-bubble-text">100 ملل؟<br>هذه ليست كمية صغيرة‎...</span>
+    </div>
+
+    <div class="s5q-content">
+
+      <!-- Header — title blue bold; last instruction line bold (source runs) -->
+      <div class="s5q-header" data-reveal="1">
+        <p class="s5q-title">لنحاول التخمين‎...</p>
+        <p class="s5q-body">علينا قياس 100 ملل لإجراء تجربة في الصف (وهي كمية تعادل كوب شرب تقريبًا).<br>أي أداة نختار؟<br><strong>اضغطوا على الأداة المناسبة‎.</strong></p>
+      </div>
+
+      <!-- Image cards, right→left: משורה · פיפטה · כפית מדידה רפואית.
+           direction:ltr → first DOM child = leftmost.
+           Motion: ltr grid reveals as ONE group. -->
+      <div class="s5q-cards" role="radiogroup" aria-label="أي أداة نختار؟ اضغطوا على الأداة المناسبة‎." data-reveal="2">
+
+        <button class="s5q-card" type="button" role="radio" aria-checked="false"
+                data-id="spoon" onclick="s5qSelect('spoon')">
+          <span class="s5q-card-frame">
+            <img class="img-contain" src="../unit-assets/img/MedicineSpoon.png" alt="ملعقة قياس طبّية">
+          </span>
+          <span class="s5q-card-label">ملعقة قياس طبّية</span>
+        </button>
+
+        <button class="s5q-card" type="button" role="radio" aria-checked="false"
+                data-id="pipette" onclick="s5qSelect('pipette')">
+          <span class="s5q-card-frame">
+            <img src="../unit-assets/img/pipette.png" alt="ماصّة">
+          </span>
+          <span class="s5q-card-label">ماصّة</span>
+        </button>
+
+        <button class="s5q-card" type="button" role="radio" aria-checked="false"
+                data-id="cylinder" onclick="s5qSelect('cylinder')">
+          <span class="s5q-card-frame">
+            <img src="../unit-assets/img/MeasuringCylinder.png" alt="مخبار مدرّج">
+          </span>
+          <span class="s5q-card-label">مخبار مدرّج</span>
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- Bottom action bar: [צדקתי? + hint] (left) · [back] (right).
+         Hint available from the start (established project policy). -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s5q-check" type="button" disabled
+                onclick="s5qCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="s5q-hint" type="button" onclick="s5qOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s5-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+
+  </section>
+
+  <!-- S5 feedback popup — outside .screen so display:none never hides it -->
+  <div class="scq-popup m-popup hidden" id="s5q-popup"
+       onpointerdown="s5qPopupMouseDown(event)"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s5q-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s5q-popup-body"></div>
+  </div>
+
+  <!-- S5 hint popup (modal) — outside .screen divs, inside #app -->
+  <div class="scq-hint-overlay m-popup hidden" id="s5q-hint-overlay"
+       onclick="s5qCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="s5q-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="s5q-hint-title">تعالوا نفكر‎:</h2>
+          <div class="scq-hint-body">
+            <p>هل 100 ملل هي كمية صغيرة جدًا أم متوسطة/كبيرة؟</p>
+            <p>أي أداة مناسبة لقياس كميات كبيرة نسبيًا بطريقة مريحة وواضحة؟</p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="s5qCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S6 — Screen 07 · TwoOptionSelection: learning-style choice
+       Slides 10+11 are ONE screen — two variants of the same screen
+       per the selected companion character (producer notes; reference
+       screen: Target-01 S4). Card images resolve from the character
+       asset map on every entry, so a changed selection on S0 updates
+       here too. Right = looking-glass, left = scratch-card (producer
+       notes). No card labels in the source. Continue: "בחרתי" —
+       routes to future screens once they exist.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="6" id="s6">
+
+    <div class="select-content">
+      <div class="select-head" data-reveal="1">
+        <h1 class="select-title">عملية قياس حجم السائل</h1>
+        <p class="select-subtitle frc-instructions">تعرّفنا على أدوات القياس، وبقيَ أن نتعلم فقط كيفية استخدامها في عملية قياس علمية.<br><strong>اختاروا كيف ترغبون في التعلم خلال الدقائق الخمس القادمة‎:</strong></p>
+      </div>
+
+      <!-- direction:ltr → first DOM child = LEFT. Left = scratch-card, right = looking-glass.
+           Motion: fade-only group (video-zone rule — visuals are <video>). -->
+      <div class="option-cards" role="radiogroup" aria-label="اختاروا كيف ترغبون في التعلم في الدقائق الخمس القادمة" data-reveal="2" data-reveal-fade>
+
+        <div class="option-card" role="radio" aria-checked="false" tabindex="0"
+             data-value="scratch-card" aria-label="الشخصية تمسك بطاقة كشط وعملة معدنية"
+             onclick="selectOptionS6(this)">
+          <div class="option-card-img">
+            <!-- src resolved per selected character on every entry — see
+                 updateS6Characters(). Decorative; accessible name lives on
+                 the card's aria-label. -->
+            <video id="s6-img-scratch" class="option-card-video" aria-hidden="true"
+                   muted playsinline preload="auto"
+                   disablepictureinpicture disableremoteplayback
+                   controlsList="nodownload noremoteplayback nofullscreen noplaybackrate"></video>
+          </div>
+          <div class="option-card-labels">
+            <span class="option-card-name">كشط بطاقة حظ</span>
+          </div>
+        </div>
+
+        <!-- Looking-glass = the escape-room path (user mapping decision). -->
+        <div class="option-card" role="radio" aria-checked="false" tabindex="0"
+             data-value="escape-room" aria-label="الشخصية تنظر عبر عدسة مكبرة"
+             onclick="selectOptionS6(this)">
+          <div class="option-card-img">
+            <video id="s6-img-glass" class="option-card-video" aria-hidden="true"
+                   muted playsinline preload="auto"
+                   disablepictureinpicture disableremoteplayback
+                   controlsList="nodownload noremoteplayback nofullscreen noplaybackrate"></video>
+          </div>
+          <div class="option-card-labels">
+            <span class="option-card-name">الخروج من غرفة هروب</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <button class="btn-continue" id="s6-continue" disabled onclick="advanceFromS6()">اخترتُ</button>
+    <button class="scq-back" id="s6-back" type="button" onclick="goBack()">عودة</button>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S7 — Screen 08 · ScratchCardsReveal — scratch-card learning path
+       (slides 12+13 = one screen: side A / side B). NEW template per
+       producer notes; Figma source: 720 — UI Templates, nodes
+       1784:18759 (State 01) / 1784:18835 (State 02).
+       Structure mirrors FlipCardsReveal + the learning-path toggle
+       (Target-01 S5/S6 pattern, text-pill variant per the Figma node):
+       כרטיס גירוד (active, LEFT) · חדר בריחה (RIGHT, visible but
+       inactive until its screen is built — user decision).
+       Scratch mechanics: a canvas cover per card draws side A (white
+       surface + question); pointer-scratching erases it (mask) to
+       reveal side B beneath; cursor becomes a coin (coin.png) over an
+       unscratched card. ≥50% erased → auto-complete. Enter/Space on a
+       focused card reveals instantly (keyboard path). Continue enables
+       only after all 3 cards are revealed.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="7" id="s7">
+
+    <div class="select-content s7sc-content">
+      <!-- Motion: ONLY this text block reveals (it is a SIBLING of the scratch
+           cards, never their ancestor). Toggle, cards, canvases, coin cursor
+           and audio stay static — scratch covers are painted from entry-time
+           canvas measurements and have their own audio/mechanics. -->
+      <div class="select-head" data-reveal="1">
+        <h1 class="select-title">كيف نقيس حجم السائل بطريقة صحيحة؟</h1>
+        <p class="select-subtitle frc-instructions"><strong>اكشطوا البطاقات بواسطة الفأرة واكتشفوا الأمور المهمة التي يجب القيام بها أثناء القياس‎.</strong></p>
+      </div>
+
+      <!-- 3 scratch cards, right→left per source: איך נבחר כלי מדידה (right) ·
+           על מה נסתכל במשורה (middle) · איך נקרא נכון את גובה פני הנוזל (left).
+           direction:ltr → first DOM child = leftmost. Side B is live HTML;
+           the canvas cover draws side A and is erased by scratching. -->
+      <div class="s7sc-cards">
+
+        <div class="s7sc-card" data-index="0" tabindex="0" role="button" aria-expanded="false"
+             aria-label="بطاقة كشط — كيف نقرأ ارتفاع سطح السائل بشكل صحيح؟ اكشطوا واكتشفوا"
+             data-side-a="كيف نقرأ ارتفاع سطح السائل بشكل صحيح؟">
+          <div class="s7sc-card-back">
+            <p><strong>كيف نقرأ ارتفاع سطح السائل بشكل صحيح؟</strong></p>
+            <p>نضع أعيننا على مستوى سطح السائل. النظر من الأعلى أو الأسفل قد يؤدي إلى خطأ في القراءة‎.</p>
+            <img class="s7sc-card-img s7sc-card-img--eye" src="assets/img/minEye.png" alt="عين على مستوى سطح السائل، تنظر في خط مستقيم إلى أدنى نقطة في الانحناء داخل المخبار المدرّج">
+          </div>
+          <canvas class="s7sc-card-cover" aria-hidden="true"></canvas>
+        </div>
+
+        <div class="s7sc-card" data-index="1" tabindex="0" role="button" aria-expanded="false"
+             aria-label="بطاقة كشط — إلى ماذا ننظر في المخبار المدرّج؟ اكشطوا واكتشفوا"
+             data-side-a="إلى ماذا ننظر في المخبار المدرّج؟">
+          <div class="s7sc-card-back">
+            <p><strong>إلى ماذا ننظر في المخبار المدرّج؟</strong></p>
+            <p>يلتصق السائل بجدار الوعاء ويكوّن انحناءً صغيرًا‎.</p>
+            <p>نقرأ القياس بحسب أدنى نقطة في الانحناء‎.</p>
+            <img class="s7sc-card-img s7sc-card-img--min" src="assets/img/min.png" alt="مخبار مدرّج يحتوي على سائل؛ نقطة حمراء تحدد أدنى نقطة في الانحناء، حيث تُقرأ قيمة القياس">
+          </div>
+          <canvas class="s7sc-card-cover" aria-hidden="true"></canvas>
+        </div>
+
+        <div class="s7sc-card" data-index="2" tabindex="0" role="button" aria-expanded="false"
+             aria-label="بطاقة كشط — كيف نختار أداة القياس؟ اكشطوا واكتشفوا"
+             data-side-a="كيف نختار أداة القياس؟">
+          <div class="s7sc-card-back">
+            <p><strong>كيف نختار أداة القياس؟</strong></p>
+            <p>نختار الأداة بحسب:</p>
+            <p><strong>المجال</strong> - كمية السائل التي تستوعبها</p>
+            <p><strong>الدقّة</strong> - مدى تقارب التدريجات</p>
+            <p><strong>السياق</strong> - هدف القياس</p>
+            <p>بعد ذلك، نسكب السائل داخلها</p>
+          </div>
+          <canvas class="s7sc-card-cover" aria-hidden="true"></canvas>
+
+          <!-- Gesture hint — decorative-only, finite scratch/scrub demo.
+               Same coordinate box as .s7sc-card-cover above (inset:0 on
+               this card), so it always sits inside the real scratchable
+               surface at any viewport scale. pointer-events:none +
+               aria-hidden on wrapper and hand: never intercepts the real
+               scratch. See s7GhStart()/s7GhStop() in main.js. -->
+          <div class="s7gh hidden" id="s7gh-hint" aria-hidden="true">
+            <img class="s7gh-hand" src="assets/img/s7gh-hand.svg" alt="" aria-hidden="true">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Coin cursor — a real element following the pointer over an
+         unscratched card (native cursors are size-limited and can be
+         silently rejected; this shows the actual coin.png asset). -->
+    <img class="s7sc-coin hidden" id="s7sc-coin" src="assets/img/coin.png" alt="" aria-hidden="true">
+
+    <!-- Scratch sound effects. Not learner-facing controls, so plain
+         <audio> with no controls attribute; playback is driven entirely
+         from the scratch engine in main.js. -->
+    <audio id="s7sc-scratch-audio" src="assets/audio/coin_scratching.mp3" preload="auto"></audio>
+    <audio id="s7sc-celebration-audio" src="assets/audio/celebration.mp3" preload="auto"></audio>
+
+    <!-- Learning-path toggle — lives in the bottom nav bar (Figma
+         FixedNavigationBar), centered between Continue/Back. Position-
+         locked: כרטיס גירוד LEFT, חדר בריחה RIGHT (source slide order). -->
+    <div class="s7sc-toggle" role="tablist" aria-label="اختاروا طريقة التعلم">
+      <button class="s7sc-toggle-btn s7sc-toggle-btn--active" id="s7sc-tab-scratch"
+              type="button" role="tab" aria-selected="true">بطاقة كشط</button>
+      <button class="s7sc-toggle-btn" id="s7sc-tab-escape"
+              type="button" role="tab" aria-selected="false"
+              onclick="s7scSwitchTab('escape-room')">غرفة هروب</button>
+    </div>
+
+    <button class="btn-continue" id="s7-continue" disabled onclick="advanceFromS7()">متابعة</button>
+    <button class="scq-back" id="s7-back" type="button" onclick="goBack()">عودة</button>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S8 — Screen 09 · ImageHotspotQuestion (slide 14) — NEW template
+       No .md reference yet in the skill library (producer note: "עוד
+       לא קיים קובץ MD"). Figma: file dpY9DTl41tzW8SKvcPWU0C, node
+       2467:5348 (before selection) / 2467:5371 (after selection),
+       component "PointSelectionHotspot".
+       Otherwise reuses the exact SingleChoiceQuestion state machine
+       (2 attempts, hint from start, feedback popups) — only the
+       "select an option" mechanism differs: clicking a pulsing dot
+       hotspot on the photo instead of a text pill.
+       Photo: children.png (fetched from the Figma frame per producer
+       notes). Figma's template mockup shows 4 example dot positions,
+       but the producer's note is explicit: only 3 real hotspots, one
+       per student in the photo, rightmost = correct. Positions below
+       are placed against the actual photo (verified visually), not
+       copied from the generic 4-dot template mockup.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="8" id="s8">
+
+    <div class="s8q-content">
+      <div class="s8q-text" data-reveal="1">
+        <p class="s8q-title">يظهر في الصورة ثلاثة طلاب ومخبار مدرّج يحتوي على ماء.</p>
+        <p class="s8q-body">من يقرأ ارتفاع السائل بالطريقة الصحيحة؟</p>
+      </div>
+
+      <!-- Motion: fade-only — hotspot dots are absolutely positioned (static
+           inline coords, no entry-time measurement) and carry their own
+           s8q-pulse animation; the container must never transform. -->
+      <div class="s8q-img-wrap" data-reveal="2" data-reveal-fade>
+        <img class="s8q-img" src="assets/img/children.png" alt="ثلاثة طلاب ينظرون إلى مخبار مدرّج يحتوي على سائل فوق طاولة مختبر">
+
+        <!-- Figure hit-regions (producer change: no visible dots — the
+             learner clicks the student directly). Each button is an
+             invisible rectangle over one figure (computed from the
+             natural 867×647 photo under object-fit:cover into 718×387;
+             the wrap has no padding — its edge IS the photo edge, which
+             also clips the glows there). Inside each button sits that figure's
+             CUTOUT (same 867×647 canvas, producer-supplied), offset back
+             to align pixel-perfect with the background — its pixels are
+             identical to the photo, so it's invisible until a state
+             applies a drop-shadow glow that hugs the figure's contour
+             (the S11 escape-room language). DOM order = stacking order:
+             the right-hand girl leans IN FRONT of the middle boy, so her
+             button comes last and wins their overlap zone. -->
+        <button class="s8q-hotspot" type="button" data-id="left"
+                aria-label="الطالبة من جهة اليسار"
+                style="left:17px; top:120px; width:310px; height:267px;"
+                onclick="s8qSelect('left', this)">
+          <img class="s8q-figure" src="assets/img/child-left.png" alt=""
+               aria-hidden="true" style="left:-17px; top:-120px;">
+        </button>
+
+        <button class="s8q-hotspot" type="button" data-id="middle"
+                aria-label="الطالب في الوسط"
+                style="left:323px; top:0; width:228px; height:327px;"
+                onclick="s8qSelect('middle', this)">
+          <img class="s8q-figure" src="assets/img/child-middle.png" alt=""
+               aria-hidden="true" style="left:-323px; top:0;">
+        </button>
+
+        <button class="s8q-hotspot" type="button" data-id="right"
+                aria-label="الطالبة من جهة اليمين"
+                style="left:464px; top:54px; width:254px; height:333px;"
+                onclick="s8qSelect('right', this)">
+          <img class="s8q-figure" src="assets/img/child-right.png" alt=""
+               aria-hidden="true" style="left:-464px; top:-54px;">
+        </button>
+
+        <!-- Cylinder cutout — topmost, non-interactive: the glass sits in
+             front of the students, so it occludes any figure glow behind
+             it (see .s8q-occluder note in style.css). -->
+        <img class="s8q-occluder" src="assets/img/cylinder-children.png"
+             alt="" aria-hidden="true">
+      </div>
+    </div>
+
+    <!-- Bottom action bar: [check + hint] (left) · [back] (right) -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s8q-check" type="button" disabled
+                onclick="s8qCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="s8q-hint" type="button" onclick="s8qOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s8-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+
+  </section>
+
+  <!-- S8 feedback popup — outside .screen so display:none never hides it -->
+  <div class="scq-popup m-popup hidden" id="s8q-popup"
+       onpointerdown="s8qPopupMouseDown(event)"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s8q-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s8q-popup-body"></div>
+  </div>
+
+  <!-- S8 hint popup (modal) — outside .screen divs, inside #app -->
+  <div class="scq-hint-overlay m-popup hidden" id="s8q-hint-overlay"
+       onclick="s8qCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="s8q-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="s8q-hint-title">تلميح‎:</h2>
+          <div class="scq-hint-body">
+            <p>من أي زاوية يجب أن ننظر حتى لا نخطئ في قراءة ارتفاع السائل؟</p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="s8qCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S9 — Screen 10 · ScratchCardsReveal (second instance, slides
+       15+16). Behaves exactly like S7 (same template/mechanics);
+       namespaced s9sc* per the multi-instance rule. Content: side A
+       titles kept from slide 15; side B bodies for the right and left
+       cards were rewritten to actually answer their own titles (the
+       source had leftover S7 content there) — confirmed with the user.
+       The middle card's original body already answered its own title
+       correctly, so only its title needed swapping in, body unchanged.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="9" id="s9">
+
+    <!-- Companion character peeking from the screen's left edge.
+         Asset resolves per the S0-selected character (companion character
+         system — never hardcoded); src set in resetScreenState(9). -->
+    <img class="s9-peek-char" id="s9-peek-char" src="" alt="" aria-hidden="true">
+
+    <!-- Speech bubble above the peeking character — Figma "Image Text
+         Bubble States" node 2541:1397 (203×137, tail bottom-center,
+         pointing down at the character's head). -->
+    <div class="s9-peek-bubble" aria-hidden="true">
+      <span class="s9-peek-bubble-text">هل ترون بطاقتَيّ<br>الكشط الموجودتين بجانبي؟<br>تعلّمنا سابقًا عن هاتين البطاقتين.<br>حاولوا أن تتذكروا قبل أن تكشطوا...</span>
+    </div>
+
+    <div class="select-content s7sc-content">
+      <!-- Motion: ONLY this text block reveals (sibling of the scratch cards,
+           never their ancestor) — same rationale as S7. Peek character +
+           bubble are a character zone: static. -->
+      <div class="select-head" data-reveal="1">
+        <h1 class="select-title">كيف نقيس حجم السائل بطريقة صحيحة؟</h1>
+        <p class="select-subtitle frc-instructions"><strong>اكشطوا البطاقات بواسطة الفأرة واكتشفوا الأمور المهمة التي يجب القيام بها أثناء القياس‎.</strong></p>
+      </div>
+
+      <!-- 3 scratch cards, right→left per source x-offsets:
+           מהן יחידות המידה (right) · על מה נסתכל במשורה (middle) ·
+           איך נדע שהמדידה מהימנה (left). direction:ltr → first DOM
+           child = leftmost. -->
+      <div class="s7sc-cards" id="s9sc-cards">
+
+        <div class="s7sc-card" data-index="0" tabindex="0" role="button" aria-expanded="false"
+             aria-label="بطاقة كشط — كيف نعرف أن القياس موثوق؟ اكشطوا واكتشفوا"
+             data-side-a="كيف نعرف أن القياس موثوق؟">
+          <div class="s7sc-card-back">
+            <p><strong>كيف نعرف أن القياس موثوق؟</strong></p>
+            <p>إذا كانت نتائج القياسات الثلاثة متقاربة، فالقياس موثوق‎.</p>
+          </div>
+          <canvas class="s7sc-card-cover" aria-hidden="true"></canvas>
+        </div>
+
+        <div class="s7sc-card" data-index="1" tabindex="0" role="button" aria-expanded="false"
+             aria-label="بطاقة كشط — كم مرة نقيس؟ اكشطوا واكتشفوا"
+             data-side-a="كم مرة نقيس؟">
+          <div class="s7sc-card-back">
+            <p><strong>كم مرة نقيس؟</strong></p>
+            <p>لكي يكون القياس موثوقًا، نقيس 3 مرات ونحسب المعدل.</p>
+          </div>
+          <canvas class="s7sc-card-cover" aria-hidden="true"></canvas>
+        </div>
+
+        <div class="s7sc-card" data-index="2" tabindex="0" role="button" aria-expanded="false"
+             aria-label="بطاقة كشط — ما هي وحدات قياس حجم السائل؟ اكشطوا واكتشفوا"
+             data-side-a="ما هي وحدات قياس حجم السائل؟">
+          <div class="s7sc-card-back">
+            <p><strong>ما هي وحدات قياس حجم السائل؟</strong></p>
+            <p>حجم السائل هو الحيز الذي يُشغِله السائل. وحدات قياس الحجم هي: <strong>مليلتر (ملل)، لتر، سنتيمتر مكعب، متر مكعب</strong>.</p>
+            <div class="s7sc-units-chip">
+              <span>1 ملل = 1 سم مكعّب</span>
+              <span>1‏‎ ‎لتر = 1000 ملل</span>
+              <span>1 متر مكعّب = 1000 لتر</span>
+            </div>
+          </div>
+          <canvas class="s7sc-card-cover" aria-hidden="true"></canvas>
+
+          <!-- Gesture hint — same approved pattern as S7 (see s7gh-hint),
+               re-namespaced s9gh*. Waypoint Y-values are NOT copied from S7
+               verbatim: this card is 300×274 (not S7's 283×283 square) and
+               this title wraps to 2 lines starting much higher (measured
+               glyph top y≈100.5) than S7's single-line title (y≈120.5), so
+               S7's Y-values would nearly touch the text. X-values, timing,
+               traverse count and asset are unchanged — see s9gh-scratch in
+               style.css for the exact adjustment and its rationale. -->
+          <div class="s7gh hidden" id="s9gh-hint" aria-hidden="true">
+            <img class="s7gh-hand" src="assets/img/s7gh-hand.svg" alt="" aria-hidden="true">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Coin cursor + sound effects — this screen's own instance,
+         mirroring S7's exactly (see main.js s9sc* functions). -->
+    <img class="s7sc-coin hidden" id="s9sc-coin" src="assets/img/coin.png" alt="" aria-hidden="true">
+    <audio id="s9sc-scratch-audio" src="assets/audio/coin_scratching.mp3" preload="auto"></audio>
+    <audio id="s9sc-celebration-audio" src="assets/audio/celebration.mp3" preload="auto"></audio>
+
+    <!-- Learning-path toggle — same as S7, in the bottom nav bar. -->
+    <div class="s7sc-toggle" role="tablist" aria-label="اختاروا طريقة التعلم">
+      <button class="s7sc-toggle-btn s7sc-toggle-btn--active" id="s9sc-tab-scratch"
+              type="button" role="tab" aria-selected="true">بطاقة كشط</button>
+      <button class="s7sc-toggle-btn" id="s9sc-tab-escape"
+              type="button" role="tab" aria-selected="false"
+              onclick="s9scSwitchTab('escape-room')">غرفة هروب</button>
+    </div>
+
+    <button class="btn-continue" id="s9-continue" disabled onclick="advanceFromS9()">متابعة</button>
+    <button class="scq-back" id="s9-back" type="button" onclick="goBack()">عودة</button>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S10 — Screen 11 · DropdownQuestion (Multiple Blanks), slide 17.
+       Ported from the reference S8/mdq implementation (Target-01),
+       renamed s10q*. Figma: node 2476:5201. Producer notes: NO hint,
+       NO progress nav, 2 attempts. Shared 4-word bank across all 4
+       blanks (order per producer notes).
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="10" id="s10">
+
+    <div class="s10q-content">
+      <h1 class="s10q-title" data-reveal="1">ماذا تعلّمنا؟</h1>
+      <p class="s10q-instruction" data-reveal="1">أكملوا الجمل. انتبهوا، هذه المرة لا يوجد تلميح‎...</p>
+
+      <!-- Row 1: "מדידה מדעית טובה של נוזל דורשת: [dd1] מתאים, קריאה [dd2]," -->
+      <div class="s10q-fill-row" data-reveal="2">
+        <span class="s10q-word">القياس العلمي الجيد للسائل‎ يحتاج إلى:</span>
+        <div class="mdq-dropdown-wrap" id="s10q-wrap-1">
+          <button class="mdq-btn" id="s10q-btn-1" type="button"
+                  data-empty="true" aria-haspopup="listbox" aria-expanded="false"
+                  onclick="s10qToggle(1)">
+            <svg class="mdq-chevron" width="16" height="8" viewBox="0 0 16 8" fill="none" aria-hidden="true">
+              <path d="M1 1L8 7L15 1" stroke="#AEAEAE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="mdq-selected" id="s10q-selected-1">اختاروا إجابة</span>
+          </button>
+          <ul class="mdq-list hidden" id="s10q-list-1" role="listbox">
+            <li class="mdq-option" role="option" tabindex="0" data-key="eye-level" onclick="s10qSelect(1,'eye-level')">على مستوى العينين</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="average" onclick="s10qSelect(1,'average')">المعدل</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="tool" onclick="s10qSelect(1,'tool')">أداة</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="three" onclick="s10qSelect(1,'three')">ثلاث</li>
+          </ul>
+        </div>
+        <span class="s10q-word">مناسبة، قراءة</span>
+        <div class="mdq-dropdown-wrap" id="s10q-wrap-2">
+          <button class="mdq-btn" id="s10q-btn-2" type="button"
+                  data-empty="true" aria-haspopup="listbox" aria-expanded="false"
+                  onclick="s10qToggle(2)">
+            <svg class="mdq-chevron" width="16" height="8" viewBox="0 0 16 8" fill="none" aria-hidden="true">
+              <path d="M1 1L8 7L15 1" stroke="#AEAEAE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="mdq-selected" id="s10q-selected-2">اختاروا إجابة</span>
+          </button>
+          <ul class="mdq-list hidden" id="s10q-list-2" role="listbox">
+            <li class="mdq-option" role="option" tabindex="0" data-key="eye-level" onclick="s10qSelect(2,'eye-level')">على مستوى العينين</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="average" onclick="s10qSelect(2,'average')">المعدل</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="tool" onclick="s10qSelect(2,'tool')">أداة</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="three" onclick="s10qSelect(2,'three')">ثلاث</li>
+          </ul>
+        </div>
+        <span class="s10q-word">،</span>
+      </div>
+
+      <!-- Row 2: "ביצוע [dd3] מדידות, וחישוב [dd4]." -->
+      <div class="s10q-fill-row" data-reveal="2">
+        <span class="s10q-word">إجراء</span>
+        <div class="mdq-dropdown-wrap" id="s10q-wrap-3">
+          <button class="mdq-btn" id="s10q-btn-3" type="button"
+                  data-empty="true" aria-haspopup="listbox" aria-expanded="false"
+                  onclick="s10qToggle(3)">
+            <svg class="mdq-chevron" width="16" height="8" viewBox="0 0 16 8" fill="none" aria-hidden="true">
+              <path d="M1 1L8 7L15 1" stroke="#AEAEAE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="mdq-selected" id="s10q-selected-3">اختاروا إجابة</span>
+          </button>
+          <ul class="mdq-list hidden" id="s10q-list-3" role="listbox">
+            <li class="mdq-option" role="option" tabindex="0" data-key="eye-level" onclick="s10qSelect(3,'eye-level')">على مستوى العينين</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="average" onclick="s10qSelect(3,'average')">المعدل</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="tool" onclick="s10qSelect(3,'tool')">أداة</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="three" onclick="s10qSelect(3,'three')">ثلاث</li>
+          </ul>
+        </div>
+        <span class="s10q-word">قياسات، وحساب</span>
+        <div class="mdq-dropdown-wrap" id="s10q-wrap-4">
+          <button class="mdq-btn" id="s10q-btn-4" type="button"
+                  data-empty="true" aria-haspopup="listbox" aria-expanded="false"
+                  onclick="s10qToggle(4)">
+            <svg class="mdq-chevron" width="16" height="8" viewBox="0 0 16 8" fill="none" aria-hidden="true">
+              <path d="M1 1L8 7L15 1" stroke="#AEAEAE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="mdq-selected" id="s10q-selected-4">اختاروا إجابة</span>
+          </button>
+          <ul class="mdq-list hidden" id="s10q-list-4" role="listbox">
+            <li class="mdq-option" role="option" tabindex="0" data-key="eye-level" onclick="s10qSelect(4,'eye-level')">على مستوى العينين</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="average" onclick="s10qSelect(4,'average')">المعدل</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="tool" onclick="s10qSelect(4,'tool')">أداة</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="three" onclick="s10qSelect(4,'three')">ثلاث</li>
+          </ul>
+        </div>
+        <span class="s10q-word">.</span>
+      </div>
+    </div>
+
+    <!-- Bottom action bar — no hint (producer: "ללא רמז") -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s10q-check" type="button" disabled
+                onclick="s10qCheck()">هل إجابتي صحيحة؟</button>
+      </div>
+      <button class="scq-back" id="s10-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+
+  </section>
+
+  <!-- S10 feedback popup — outside .screen so display:none never hides it -->
+  <div class="scq-popup m-popup hidden" id="s10q-popup"
+       onpointerdown="s10qPopupMouseDown(event)"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s10q-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s10q-popup-body"></div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S11 — EscapeRoomHotspots (NEW template, no .md reference yet)
+       Branch screen: the חדר בריחה learning path chosen on S6 (or via
+       the S7/S9 toggle tabs). Covers the same content as S7+S8+S9 —
+       its המשך continues to S12 (the branch's own dropdown question);
+       the paths reconnect at S13. Figma: dpY9DTl41tzW8SKvcPWU0C,
+       nodes 2482:5770 (initial) / 2493:5851 (all modals open),
+       component "AreaSelectionHotspot".
+       6 objects "hide" over a lab photo; clicking one glows it
+       (Subject-Alpha-200, shape of the image) and opens its speech-
+       bubble modal; clicking the next object grays the previous one
+       out (visited, inactive) but its modal STAYS OPEN (client QA
+       2026-09-23), so the learner can see what was already found.
+       Continue unlocks after all 6 were opened.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="11" id="s11">
+    <!-- Motion v0.1: head (title + subtitle) floats in as one group; the
+         scene fades in as one unit below (see .s11er-bg / .s11er-object
+         markers); progress panel floats in as its own group. The
+         learning-path toggle no longer lives here — it's static chrome
+         in the bottom nav bar now (see before the Continue/Back buttons
+         below), matching S7/S9. -->
+    <div class="s11er-head" data-reveal="1">
+      <h1 class="s11er-title">تجوّلوا بالفأرة في المختبر وجِدوا مبادئ القياس الستة.</h1>
+      <p class="s11er-subtitle">بهذه الطريقة فقط ستتمكنون من الخروج‎.</p>
+    </div>
+
+    <div class="s11er-scene">
+      <div class="s11er-bg" data-reveal="3" data-reveal-fade>
+        <img src="assets/img/escape-lab-bg.png" alt="مختبر علوم يحتوي على أدوات قياس مختلفة">
+      </div>
+
+      <!-- 6 hidden objects (positions from Figma, scene-relative).
+           The table is a live HTML table (div role=button — a <table>
+           may not nest inside <button>); the rest are real buttons.
+           Same group + fade as .s11er-bg above, so the background photo
+           and every embedded object fade in together as one unit —
+           clickable throughout (no default pointer-events blocking). -->
+      <div class="s11er-object s11er-object--table" id="s11er-obj-table" role="button"
+           tabindex="0" aria-label="جدول قياسات على اللوح — اضغطوا لاكتشاف مبدأ القياس"
+           onclick="s11erOpen('table')" data-reveal="3" data-reveal-fade>
+        <table class="s11er-table">
+          <tr><th>رقم القياس</th><th>النتيجة</th></tr>
+          <tr><td>1</td><td>49</td></tr>
+          <tr><td>2</td><td>50</td></tr>
+          <tr><td>3</td><td>51</td></tr>
+        </table>
+      </div>
+      <button class="s11er-object s11er-object--eye" id="s11er-obj-eye" type="button"
+              aria-label="بوستر عين على الحائط — اضغطوا لاكتشاف مبدأ القياس"
+              onclick="s11erOpen('eye')" data-reveal="3" data-reveal-fade>
+        <img src="assets/img/escape-eye.png" alt="">
+      </button>
+      <button class="s11er-object s11er-object--emptybeaker" id="s11er-obj-emptybeaker" type="button"
+              aria-label="دورق فارغ — اضغطوا لاكتشاف مبدأ القياس"
+              onclick="s11erOpen('emptybeaker')" data-reveal="3" data-reveal-fade>
+        <img src="assets/img/escape-beaker-empty.png" alt="">
+      </button>
+      <button class="s11er-object s11er-object--fullbeaker" id="s11er-obj-fullbeaker" type="button"
+              aria-label="دورق يحتوي على سائل أخضر — اضغطوا لاكتشاف مبدأ القياس"
+              onclick="s11erOpen('fullbeaker')" data-reveal="3" data-reveal-fade>
+        <img src="assets/img/escape-beaker-full.png" alt="">
+      </button>
+      <button class="s11er-object s11er-object--cylinder" id="s11er-obj-cylinder" type="button"
+              aria-label="مخبار مدرّج طويل يحتوي على سائل — اضغطوا لاكتشاف مبدأ القياس"
+              onclick="s11erOpen('cylinder')" data-reveal="3" data-reveal-fade>
+        <img src="assets/img/escape-cylinder.png" alt="">
+      </button>
+      <button class="s11er-object s11er-object--pipette" id="s11er-obj-pipette" type="button"
+              aria-label="ماصّة — اضغطوا لاكتشاف مبدأ القياس"
+              onclick="s11erOpen('pipette')" data-reveal="3" data-reveal-fade>
+        <img src="assets/img/escape-pipette.png" alt="">
+      </button>
+
+      <!-- 6 speech-bubble modals (one per object; Figma group mapping).
+           The table's bubble sits BELOW its object → flipped variant
+           (tail on top). All texts verbatim from Figma. -->
+      <div class="s11er-bubble s11er-bubble--table hidden" id="s11er-bubble-table"
+           role="status" aria-live="polite">
+        <div class="s11er-bubble-text">
+          <p>نقيس السائل 3 مرات ونحسب المعدل.</p>
+          <p>إذا كانت نتائج القياسات الثلاثة متقاربة، فالقياس موثوق‎.</p>
+        </div>
+      </div>
+      <div class="s11er-bubble s11er-bubble--eye hidden" id="s11er-bubble-eye"
+           role="status" aria-live="polite">
+        <div class="s11er-bubble-text">
+          <p>نضع أعيننا على مستوى سطح السائل. النظر من الأعلى أو الأسفل قد يؤدي إلى خطأ في القراءة‎.</p>
+          <img class="s11er-bubble-img" src="assets/img/minEye.png"
+               alt="رسم توضيحي: خط نظر مستقيم على مستوى سطح السائل">
+        </div>
+      </div>
+      <div class="s11er-bubble s11er-bubble--emptybeaker hidden" id="s11er-bubble-emptybeaker"
+           role="status" aria-live="polite">
+        <div class="s11er-bubble-text">
+          <p>وحدات قياس الحجم هي: مليلتر (ملل)، لتر، سنتيمتر مكعب، متر مكعب.</p>
+          <p>1 ملل = 1 سم مكعّب؛</p>
+          <p>1‏‎ ‎لتر = 1000 ملل؛</p>
+          <p>1 متر مكعّب = 1000 لتر.</p>
+        </div>
+      </div>
+      <div class="s11er-bubble s11er-bubble--fullbeaker hidden" id="s11er-bubble-fullbeaker"
+           role="status" aria-live="polite">
+        <div class="s11er-bubble-text">
+          <p>حجم السائل هو الحيز الذي يُشغِله السائل</p>
+        </div>
+      </div>
+      <div class="s11er-bubble s11er-bubble--cylinder hidden" id="s11er-bubble-cylinder"
+           role="status" aria-live="polite">
+        <div class="s11er-bubble-text">
+          <p>يلتصق الماء بجدار الوعاء ويكوّن انحناءً صغيرًا. نقرأ خط السائل السفلي للانحناء‎.</p>
+        </div>
+      </div>
+      <div class="s11er-bubble s11er-bubble--pipette hidden" id="s11er-bubble-pipette"
+           role="status" aria-live="polite">
+        <div class="s11er-bubble-text">
+          <p>نختار أداة القياس بحسب دقّتها (تقارُب علامات التدريج)، السياق (هدف القياس)، والمجال (كمية السائل التي تستوعبها)</p>
+        </div>
+      </div>
+
+      <!-- Progress meter (Figma "Progress question", node 2494:6410) —
+           6 dots, RTL: dot 1 rightmost. Each found object flips the next
+           dot from current → correct (order-independent). -->
+      <div class="s11er-progress" id="s11er-progress" role="status"
+           aria-label="المبادئ التي تم إيجادها" data-reveal="2">
+        <p class="s11er-progress-title">المبادئ التي تم إيجادها</p>
+        <div class="s11er-progress-dots">
+          <div class="s11er-progress-dot"><img id="s11er-dot-ico-1" src="assets/img/escape-dot-current.svg" alt=""><span>1</span></div>
+          <div class="s11er-progress-dot"><img id="s11er-dot-ico-2" src="assets/img/escape-dot-current.svg" alt=""><span>2</span></div>
+          <div class="s11er-progress-dot"><img id="s11er-dot-ico-3" src="assets/img/escape-dot-current.svg" alt=""><span>3</span></div>
+          <div class="s11er-progress-dot"><img id="s11er-dot-ico-4" src="assets/img/escape-dot-current.svg" alt=""><span>4</span></div>
+          <div class="s11er-progress-dot"><img id="s11er-dot-ico-5" src="assets/img/escape-dot-current.svg" alt=""><span>5</span></div>
+          <div class="s11er-progress-dot"><img id="s11er-dot-ico-6" src="assets/img/escape-dot-current.svg" alt=""><span>6</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gentle background music (escape-room screen only) + an object-found
+         chime; both driven from the interaction code, not learner-facing -->
+    <audio id="s11er-music-audio" src="assets/audio/MysteriousMusic.mp3" preload="auto" loop></audio>
+    <audio id="s11er-celebration-audio" src="assets/audio/celebration.mp3" preload="auto"></audio>
+
+    <!-- Learning-path toggle — same component as S7/S9, in the bottom
+         nav bar (position-locked: כרטיס גירוד LEFT, חדר בריחה RIGHT). -->
+    <div class="s7sc-toggle" role="tablist" aria-label="اختاروا طريقة التعلم">
+      <button class="s7sc-toggle-btn" id="s11er-tab-scratch" type="button" role="tab"
+              aria-selected="false" onclick="s11erSwitchTab('scratch')">بطاقة كشط</button>
+      <button class="s7sc-toggle-btn s7sc-toggle-btn--active" id="s11er-tab-escape"
+              type="button" role="tab" aria-selected="true">غرفة هروب</button>
+    </div>
+
+    <button class="btn-continue" id="s11-continue" disabled onclick="advanceFromS11()">متابعة</button>
+    <button class="scq-back" id="s11-back" type="button" onclick="goBack()">عودة</button>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S12 — DropdownQuestion, escape-path variant (Figma 2571:1775,
+       "AreaSelectionHotspot - state 01"). Exact duplicate of S10's
+       question (same 4 blanks, same shared word bank, same correct
+       answers, 2 attempts, no hint) — only the title/instruction
+       differ, plus S11's escape-room scene as a faded backdrop
+       (static replica under a white 83% veil, non-interactive).
+       Reached only from S11's המשך; continues to S13, where the two
+       learning paths reconnect.
+
+       Motion v0.1 (post-merge coverage fix — this screen was added to
+       main after the original animation pass on experiment/motion-system,
+       so it never got classified): header (title+instruction) and the
+       question block reuse S10's exact groups/order (this IS S10's
+       content) — group 1, group 2, both float-in. The backdrop is the
+       same "background scene photo + embedded objects" role as S11's
+       scene (S11: header=1, progress=2, scene=3 — scene deliberately
+       LAST); here it's non-interactive and veiled, but the same role
+       classification applies, so it stays group 3 (fade-in, ALL of
+       bg+objects+veil as one unit via the single outer wrapper — no
+       per-object marking needed since none of them are separately
+       interactive here). -->
+  <section class="screen" data-screen="12" id="s12">
+
+    <!-- Faded escape-room backdrop — S11's scene composition (photo +
+         measurement table + object cutouts at their exact positions),
+         cloned WITHOUT interactivity, under the white veil. -->
+    <div class="s12q-backdrop" aria-hidden="true" data-reveal="3" data-reveal-fade>
+      <div class="s11er-scene">
+        <div class="s11er-bg">
+          <img src="assets/img/escape-lab-bg.png" alt="">
+        </div>
+        <div class="s11er-object s11er-object--table">
+          <table class="s11er-table">
+            <tr><th>رقم القياس</th><th>النتيجة</th></tr>
+            <tr><td>1</td><td>49</td></tr>
+            <tr><td>2</td><td>50</td></tr>
+            <tr><td>3</td><td>51</td></tr>
+          </table>
+        </div>
+        <div class="s11er-object s11er-object--eye"><img src="assets/img/escape-eye.png" alt=""></div>
+        <div class="s11er-object s11er-object--emptybeaker"><img src="assets/img/escape-beaker-empty.png" alt=""></div>
+        <div class="s11er-object s11er-object--fullbeaker"><img src="assets/img/escape-beaker-full.png" alt=""></div>
+        <div class="s11er-object s11er-object--cylinder"><img src="assets/img/escape-cylinder.png" alt=""></div>
+        <div class="s11er-object s11er-object--pipette"><img src="assets/img/escape-pipette.png" alt=""></div>
+      </div>
+      <div class="s12q-veil"></div>
+    </div>
+
+    <div class="s10q-content s12q-content">
+      <h1 class="s10q-title" data-reveal="1">لكي تخرجوا من الغرفة، أكملوا الجمل‎.</h1>
+      <p class="s10q-instruction" data-reveal="1">انتبهوا، هذه المرة لا يوجد تلميح‎...</p>
+
+      <!-- Row 1: "מדידה מדעית טובה של נוזל דורשת: [dd1] מתאים, קריאה [dd2]" -->
+      <div class="s10q-fill-row" data-reveal="2">
+        <span class="s10q-word">القياس العلمي الجيد للسائل‎ يحتاج إلى:</span>
+        <div class="mdq-dropdown-wrap" id="s12q-wrap-1">
+          <button class="mdq-btn" id="s12q-btn-1" type="button"
+                  data-empty="true" aria-haspopup="listbox" aria-expanded="false"
+                  onclick="s12qToggle(1)">
+            <svg class="mdq-chevron" width="16" height="8" viewBox="0 0 16 8" fill="none" aria-hidden="true">
+              <path d="M1 1L8 7L15 1" stroke="#AEAEAE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="mdq-selected" id="s12q-selected-1">اختاروا إجابة</span>
+          </button>
+          <ul class="mdq-list hidden" id="s12q-list-1" role="listbox">
+            <li class="mdq-option" role="option" tabindex="0" data-key="eye-level" onclick="s12qSelect(1,'eye-level')">على مستوى العينين</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="average" onclick="s12qSelect(1,'average')">المعدل</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="tool" onclick="s12qSelect(1,'tool')">أداة</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="three" onclick="s12qSelect(1,'three')">ثلاث</li>
+          </ul>
+        </div>
+        <span class="s10q-word">مناسبة، قراءة</span>
+        <div class="mdq-dropdown-wrap" id="s12q-wrap-2">
+          <button class="mdq-btn" id="s12q-btn-2" type="button"
+                  data-empty="true" aria-haspopup="listbox" aria-expanded="false"
+                  onclick="s12qToggle(2)">
+            <svg class="mdq-chevron" width="16" height="8" viewBox="0 0 16 8" fill="none" aria-hidden="true">
+              <path d="M1 1L8 7L15 1" stroke="#AEAEAE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="mdq-selected" id="s12q-selected-2">اختاروا إجابة</span>
+          </button>
+          <ul class="mdq-list hidden" id="s12q-list-2" role="listbox">
+            <li class="mdq-option" role="option" tabindex="0" data-key="eye-level" onclick="s12qSelect(2,'eye-level')">على مستوى العينين</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="average" onclick="s12qSelect(2,'average')">المعدل</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="tool" onclick="s12qSelect(2,'tool')">أداة</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="three" onclick="s12qSelect(2,'three')">ثلاث</li>
+          </ul>
+        </div>
+        <span class="s10q-word">،</span>
+      </div>
+
+      <!-- Row 2: "ביצוע [dd3] מדידות, וחישוב [dd4]."
+           Trailing "," after dd2 and "." after dd4 added to match S10 and
+           the approved script (PPTX 120726, slide 40); Figma 2571:1775 has
+           neither, but the script wins. -->
+      <div class="s10q-fill-row" data-reveal="2">
+        <span class="s10q-word">إجراء</span>
+        <div class="mdq-dropdown-wrap" id="s12q-wrap-3">
+          <button class="mdq-btn" id="s12q-btn-3" type="button"
+                  data-empty="true" aria-haspopup="listbox" aria-expanded="false"
+                  onclick="s12qToggle(3)">
+            <svg class="mdq-chevron" width="16" height="8" viewBox="0 0 16 8" fill="none" aria-hidden="true">
+              <path d="M1 1L8 7L15 1" stroke="#AEAEAE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="mdq-selected" id="s12q-selected-3">اختاروا إجابة</span>
+          </button>
+          <ul class="mdq-list hidden" id="s12q-list-3" role="listbox">
+            <li class="mdq-option" role="option" tabindex="0" data-key="eye-level" onclick="s12qSelect(3,'eye-level')">على مستوى العينين</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="average" onclick="s12qSelect(3,'average')">المعدل</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="tool" onclick="s12qSelect(3,'tool')">أداة</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="three" onclick="s12qSelect(3,'three')">ثلاث</li>
+          </ul>
+        </div>
+        <span class="s10q-word">قياسات، وحساب</span>
+        <div class="mdq-dropdown-wrap" id="s12q-wrap-4">
+          <button class="mdq-btn" id="s12q-btn-4" type="button"
+                  data-empty="true" aria-haspopup="listbox" aria-expanded="false"
+                  onclick="s12qToggle(4)">
+            <svg class="mdq-chevron" width="16" height="8" viewBox="0 0 16 8" fill="none" aria-hidden="true">
+              <path d="M1 1L8 7L15 1" stroke="#AEAEAE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="mdq-selected" id="s12q-selected-4">اختاروا إجابة</span>
+          </button>
+          <ul class="mdq-list hidden" id="s12q-list-4" role="listbox">
+            <li class="mdq-option" role="option" tabindex="0" data-key="eye-level" onclick="s12qSelect(4,'eye-level')">على مستوى العينين</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="average" onclick="s12qSelect(4,'average')">المعدل</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="tool" onclick="s12qSelect(4,'tool')">أداة</li>
+            <li class="mdq-option" role="option" tabindex="0" data-key="three" onclick="s12qSelect(4,'three')">ثلاث</li>
+          </ul>
+        </div>
+        <span class="s10q-word">.</span>
+      </div>
+    </div>
+
+    <!-- Bottom action bar — no hint ("הפעם אין רמז", like S10) -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s12q-check" type="button" disabled
+                onclick="s12qCheck()">هل إجابتي صحيحة؟</button>
+      </div>
+      <button class="scq-back" id="s12q-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+
+  </section>
+
+  <!-- S12 feedback popup — outside .screen so display:none never hides it -->
+  <!-- Popup motion (approved, matches every other question popup in this
+       part): m-popup = 260ms fade-in on every open. -->
+  <div class="scq-popup m-popup hidden" id="s12q-popup"
+       onpointerdown="s12qPopupMouseDown(event)"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s12q-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s12q-popup-body"></div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S13 (legacy s12ddq namespace) — OrderedDragAndDropQuestion
+       (sequencing variant of
+       DragAndDropQuestion — slide 19). Ported from the reference
+       implementation the producer named: S11 in Target-01
+       (methodica-science-mass-measure-01-01). Order the 5 steps of
+       measuring liquid volume. 2 attempts, hint visible from the
+       start (producer: "רמז מופיע כבר מניסיון ראשון").
+       Correct order (notesSlide19): בחירת כלי מדידה → מדידה בגובה
+       העיניים → חזרתיות → בדיקת מהימנות → חישוב ממוצע.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="13" id="s13">
+
+    <div class="s12ddq-area">
+      <h1 class="s12ddq-title" data-reveal="1">ماذا تعلّمنا؟</h1>
+      <p class="s12ddq-subtitle" data-reveal="1">رتبوا مراحل عملية قياس حجم السائل بحسب الترتيب</p>
+
+      <!-- Main row: source tray + numbered drop targets.
+           Motion: fade-only — drag cards / drop targets are JS-measured
+           (ghost math / elementFromPoint), geometry must never transform. -->
+      <div class="s12ddq-main-row" data-reveal="2" data-reveal-fade>
+
+        <!-- Source tray — card order per slide 19 (top→bottom) -->
+        <div class="s12ddq-source" id="s12ddq-source">
+          <div class="s12ddq-source-slot">
+            <div class="s12ddq-drag-card" id="drag-s12-klei">
+              <span class="s12ddq-card-text">اختيار أداة القياس – هل تستطيع الأداة استيعاب كمية السائل؟</span>
+            </div>
+          </div>
+          <div class="s12ddq-source-slot">
+            <div class="s12ddq-drag-card" id="drag-s12-hazara">
+              <span class="s12ddq-card-text">التكرار - إجراء 3 قياسات</span>
+            </div>
+          </div>
+          <div class="s12ddq-source-slot">
+            <div class="s12ddq-drag-card" id="drag-s12-memuza">
+              <span class="s12ddq-card-text">حساب المعدل</span>
+            </div>
+          </div>
+          <div class="s12ddq-source-slot">
+            <!-- "בגובה" — corrected from the slide's "בגבוה" (typo) -->
+            <div class="s12ddq-drag-card" id="drag-s12-eynayim">
+              <span class="s12ddq-card-text">القياس على مستوى العينين</span>
+            </div>
+          </div>
+          <div class="s12ddq-source-slot">
+            <div class="s12ddq-drag-card" id="drag-s12-mehemanut">
+              <span class="s12ddq-card-text">مدى تقارب النتائج من بعضها البعض – فحص الموثوقية</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Numbered drop targets -->
+        <div class="s12ddq-targets-col">
+          <div class="s12ddq-target-row">
+            <div class="s12ddq-target" id="target-s12-1"></div>
+            <div class="s12ddq-num-badge">1</div>
+          </div>
+          <div class="s12ddq-target-row">
+            <div class="s12ddq-target" id="target-s12-2"></div>
+            <div class="s12ddq-num-badge">2</div>
+          </div>
+          <div class="s12ddq-target-row">
+            <div class="s12ddq-target" id="target-s12-3"></div>
+            <div class="s12ddq-num-badge">3</div>
+          </div>
+          <div class="s12ddq-target-row">
+            <div class="s12ddq-target" id="target-s12-4"></div>
+            <div class="s12ddq-num-badge">4</div>
+          </div>
+          <div class="s12ddq-target-row">
+            <div class="s12ddq-target" id="target-s12-5"></div>
+            <div class="s12ddq-num-badge">5</div>
+          </div>
+        </div>
+
+      </div><!-- /.s12ddq-main-row -->
+    </div><!-- /.s12ddq-area -->
+
+    <!-- Bottom action bar -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s12ddq-check" type="button" disabled
+                onclick="s12ddqCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="s12ddq-hint" type="button" onclick="s12ddqOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s12-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+
+  </section>
+
+  <!-- S12 feedback popup — outside .screen so display:none never hides it -->
+  <div class="scq-popup m-popup hidden" id="s12ddq-popup"
+       onpointerdown="s12ddqPopupMouseDown(event)"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s12ddq-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s12ddq-popup-body"></div>
+  </div>
+
+  <!-- S12 hint popup (modal) — outside .screen divs, inside #app -->
+  <div class="scq-hint-overlay m-popup hidden" id="s12ddq-hint-overlay"
+       onclick="s12ddqCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="s12ddq-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="s12ddq-hint-title">تذكروا،</h2>
+          <div class="scq-hint-body">
+            <p>قبل أن نقيس، علينا اختيار الأداة التي سنستخدمها. بعد ذلك فكروا: كيف نقف لكي نقرأ ارتفاع السائل بالشكل الصحيح؟ كم مرة نقيس، وما الذي يجب أن نفحصه ونحسبه في المراحل الأخيرة؟</p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="s12ddqCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S13 — TransitionScreen (slide 20). Ported from Target-01's S7
+       (the reference named in notesSlide20). Companion character
+       video (Sporty variant, resolved per the S0 selection) plays
+       automatically on entry and freezes on its rest frame.
+       Continue is always enabled ("קחו אותי לשאלה").
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="14" id="s14">
+
+    <div class="s13tr-content">
+      <div class="s13tr-text" data-reveal="1">
+        <h1 class="s13tr-title">ماذا بقيَ عالقًا في عقولنا؟</h1>
+        <p class="s13tr-subtitle">سؤال بسيط للإحماء قبل أن نبدأ التمرين</p>
+      </div>
+      <!-- Motion v0.1 (video-zone fade): gentle fade only, starts with the
+           screen entrance; autoplay untouched. -->
+      <div class="s13tr-video-wrap" data-reveal="1" data-reveal-fade>
+        <video id="s13tr-video" class="s13tr-video" autoplay muted playsinline
+               disablepictureinpicture disableremoteplayback
+               controlsList="nodownload noremoteplayback nofullscreen noplaybackrate"></video>
+      </div>
+    </div>
+
+    <button class="btn-continue" id="s13-continue" onclick="advanceFromS13()">خذوني إلى السؤال</button>
+    <button class="scq-back" id="s13-back" type="button" onclick="goBack()">عودة</button>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S14 — SingleChoiceQuestion "תרופה לתינוק" (slide 21).
+       Text options (user decision — the PPT supplies text only,
+       despite the Figma name SingleChoiceQuestionImage). 4 options,
+       correct: מזרק. 2 attempts, hint from the start.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="15" id="s15">
+
+    <div class="scq-question">
+      <!-- Question text (no content image on this question) -->
+      <div class="scq-qtext s14q-qtext" data-reveal="1">
+        <p>دواء للطفل</p>
+        <p class="s14q-body">يحتاج طفل مريض بعمر 6 أشهر إلى دواء بجرعة 2 ملل.</p>
+        <p class="s14q-body">أي أداة تختارون؟</p>
+      </div>
+
+      <!-- Four single-choice options (order per slide 21) -->
+      <div class="scq-answers s14q-answers" role="radiogroup" aria-label="أي أداة تختارون؟" data-reveal="2">
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="spoon" onclick="s14qSelect('spoon')">
+          <span class="scq-opt-text">ملعقة صغيرة من المطبخ</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="syringe" onclick="s14qSelect('syringe')">
+          <span class="scq-opt-text">محقنة</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="cylinder" onclick="s14qSelect('cylinder')">
+          <span class="scq-opt-text">مخبار مدرّج كبير بسِعة 500 ملل</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="bottle" onclick="s14qSelect('bottle')">
+          <span class="scq-opt-text">قنّينة طفل</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom action bar — hint available from the start (producer note) -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s14q-check" type="button" disabled
+                onclick="s14qCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="s14q-hint" type="button" onclick="s14qOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s14-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+  </section>
+
+  <!-- S14 feedback popup — outside .screen so display:none never hides it -->
+  <div class="scq-popup m-popup hidden" id="s14q-popup"
+       onpointerdown="s14qPopupMouseDown(event)"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s14q-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s14q-popup-body"></div>
+  </div>
+
+  <!-- S14 hint popup (modal) — outside .screen divs, inside #app -->
+  <div class="scq-hint-overlay m-popup hidden" id="s14q-hint-overlay"
+       onclick="s14qCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="s14q-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="s14q-hint-title">حاولوا أن تتذكروا‎:</h2>
+          <div class="scq-hint-body">
+            <p>2 ‎ملل هي كمية صغيرة جدًا، ويحتاج الطفل إلى دقة عالية. أي أداة صغيرة ودقيقة؟</p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="s14qCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       Image zoom modal — ONE shared instance per part, outside all
+       .screen divs (global component). Opens via any [data-zoom-src]
+       button; closes via backdrop / X / Escape. Clone-based stage:
+       the image WRAPPER is cloned so overlays inside it are included.
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="img-zoom-modal hidden" id="img-zoom-modal" aria-hidden="true">
+    <div class="img-zoom-modal__backdrop" data-zoom-close="true"></div>
+    <div class="img-zoom-modal__panel" role="dialog" aria-modal="true" aria-label="عرض الصورة المكبَّرة">
+      <button class="img-zoom-modal__close" type="button" aria-label="إغلاق الصورة" data-zoom-close="true"><svg class="img-zoom-modal__close-icon" aria-hidden="true" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.192 1.192L13.808 13.808M13.808 1.192L1.192 13.808" stroke="currentColor" stroke-width="2.383" stroke-linecap="round"/></svg></button>
+      <div class="img-zoom-modal__stage" id="img-zoom-modal-stage"></div>
+    </div>
+  </div>
+
+  <!-- ═══ "מצאתם בעיה?" — the shared 720 issue-report dialogs (unit-js/25-report.js,
+       unit-css/25-report.css). Copied unchanged from methodica-science-mass-measure-03; inside
+       #app (the overlay aligns with the scaled canvas) and outside every .screen (always
+       available). Guide §7.1. ═══ -->
+  <div id="report-modal"
+       class="report-modal-overlay"
+       hidden
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="report-modal-title">
+    <div class="report-modal-box">
+      <button class="report-close-btn" type="button" onclick="tryCloseReportModal()" aria-label="إغلاق">&#10005;</button>
+      <h2 class="report-modal-title" id="report-modal-title">الإبلاغ عن مشكلة</h2>
+      <p class="report-modal-body">هل هناك شيء غير واضح أو لا يعمل كما ينبغي؟<br>أخبرونا بما حدث لنعالج المشكلة.</p>
+
+      <div class="report-field">
+        <label class="report-label" for="report-type"><span class="required-star">*</span> ما نوع المشكلة</label>
+        <div class="report-custom-select" id="report-type-wrapper">
+          <button class="report-select-btn is-placeholder" type="button" aria-haspopup="listbox" aria-expanded="false">
+            <span class="report-select-value">اختاروا نوع المشكلة</span>
+          </button>
+          <ul class="report-select-list" role="listbox" hidden>
+            <li class="report-select-option" data-value="technical" role="option">عطل تقني أو شيء لا يعمل</li>
+            <li class="report-select-option" data-value="unclear" role="option">شيء غير واضح لي</li>
+            <li class="report-select-option" data-value="other" role="option">أخرى</li>
+          </ul>
+          <input type="hidden" id="report-type" value="">
+        </div>
+        <span class="report-field-error" id="report-type-error" hidden>اختاروا نوع المشكلة</span>
+      </div>
+
+      <div class="report-field">
+        <label class="report-label" for="report-text"><span class="required-star">*</span> ماذا حدث؟</label>
+        <textarea class="report-textarea" id="report-text" maxlength="250" rows="4" placeholder="اشرحوا ما حدث لنتمكن من فهم المشكلة" onblur="reportTextBlur()"></textarea>
+        <span class="report-field-error" id="report-text-error" hidden>اكتبوا ما حدث</span>
+        <span class="report-char-count" id="report-char-count">0 / 250</span>
+      </div>
+
+      <div class="report-actions">
+        <button class="report-cancel-btn" type="button" onclick="tryCloseReportModal()">إلغاء</button>
+        <button class="report-submit-btn" type="button" onclick="submitReport()" disabled>إرسال البلاغ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- מצב "הדיווח נשלח". דיאלוג נפרד מדיאלוג הנטישה שמתחתיו — אין לאחד ביניהם. -->
+  <div id="report-thanks-modal"
+       class="report-modal-overlay"
+       hidden
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="report-thanks-title">
+    <div class="report-modal-box report-confirm-box">
+      <h2 class="report-modal-title" id="report-thanks-title">تم إرسال البلاغ، شكرًا!</h2>
+      <p class="report-modal-body">استلمنا بلاغكم وسنعالجه في أقرب وقت.</p>
+      <div class="report-actions">
+        <button class="report-submit-btn" type="button" onclick="closeReportThanks()">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- אישור נטישה: נפתח רק כשיש קלט שלא נשלח. -->
+  <div id="report-confirm-modal"
+       class="report-modal-overlay"
+       hidden
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="report-confirm-title">
+    <div class="report-modal-box report-confirm-box">
+      <h2 class="report-modal-title" id="report-confirm-title">هل أنتم متأكدون من إغلاق النافذة؟</h2>
+      <p class="report-modal-body">عند الضغط على إغلاق لن يُرسل البلاغ</p>
+      <div class="report-actions">
+        <button class="report-cancel-btn" type="button" onclick="forceCloseReportModal()">إغلاق النافذة</button>
+        <button class="report-submit-btn" type="button" onclick="backToReportForm()">أريد الإبلاغ</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /#app -->
+<script src="../unit-js/10-identity.js?v=2"></script>
+<script src="../unit-js/20-xapi.js?v=2"></script>
+<script src="../unit-js/25-report.js?v=1"></script>
+<script src="../unit-js/40-resume.js?v=2"></script>
+<script src="../unit-js/45-resume-paint.js?v=1"></script>
+<script src="../unit-js/50-loader.js?v=1"></script>
+<script src="../unit-js/05-motion.js?v=1"></script>
+<script src="../unit-js/00-util.js?v=2"></script>
+<script src="../unit-js/30-nav.js?v=2"></script>
+<script src="../unit-js/32-navlabels.js?v=1"></script>
+<script src="../unit-js/35-popup.js?v=1"></script>
+<script src="js/main.js?v=12"></script>
+<script src="../unit-js/90-boot.js?v=2"></script>
+</body>
+</html>

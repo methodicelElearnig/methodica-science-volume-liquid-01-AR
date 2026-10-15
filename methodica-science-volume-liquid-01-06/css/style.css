@@ -1,0 +1,381 @@
+/* ═══════════════════════════════════════════════════════
+   css/style.css  —  720 Science · Liquid Volume Lomda · Part 06
+   Canvas: 1280 × 710 px   (matches the 720 reference engine)
+
+   Engine scaffold only — no screen content has been added yet.
+   Add each screen's own section (with its own #sN { … } block and
+   template-specific classes) below the marker at the end of this
+   file as it's built; read the relevant 720-templates reference
+   file for that screen rather than pre-copying unused templates
+   here speculatively.
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── Screens ───────────────────────────────────────────── */
+.screen {
+  position: absolute; inset: 0;
+  width: 1280px; height: 710px;
+  display: none; overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════
+   S0 — TransitionScreen (slide 40, last slide of the deck)
+   Companion character video above/below a multi-line text block.
+   Source formatting preserved as-is: 4 regular lines, one 40px-bold
+   headline in the middle, then 2 more bold lines — not a simple
+   title+subtitle pair, per _question-template-defaults.md's
+   "preserve meaningful text structure" rule.
+   ═══════════════════════════════════════════════════════ */
+#s0 { background: #fff; }
+
+.s0tr-content {
+  position: absolute; inset: 0 0 74px 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 16px;
+}
+.s0tr-text {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 2px;
+  text-align: center;
+  max-width: 1050px;
+}
+.s0tr-lead {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 22px; font-weight: 400; color: #303030;
+  margin: 0; line-height: 1.25;
+}
+.s0tr-title {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 40px; font-weight: 700; color: #303030;
+  margin: 8px 0; line-height: 1.2;
+}
+.s0tr-strong {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 22px; font-weight: 700; color: #303030;
+  margin: 0; line-height: 1.25;
+}
+.s0tr-video-wrap { width: 560px; height: 315px; flex-shrink: 0; }
+.s0tr-video { width: 100%; height: 100%; object-fit: contain; display: block;
+  clip-path: inset(2px);   /* hide the GPU edge-blend seam at fractional scales */
+  /* Decorative, non-interactive video — suppress browser-injected hover
+     overlays (PiP/cast/read-aloud) some browsers show regardless of the
+     controlsList/disablepictureinpicture attributes on the element itself. */
+  pointer-events: none;
+}
+
+/* #s0 has no .scq-bar wrapper (TransitionScreen convention) — position its
+   own back button, matching every other part's S0/S4 pattern. */
+#s0-back {
+  position: absolute;
+  bottom: 17.5px; right: 24px;
+  z-index: 12;
+}
+
+/* ═══════════════════════════════════════════════════════
+   S1 — Reference-materials screen (Figma 2515:6338). Two panels:
+   a unit-conversion table (left) + two captioned recipe photos
+   (right). direction:ltr on the row keeps the table panel physically
+   LEFT and recipes panel physically RIGHT (matches Figma), same
+   technique as part-03's .ts-content-row; each panel's own content
+   is direction:rtl for correct Hebrew text/alignment.
+   No interaction beyond continue/back — continue is enabled from
+   the start (confirmed with the producer).
+   ═══════════════════════════════════════════════════════ */
+#s1 { background: #fff; }
+
+.s1rc-row {
+  position: absolute; top: 32px; left: 150px; right: 40px;
+  display: flex; direction: ltr;
+}
+.s1rc-col {
+  width: 545px; box-sizing: border-box;
+  padding: 16px;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 12px;
+}
+.s1rc-caption {
+  margin: 0; width: 100%;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 700; color: #303030;
+  text-align: right; direction: rtl; line-height: normal;
+}
+/* Figma spec is 403×235 — sized down slightly (same ~1.71 aspect ratio)
+   so the two stacked photo+caption pairs clear the bottom bar. */
+.s1rc-photo-frame {
+  width: 375px; height: 219px; flex-shrink: 0;
+  border: 1px solid rgba(174, 174, 174, 0.5);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.s1rc-photo-frame img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
+.s1rc-table {
+  width: 200px;
+  border-collapse: collapse;
+  font-family: Calibri, Arial, sans-serif;
+  direction: rtl;
+}
+.s1rc-table td {
+  width: 200px; height: 46px;
+  border: 1px solid #c9ced8; background: #fff;
+  font-size: 20px; font-weight: 600; color: #303030;
+  text-align: center; vertical-align: middle;
+  box-sizing: border-box;
+}
+
+/* #s1 has no .scq-bar wrapper (TransitionScreen convention) — position its
+   own back button, matching #s0-back above. */
+#s1-back {
+  position: absolute;
+  bottom: 17.5px; right: 24px;
+  z-index: 12;
+}
+
+/* ═══════════════════════════════════════════════════════
+   S2 — SingleChoiceQuestion (Figma 2515:6476 / 2519:1069)
+   No content image — single 792px-wide text column (title + body,
+   both explicitly #303030 per the source — NOT the template's
+   default blue title, per _question-template-defaults.md's
+   "explicit source formatting over generic defaults" rule) + 604px
+   answer pills, right-anchored. Plus the inline recall button (see
+   below) between the answers and the bottom bar.
+   ═══════════════════════════════════════════════════════ */
+#s2 { background: #fff; }
+
+/* Base shape (row: image left + text column right) — matches the
+   standard SingleChoiceQuestionImage template; used as-is by S3
+   onward. #s2 overrides this to a single column below, since it has
+   no content image. */
+.scq-question {
+  position: absolute; top: 139px; right: 40px; left: 40px;
+  display: flex; direction: ltr; align-items: flex-start; gap: 40px;
+}
+/* Sections with no content image (S2, S4) — single 792px-wide column,
+   right-anchored, instead of the row shape above. */
+#s2 .scq-question,
+#s4 .scq-question {
+  direction: rtl;
+  flex-direction: column; gap: 24px;
+  left: auto; width: 792px;
+}
+.scq-qtext {
+  display: flex; flex-direction: column; gap: 16px;
+  direction: rtl; text-align: right; line-height: normal;
+}
+.scq-qtext p { margin: 0; }
+.s2q-title { font-family: Calibri, Arial, sans-serif; font-size: 24px; font-weight: 700; color: #303030; }
+.s2q-body  { font-family: Calibri, Arial, sans-serif; font-size: 24px; font-weight: 400; color: #303030; }
+
+.scq-answers {
+  align-self: flex-start;   /* RTL: flex-start = physical right */
+  width: 604px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.scq-opt {
+  width: 100%; min-height: 46px;
+  border: 2px solid var(--subject-500); border-radius: 1000px;
+  background: #fff; padding: 7px 20px;
+  display: flex; align-items: center; gap: 10px;
+  direction: rtl; cursor: pointer;
+  font-family: Calibri, Arial, sans-serif;
+  overflow: visible;
+}
+
+/* Recall button — visually identical to .scq-hint (reused as-is), but
+   positioned inline in the question flow (right-anchored, below the
+   answers) rather than in the bottom bar, per Figma. Same hidden-
+   until-first-wrong gating as the standard hint. */
+.s2q-recall-btn { align-self: flex-start; }
+
+/* ── Recipe-reminder popup (Figma "ContentPopup") — a large centered
+   modal that reuses S1's .s1rc-* content verbatim, opened by the
+   .s2q-recall-btn instead of the standard hint. Backdrop matches the
+   standard hint overlay; the close button carries its own visual style
+   (see .recipe-popup-close). ── */
+.recipe-popup-overlay {
+  position: absolute; inset: 0; z-index: 60;
+  background: rgba(255, 255, 255, 0.78);
+  display: flex; align-items: center; justify-content: center;
+}
+.recipe-popup-overlay.hidden { display: none !important; }
+.recipe-popup {
+  position: relative;
+  width: 1090px; height: 623px;
+  background: #fff; border: 1px solid #303030; border-radius: 48px;
+  overflow: hidden;
+}
+/* Override S1's full-screen absolute positioning — inside the modal,
+   the same row just fills the panel. Padding/gap are scoped to the
+   popup only (not the shared .s1rc-col default) — the popup is
+   taller than S1's own on-page layout, so it can afford more
+   breathing room per the producer's Figma update, without risking
+   overflow on S1's own tighter-fit page layout. */
+.recipe-popup .s1rc-row {
+  position: static;
+  width: 100%; height: 100%;
+}
+.recipe-popup .s1rc-col {
+  padding: 32px;
+  gap: 16px;
+}
+.recipe-popup-close {
+  position: absolute; top: 16px; left: 16px; z-index: 2;
+  /* Self-contained visual styling — this button belongs to the recall modal
+     alone. It previously inherited its circle and X bars from the feedback
+     popup's close button, which no longer exists. */
+  flex-shrink: 0;
+  width: 30px; height: 30px;
+  border: 1px solid #303030; border-radius: 50%;
+  background: #fff; color: transparent;
+  font-size: 0; line-height: 0; cursor: pointer;
+  padding: 0;
+}
+.recipe-popup-close::before,
+.recipe-popup-close::after {
+  content: ''; position: absolute; left: 50%; top: 50%;
+  width: 11.31px; height: 1.333px; background: #303030; border-radius: 999px;
+  transform-origin: center;
+}
+.recipe-popup-close::before { transform: translate(-50%, -50%) rotate(45deg); }
+.recipe-popup-close::after  { transform: translate(-50%, -50%) rotate(-45deg); }
+
+/* ═══════════════════════════════════════════════════════
+   S3 — SingleChoiceQuestionImage (Figma 2519:6057)
+   Section ב׳. Standard row shape (image left, text right) — the
+   base .scq-question default above. Content image: a photo of the
+   baked cake, 380×380.
+   ═══════════════════════════════════════════════════════ */
+#s3 { background: #fff; }
+
+.scq-img { padding: 8px; }
+.s3q-img { width: 380px; height: 380px; flex-shrink: 0; }
+/* This photo is explicitly cropped in Figma (scaled up ~113%, offset
+   -6.47%) rather than letterboxed — object-fit: cover matches that
+   treatment for this image specifically (the template's usual
+   default stays `contain` for any other image). */
+.s3q-img .scq-img-inner img { object-fit: cover; }
+.img-zoom-modal__panel {
+  position: absolute; inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  width: 660px; height: 660px;
+  background: #fff; border-radius: 24px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.img-zoom-modal__caption {
+  flex: none;
+  padding: 20px 20px 0 76px;
+  font-family: Calibri, Arial, sans-serif; font-size: 20px; font-weight: 700; color: #222;
+  text-align: right; direction: rtl;
+}
+.img-zoom-modal__caption:empty { display: none; }
+.img-zoom-modal__stage {
+  position: relative; flex: 1; min-height: 0;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.img-zoom-modal__stage > .img-zoom-clone { flex: none; border: none; transform-origin: center; }
+
+.s3q-textcol {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; gap: 24px;
+  direction: rtl;
+}
+
+/* ═══════════════════════════════════════════════════════
+   S5 — SingleChoiceQuestion, image-choice variant (same
+   component as part-02's #s1). Section ד׳. Centered column:
+   header text, then a row of 4 image cards, then the recall
+   button — all centered via .s5q-content's own layout, unlike
+   S2/S4's right-anchored single-column shape above.
+   ═══════════════════════════════════════════════════════ */
+#s5 { background: #fff; }
+
+.s5q-content {
+  position: absolute;
+  left: 50%; top: calc(50% - 5px);
+  transform: translate(-50%, -50%);
+  width: 1120px;
+  display: flex; flex-direction: column; align-items: center; gap: 36px;
+}
+.s5q-header {
+  display: flex; flex-direction: column; gap: 8px;
+  align-items: stretch; width: 100%; padding: 0 10px;
+}
+.s5q-title {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 700; color: #303030;
+  text-align: right; direction: rtl; margin: 0;
+}
+.s5q-body {
+  width: 100%; text-align: right;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 400; color: #303030;
+  direction: rtl; line-height: 1.35; margin: 0;
+}
+.s5q-cards {
+  display: flex; gap: 40px; justify-content: center;
+  direction: ltr;
+}
+
+/* S5 — options row right-aligned (user request): the first card from the
+   right shares the header text's right edge (the 10px header inset). */
+#s5 .s5q-content { align-items: flex-start; }   /* rtl column: flex-start = right */
+#s5 .s5q-cards { margin-right: 10px; }
+.s5q-card {
+  position: relative;
+  background: transparent; border: none; padding: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  cursor: pointer; outline: none;
+  width: 216px;
+}
+.s5q-card:disabled { cursor: default; }
+.s5q-card-frame {
+  width: 216px; height: 216px;
+  border: 3px solid rgba(201, 206, 216, 0.4);
+  border-radius: 16px; background: #fff;
+  overflow: hidden; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.15s, background 0.15s;
+}
+.s5q-card-frame img {
+  width: 100%; height: 100%;
+  object-fit: cover; border-radius: 13px;
+  display: block; pointer-events: none; user-select: none;
+}
+/* Non-square tool photos (MedicineSpoon.png is 1212×1119) are shown whole
+   instead of cropped to the square frame — same rule as part 01. */
+.s5q-card-frame img.img-contain { object-fit: contain; }
+.s5q-card-label {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 18px; font-weight: 700; color: #303030;
+  text-align: center; direction: rtl; line-height: 1.3;
+}
+.s5q-card:not(:disabled):hover .s5q-card-frame,
+.s5q-card:focus-visible .s5q-card-frame { border-color: var(--subject-500); }
+.s5q-card.selected .s5q-card-frame { border-color: var(--subject-500); background: var(--subject-100); }
+.s5q-card.correct .s5q-card-frame { border-color: #609e12; background: #edf8ed; }
+.s5q-card.wrong   .s5q-card-frame { border-color: #b20010; background: #fff0f4; }
+/* Feedback icon badge — exact Figma vector (32px circle), pinned to the
+   card frame's top-right corner (nodes 3707:23340 / 2134:21437) */
+.s5q-card.correct::after,
+.s5q-card.wrong::after {
+  content: '';
+  position: absolute; top: 0; right: 0;
+  transform: translate(50%, -50%);
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background-repeat: no-repeat; background-position: center;
+}
+.s5q-card.correct::after {
+  background-color: #609e12;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 11' fill='none'%3E%3Cpath d='M5.16613 11C4.71195 11.0002 4.27638 10.8283 3.9555 10.5222L0.295374 7.03766C-0.0984579 6.66246 -0.0984579 6.05428 0.295374 5.67908C0.689332 5.30401 1.32794 5.30401 1.72189 5.67908L5.16613 8.95926L14.2781 0.281305C14.6721 -0.0937682 15.3107 -0.0937682 15.7046 0.281305C16.0985 0.656497 16.0985 1.26468 15.7046 1.63988L6.37675 10.5222C6.05587 10.8283 5.6203 11.0002 5.16613 11Z' fill='white'/%3E%3C/svg%3E");
+  background-size: 16px 11px;
+}
+.s5q-card.wrong::after {
+  background-color: #b20010;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M15.6278 0.372219C15.3894 0.133887 15.0661 0 14.729 0C14.3919 0 14.0686 0.133887 13.8302 0.372219L8 6.20239L2.16983 0.372219C1.93143 0.133887 1.60813 0 1.27103 0C0.933923 0 0.610622 0.133887 0.372219 0.372219C0.133887 0.610622 0 0.933923 0 1.27103C0 1.60813 0.133887 1.93143 0.372219 2.16983L6.20239 8L0.372219 13.8302C0.133887 14.0686 0 14.3919 0 14.729C0 15.0661 0.133887 15.3894 0.372219 15.6278C0.610622 15.8661 0.933923 16 1.27103 16C1.60813 16 1.93143 15.8661 2.16983 15.6278L8 9.79761L13.8302 15.6278C14.0686 15.8661 14.3919 16 14.729 16C15.0661 16 15.3894 15.8661 15.6278 15.6278C15.8661 15.3894 16 15.0661 16 14.729C16 14.3919 15.8661 14.0686 15.6278 13.8302L9.79761 8L15.6278 2.16983C15.8661 1.93143 16 1.60813 16 1.27103C16 0.933923 15.8661 0.610622 15.6278 0.372219Z' fill='white'/%3E%3C/svg%3E");
+  background-size: 16px 16px;
+}

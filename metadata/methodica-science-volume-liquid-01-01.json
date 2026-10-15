@@ -1,0 +1,171 @@
+{
+  "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-01/",
+  "title": "בואו נלמד משהו חדש",
+  "learningUnitId": "methodica-science-volume-liquid-01",
+  "componentPurpose": "instruction",
+  "isAssessment": false,
+  "recommendedAfterFail": [],
+  "isRequired": true,
+  "relativeDifficulty": 3,
+  "masteryLevel": null,
+  "order": 1,
+  "depthLevel": "core-curriculum-basic",
+  "cognitiveLevels": ["applying-a-model-or-procedure"],
+  "languages": ["Hebrew"],
+  "skills": [],
+  "estimatedTimeInMinutes": 17,
+  "createdAt": "2026-09-24T00:00:00.000Z",
+  "updatedAt": "2026-09-24T00:00:00.000Z",
+  "subContent": [
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-01/methodica-science-volume-liquid-01-01-001/",
+      "title": "בחירת דמות מלווה",
+      "informationToBot": "מטרת הפריט: בחירת דמות מלווה ליחידה כולה (הבחירה נשמרת ב-localStorage ומלווה את הלומד גם בחלקים 02–07 של היחידה). מה התלמיד אמור להבין: זו בחירה טכנית/אישית בלבד, ללא תוכן לימודי. כיווני חשיבה: אין. טעויות נפוצות: אין הערכה בפריט זה. מידע נוסף: מסך פתיחה של היחידה כולה, לפני התוכן הלימודי.",
+      "contentType": "motivational",
+      "mediaFormat": "interactive-content",
+      "questions": []
+    },
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-01/methodica-science-volume-liquid-01-01-002/",
+      "title": "כוסות משקה - איפה יותר נוזל?",
+      "informationToBot": "מטרת הפריט: הוק פותח שמערער את האינטואיציה החזותית - להראות שהעין לבדה אינה כלי מדידה אמין להשוואת כמויות נוזל בין כלים שונים. מה התלמיד אמור להבין: לא ניתן לדעת בוודאות איזו כוס מכילה יותר משקה רק על ידי הסתכלות, כי צורת הכלי משפיעה על הגובה הנראה לעין; יש צורך בכלי מדידה. כיווני חשיבה: להשוות נפח על סמך גובה בלבד הוא מטעה כאשר רוחב הכלים שונה. טעויות נפוצות: בחירת 'בכוס הגבוהה' מתוך הנחה שגובה גדול יותר = נפח גדול יותר, בלי להביא בחשבון את רוחב הכוס. מידע נוסף: מוביל ישירות להיכרות עם כלי המדידה בפריטים הבאים.",
+      "contentType": "motivational",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-01/methodica-science-volume-liquid-01-01-002/q1",
+          "questionType": "choice",
+          "questionText": "באיזה כוס המשקה תופס יותר מקום? (כלומר יש יותר משקה)?",
+          "answers": ["בכוס הגבוהה", "בכוס הנמוכה", "הכמות זהה בשתי הכוסות", "לא ניתן לדעת"],
+          "correctAnswers": ["לא ניתן לדעת"]
+        }
+      ]
+    },
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-01/methodica-science-volume-liquid-01-01-003/",
+      "title": "כלים למדידת כמויות קטנות של נוזל",
+      "informationToBot": "מטרת הפריט: הקניית שלושה כלים למדידת כמויות קטנות של נוזל - כפית מדידה רפואית (5 מ״ל, שימוש רפואי), פיפטה (0.1-5 מ״ל, דיוק גבוה, שימוש רפואי/מעבדתי), ומזרק (0.5-10 מ״ל, דיוק גבוה, שימוש רפואי). מה התלמיד אמור להבין: לכל כלי יש טווח מדידה ורמת דיוק, ולעיתים ניתן למדוד את אותה כמות בכמה כלים - הבחירה נעשית לפי הדיוק הדרוש ולפי מטרת השימוש. כיווני חשיבה: קישור בין מבנה הכלי (שנתות צפופות) לרמת הדיוק שלו. טעויות נפוצות: אין שאלה מוערכת בפריט - תוכן הקנייה בלבד. מידע נוסף: כרטיסי מידע הנפתחים בלחיצה, לא סרטון.",
+      "contentType": "instruction",
+      "mediaFormat": "interactive-content",
+      "questions": []
+    },
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-01/methodica-science-volume-liquid-01-01-004/",
+      "title": "בחירת כלי מדידה לפי מטרת השימוש",
+      "informationToBot": "מטרת הפריט: תרגול מונחה על ההיכרות עם כלי המדידה הקטנים - גרירת שלושה תרחישים (הוספת תמיסת צבע במעבדה, מנת סירופ לילד, תחליף חלב לגור חתולים) לכלי המדידה המתאים (פיפטה, כפית מדידה רפואית, מזרק בהתאמה), כאשר בכל המקרים יש למדוד אותה כמות (5 מ״ל) אך ההקשר קובע את הכלי. מה התלמיד אמור להבין/לתרגל: אותה כמות נמדדת בכלים שונים לפי הקשר השימוש (מעבדה מול רפואה וטרינרית/אנושית). טעויות נפוצות: התעלמות מהקשר השימוש ובחירת כלי לפי הכמות בלבד. מידע נוסף: כלי מדידה: פיפטה, כפית מדידה רפואית, מזרק.",
+      "contentType": "practice",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-01/methodica-science-volume-liquid-01-01-004/q1",
+          "questionType": "matching",
+          "questionText": "בכל המקרים הבאים צריך למדוד 5 מ״ל. גררו כל מקרה לכלי המתאים ביותר.",
+          "answers": {
+            "source": [
+              "במעבדה צריך להוסיף בדיוק 5 מ״ל תמיסת צבע לנוזל שבמבחנה.",
+              "ילד צריך לקחת מנה של 5 מ״ל סירופ בעזרת הכלי המצורף לבקבוק.",
+              "צריך לתת לגור חתולים 5 מ״ל תחליף חלב ישירות לפה."
+            ],
+            "target": ["כפית מדידה רפואית", "פיפטה", "מזרק"]
+          },
+          "correctAnswers": [
+            {"source": "במעבדה צריך להוסיף בדיוק 5 מ״ל תמיסת צבע לנוזל שבמבחנה.", "target": "פיפטה"},
+            {"source": "ילד צריך לקחת מנה של 5 מ״ל סירופ בעזרת הכלי המצורף לבקבוק.", "target": "כפית מדידה רפואית"},
+            {"source": "צריך לתת לגור חתולים 5 מ״ל תחליף חלב ישירות לפה.", "target": "מזרק"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-01/methodica-science-volume-liquid-01-01-005/",
+      "title": "כלים למדידת נפח גדול של נוזל",
+      "informationToBot": "מטרת הפריט: הקניית שני כלים למדידת כמויות גדולות של נוזל - משורה (10-1000 מ״ל, שנתות שוות-מרחק, דיוק גבוה, שימוש מעבדתי) וכוס כימית (שנתות גסות, פחות מדויקת, למדידה גסה ולערבוב). מה התלמיד אמור להבין: ככל שהכלי גדול יותר - הדיוק נמוך יותר, אך הוא מכיל יותר נוזל; קיים טרייד-אוף בין קיבולת לדיוק. כיווני חשיבה: קישור בין צפיפות השנתות לרמת הדיוק. טעויות נפוצות: אין שאלה מוערכת בפריט - תוכן הקנייה בלבד. מידע נוסף: כרטיסי מידע הנפתחים בלחיצה.",
+      "contentType": "instruction",
+      "mediaFormat": "interactive-content",
+      "questions": []
+    },
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-01/methodica-science-volume-liquid-01-01-006/",
+      "title": "בחירת כלי למדידת 100 מ״ל",
+      "informationToBot": "מטרת הפריט: יישום ראשוני של בחירת כלי מדידה מתאים - עלינו למדוד 100 מ״ל (כמות של בערך כוס שתייה) לניסוי בכיתה, מתוך שלושה כלים שהוכרו (כפית מדידה רפואית, פיפטה, משורה). מה התלמיד אמור להבין/לתרגל: משורה היא הכלי המתאים לכמות בסדר גודל של 100 מ״ל - כפית ופיפטה מיועדות לכמויות קטנות בהרבה. טעויות נפוצות: בחירת כלי מדידה קטן (כפית/פיפטה) שאינו מתאים לטווח הנדרש.",
+      "contentType": "practice",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-01/methodica-science-volume-liquid-01-01-006/q1",
+          "questionType": "choice",
+          "questionText": "עלינו למדוד 100 מ״ל לניסוי בכיתה (זו כמות של בערך כוס שתייה). באיזה כלי נבחר?",
+          "answers": ["כפית מדידה רפואית", "פיפטה", "משורה"],
+          "correctAnswers": ["משורה"]
+        }
+      ]
+    },
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-01/methodica-science-volume-liquid-01-01-007/",
+      "title": "תהליך מדידת נפח נוזל נכונה",
+      "informationToBot": "מטרת הפריט: הקניית עקרונות תהליך מדידת נפח נוזל נכונה, בשני מסלולי משחק חלופיים לבחירת הלומד (כרטיסי גירוד או חדר בריחה) המעבירים אותו תוכן: קריאת גובה פני הנוזל בגובה העיניים (לפי הנקודה הנמוכה בעקומה שנוצרת בהצמדות הנוזל לדופן הכלי), חזרתיות של 3 מדידות וחישוב ממוצע כדי לוודא מהימנות, ובחירת כלי מדידה לפי טווח, דיוק והקשר השימוש. כולל גם שאלת יישום (מי מבין שלושת התלמידים בתמונה קורא נכון את גובה הנוזל - התלמידה בצד ימין, שעיניה בגובה פני הנוזל) ושאלת השלמת משפט על עקרונות המדידה. מה התלמיד אמור להבין/לתרגל: זיהוי ויזואלי של תנוחת קריאה נכונה (גובה העיניים, לא מלמעלה/מלמטה), ויישום שלושת העקרונות (כלי מתאים, קריאה בגובה העיניים, שלוש מדידות וממוצע) בהשלמת משפט. טעויות נפוצות: בחירת תלמיד שמביט מלמעלה/מלמטה על המשורה; בלבול בין 'ממוצע' ל'שלוש' בהשלמת המשפטים. מידע נוסף: פריט זה ממזג שני מסלולי משחק מקבילים (כרטיסי גירוד / חדר בריחה) שמעבירים תוכן זהה - הלומד בוחר מסלול אחד בלבד.",
+      "contentType": "practice",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-01/methodica-science-volume-liquid-01-01-007/q1",
+          "questionType": "choice",
+          "questionText": "בתמונה מופיעה משורה עם מים ושלושה תלמידים. מי קורא או קוראת את גובה הנוזל בצורה הנכונה?",
+          "answers": ["התלמידה בצד שמאל", "התלמיד באמצע", "התלמידה בצד ימין"],
+          "correctAnswers": ["התלמידה בצד ימין"]
+        },
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-01/methodica-science-volume-liquid-01-01-007/q2",
+          "questionType": "fill-in",
+          "questionText": "השלימו את המשפטים: מדידה מדעית טובה של נוזל דורשת: (1) ___ מתאים, (2) קריאה ___, (3) ביצוע ___ מדידות, וחישוב (4) ___.",
+          "answers": [],
+          "correctAnswers": ["1: כלי, 2: בגובה העיניים, 3: שלוש, 4: ממוצע"]
+        }
+      ]
+    },
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-01/methodica-science-volume-liquid-01-01-008/",
+      "title": "סידור שלבי תהליך מדידת נפח נוזל",
+      "informationToBot": "מטרת הפריט: תרגול סיכום המקנה סדר פעולות נכון לתהליך מדידת נפח נוזל מדעית. מה התלמיד אמור להבין/לתרגל: סדר השלבים הנכון - (1) בחירת כלי מדידה שיוכל להכיל את כמות הנוזל, (2) מדידה בגובה העיניים, (3) חזרתיות - ביצוע 3 מדידות, (4) בדיקת מהימנות - בדיקת קרבה בין התוצאות, (5) חישוב ממוצע. טעויות נפוצות: החלפת סדר בין 'בדיקת מהימנות' לבין 'חישוב ממוצע' (בודקים קודם קרבה, מחשבים ממוצע אחרון).",
+      "contentType": "practice",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-01/methodica-science-volume-liquid-01-01-008/q1",
+          "questionType": "sequencing",
+          "questionText": "סדרו את שלבי תהליך מדידת נפח נוזל לפי הסדר",
+          "answers": [
+            "בחירת כלי מדידה – אם הכלי יוכל להכיל את כמות הנוזל?",
+            "מדידה בגובה העיניים",
+            "חזרתיות - ביצוע 3 מדידות",
+            "כמה התוצאות קרובות זו לזו – בדיקת מהימנות",
+            "חישוב ממוצע"
+          ],
+          "correctAnswers": [
+            "בחירת כלי מדידה – אם הכלי יוכל להכיל את כמות הנוזל?",
+            "מדידה בגובה העיניים",
+            "חזרתיות - ביצוע 3 מדידות",
+            "כמה התוצאות קרובות זו לזו – בדיקת מהימנות",
+            "חישוב ממוצע"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-01/methodica-science-volume-liquid-01-01-009/",
+      "title": "שאלת חימום: תרופה לתינוק",
+      "informationToBot": "מטרת הפריט: שאלת חימום קלילה לפני התרגול, המיישמת את הכלים והעקרונות שנלמדו על תרחיש רפואי - לתינוק בן 6 חודשים יש לתת תרופה במינון 2 מ״ל, ויש לבחור את כלי המדידה המתאים מבין כפית מטבח, מזרק, משורה גדולה של 500 מ״ל, ובקבוק תינוק. מה התלמיד אמור להבין/לתרגל: לכמות קטנה ומדויקת (2 מ״ל) בהקשר רפואי, מזרק הוא הכלי המתאים - כפית מטבח אינה מדויקת, ומשורה/בקבוק אינם מדויקים לכמות כה קטנה. טעויות נפוצות: בחירת כפית מטבח מתוך הרגל ביתי, בלי להביא בחשבון את הצורך בדיוק רפואי.",
+      "contentType": "practice",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-01/methodica-science-volume-liquid-01-01-009/q1",
+          "questionType": "choice",
+          "questionText": "לתינוק חולה בן 6 חודשים צריך לתת תרופה במינון 2 מ״ל. באיזה כלי תבחרו?",
+          "answers": ["כפית מהמטבח", "מזרק", "משורה גדולה של 500 מ״ל", "בקבוק תינוק"],
+          "correctAnswers": ["מזרק"]
+        }
+      ]
+    }
+  ]
+}

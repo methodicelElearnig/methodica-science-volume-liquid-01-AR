@@ -1,0 +1,235 @@
+/* ═══════════════════════════════════════════════════════
+   css/style.css  —  720 Science · Liquid Volume Lomda · Part 05
+   Canvas: 1280 × 710 px   (matches the 720 reference engine)
+
+   Engine scaffold only — no screen content has been added yet.
+   Add each screen's own section (with its own #sN { … } block and
+   template-specific classes) below the marker at the end of this
+   file as it's built; read the relevant 720-templates reference
+   file for that screen rather than pre-copying unused templates
+   here speculatively.
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── Screens ───────────────────────────────────────────── */
+.screen {
+  position: absolute; inset: 0;
+  width: 1280px; height: 710px;
+  display: none; overflow: hidden;
+}
+.img-zoom-modal__panel {
+  position: absolute; inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  width: 660px; height: 660px;
+  background: #fff; border-radius: 24px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  display: flex; flex-direction: column;   /* caption row (if any) + stage, never overlapping */
+}
+/* Optional per-image title, set via the opening button's data-zoom-caption.
+   Empty/absent → collapses to nothing. Left padding clears the close button
+   (top-left, 44px). */
+.img-zoom-modal__caption {
+  flex: none;
+  padding: 20px 20px 0 76px;
+  font-family: Calibri, Arial, sans-serif; font-size: 20px; font-weight: 700; color: #222;
+  text-align: right; direction: rtl;
+}
+.img-zoom-modal__caption:empty { display: none; }
+.img-zoom-modal__stage {
+  position: relative; flex: 1; min-height: 0;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.img-zoom-modal__stage > .img-zoom-clone { flex: none; border: none; transform-origin: center; }
+
+/* ═══════════════════════════════════════════════════════
+   S0 — TransitionScreen (slide 37)
+   Centered lead + title above the companion character video.
+   ═══════════════════════════════════════════════════════ */
+#s0 { background: #fff; }
+
+.s0tr-content {
+  position: absolute; inset: 0 0 74px 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 24px;
+}
+.s0tr-text {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 12px;
+  text-align: center;
+  max-width: 1050px;
+}
+.s0tr-title {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 40px; font-weight: 700; color: #303030;
+  margin: 0; line-height: 1.2;
+}
+.s0tr-subtitle {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 28px; font-weight: 400; color: #303030;
+  margin: 0;
+}
+.s0tr-video-wrap {
+  width: 640px; height: 360px; flex-shrink: 0;
+  position: relative;             /* anchor for the S3 placeholder graphic */
+  border-radius: 16px; overflow: hidden;
+}
+.s0tr-video { width: 100%; height: 100%; object-fit: contain; display: block;
+  clip-path: inset(2px);   /* hide the GPU edge-blend seam at fractional scales */
+  /* Decorative, non-interactive video — suppress browser-injected hover
+     overlays (PiP/cast/read-aloud) some browsers show regardless of the
+     controlsList/disablepictureinpicture attributes on the element itself. */
+  pointer-events: none;
+}
+/* S3 only — YouTube IFrame API replaces #s3-youtube-player with an iframe
+   that fills the .s0tr-video-wrap frame. Scoped to #s3 (not the shared
+   .s0tr-video-wrap rule): a black background here would otherwise show
+   through the 2px clip-path inset on S0's <video>.s0tr-video (above),
+   turning that gap into a visible black seam around the companion video. */
+#s3 .s0tr-video-wrap { background: #000; }
+.s0tr-video-wrap iframe,
+#s3-youtube-player {
+  width: 100%; height: 100%;
+  border: 0; display: block;
+}
+
+/* #s0 has no .scq-bar wrapper (TransitionScreen convention) — position its
+   own back button, matching every other part's S0/S4 pattern. */
+#s0-back {
+  position: absolute;
+  bottom: 17.5px; right: 24px;
+  z-index: 12;
+}
+
+/* #s3 has no .scq-bar wrapper (TransitionScreen convention) — position its
+   own back button, matching #s0-back above. */
+#s3-back {
+  position: absolute;
+  bottom: 17.5px; right: 24px;
+  z-index: 12;
+}
+
+/* ═══════════════════════════════════════════════════════
+   S1 — SingleChoiceQuestion (slide 38)
+   Content image (left, tall portrait bottle photo — sized to its
+   own aspect ratio rather than the reference build's 380×380
+   square, per SingleChoiceQuestion.md's own allowance) + title +
+   intro + a highlighted glossary box + question + 3 text-answer
+   pills (right). Progress-question nav above (question 1 of 2).
+   ═══════════════════════════════════════════════════════ */
+#s1 { background: #fff; }
+
+.scq-question {
+  position: absolute; top: 90px; right: 40px; left: 40px;
+  display: flex; direction: ltr; align-items: flex-start; gap: 56px;
+}
+
+/* Content image frame — reusable box; concrete size supplied per usage
+   (see .s1q-img) since this template's image slot isn't always a 380×380
+   square. */
+.scq-img { padding: 8px; }
+/* Bottle photo is portrait (800×1307, ≈0.61 aspect) — matches the
+   pptx's own frame proportions rather than a square, sized down
+   slightly from the pptx's own 384×627 so it clears the bottom bar
+   (screen top 90px + height must stay under the 74px bar at 636). */
+.s1q-img { width: 324px; height: 530px; flex-shrink: 0; }
+
+.s1q-textcol {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; gap: 20px;
+  direction: rtl;
+}
+
+.scq-qtext {
+  display: flex; flex-direction: column; gap: 0;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 700; color: var(--subject-500);   /* Blue/70, Body/B5 Bold — template default */
+  text-align: right; direction: rtl; line-height: normal;
+}
+.scq-qtext p { margin: 0; }
+/* Per-run formatting from the source: title stays the template default
+   (blue/bold); the two intro lines are explicitly plain (regular weight,
+   dark), per _question-template-defaults.md's "explicit source
+   formatting over generic template defaults" rule. */
+.s1q-plain { font-weight: 400; color: #303030; }
+.s1q-question {
+  margin: 0;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 700; color: #303030;
+  text-align: right; line-height: normal;
+}
+
+/* Glossary box — producer notes: Subject/100 fill (#D4F3FF) for this
+   text segment. Bold term + regular translation per line, matching the
+   source's own run-level emphasis. Fixed to the same width as the
+   answer pills below it (604px, the template's own Figma width) and
+   right-anchored — not stretched to the text column's full width,
+   same reasoning as .scq-answers below. */
+.s1q-glossary {
+  width: 604px; max-width: 100%;
+  align-self: flex-start;
+  background: var(--subject-100);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex; flex-direction: column; gap: 6px;
+  direction: rtl;
+}
+.s1q-glossary p {
+  margin: 0;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 20px; font-weight: 400; color: #222;
+  text-align: right; line-height: normal;
+}
+.s1q-glossary-title { font-weight: 700; }
+
+/* Answers — fixed to the template's own Figma width (604px), NOT
+   stretched to fill the text column. Right-anchored via align-self
+   (the text column's direction:rtl above makes flex-start = physical
+   right). */
+.scq-answers {
+  display: flex; flex-direction: column; gap: 12px;
+  width: 604px; max-width: 100%;
+  align-self: flex-start;
+}
+.scq-opt {
+  width: 100%; min-height: 46px;
+  border: 2px solid var(--subject-500); border-radius: 1000px;
+  background: #fff; padding: 7px 20px;
+  display: flex; align-items: center; gap: 10px;
+  direction: rtl; cursor: pointer;
+  font-family: Calibri, Arial, sans-serif;
+  overflow: visible;
+}
+
+/* ═══════════════════════════════════════════════════════
+   S2 — SingleChoiceQuestion (slide 39, last slide of the deck)
+   Content image (left, landscape bottle-on-scale + beaker photo) +
+   title + question + 4 text-answer pills (right). Progress-question
+   nav above (question 2 of 2). Reuses .scq-question/.scq-img/
+   .scq-img-inner/.scq-qtext/.scq-answers/.scq-opt/.scq-radio verbatim
+   from S1 — only this screen's image size and text-column content
+   differ.
+   ═══════════════════════════════════════════════════════ */
+#s2 { background: #fff; }
+
+/* Bottle+beaker photo is landscape (1414×1113, ≈1.27 aspect) —
+   matches the pptx's own frame proportions. */
+.s2q-img { width: 380px; height: 300px; flex-shrink: 0; }
+
+.s2q-textcol {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; gap: 20px;
+  direction: rtl;
+}
+
+.s2q-title {
+  margin: 0;
+  /* template default (blue/bold) — no color override here (the source's
+     own #3CB0F1 doesn't match this project's Subject/500 blue used by
+     every other title; see build notes) */
+}
+/* All body paragraphs in the source are plain (regular weight, dark) —
+   no separate bold treatment for the closing question line, unlike S1. */
+.s2q-plain { font-weight: 400; color: #303030; }
+.s2q-strong { font-weight: 700; color: #303030; }

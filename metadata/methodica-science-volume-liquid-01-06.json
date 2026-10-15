@@ -1,0 +1,68 @@
+{
+  "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-06/",
+  "title": "שאלת שיא",
+  "learningUnitId": "methodica-science-volume-liquid-01",
+  "componentPurpose": "practice",
+  "isAssessment": true,
+  "recommendedAfterFail": [],
+  "isRequired": true,
+  "relativeDifficulty": 5,
+  "masteryLevel": null,
+  "order": 6,
+  "depthLevel": "core-curriculum-basic",
+  "cognitiveLevels": ["evaluating-and-justifying"],
+  "languages": ["Hebrew"],
+  "skills": [],
+  "estimatedTimeInMinutes": 8,
+  "createdAt": "2026-09-24T00:00:00.000Z",
+  "updatedAt": "2026-09-24T00:00:00.000Z",
+  "subContent": [
+    {
+      "id": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-06/methodica-science-volume-liquid-01-06-001/",
+      "title": "שאלת שיא: מתכון עוגת השוקולד של סבתא (4 סעיפים)",
+      "informationToBot": "מטרת הפריט: שאלת השיא של היחידה - תרחיש שלם המשווה מתכון ישן (בכתב יד, ביחידות לא-סטנדרטיות: 1 כוס מיץ, 2 כפיות סוכר, כף שמן) למתכון עדכני (ביחידות מטריות: 250 מ״ל, 10 גרם סוכר, 15 מ״ל שמן), לפי טבלת המרה נתונה (כוס=240 מ״ל, כפית=5 מ״ל, כף=15 מ״ל). תתי-סעיפים: א) המרת יחידת 'כוס' למ״ל לפי המתכון הישן. ב) הערכת מידת הדמיון בין העוגות משני המתכונים. ג) הבנת הרציונל להעדפת יחידות תקניות (מ״ל) על פני יחידות ביתיות לא-אחידות (כוס/כף/כפית). ד) יישום עקרון בחירת כלי מדידה מדויק (מבין ארבע אפשרויות) למדידת 15 מ״ל שמן בהקשר מקצועי (קונדיטוריה). מה התלמיד אמור להבין: יחידות סטנדרטיות מבטיחות תוצאה אחידה ללא תלות בכלי הבית של המבשל/ת; דיוק במדידה משפיע ישירות על תוצאת המוצר. טעויות נפוצות: סעיף א - חישוב שגוי של המרת 'כוס' (240 מ״ל) בהתעלם מטבלת ההמרה הנתונה. סעיף ב - מסקנה קיצונית מדי ('זהה לגמרי' או 'שונה משמעותית') במקום 'כמעט זהה' לאור הפרשים קטנים בין המתכונים. סעיף ד - בחירת כף מטבח רגילה או כוס כימית מתוך נוחות, בלי להתחשב בדרישת הדיוק הגבוה בהקשר מקצועי.",
+      "contentType": "practice",
+      "mediaFormat": "interactive-content",
+      "questions": [
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-06/methodica-science-volume-liquid-01-06-001/q1",
+          "questionType": "choice",
+          "questionText": "סעיף א׳: אם נשתמש במתכון של סבתא, כמה מ\"ל מים נשים?",
+          "answers": ["240 מ״ל", "250 מ״ל", "480 מ״ל", "5 מ״ל"],
+          "correctAnswers": ["240 מ״ל"]
+        },
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-06/methodica-science-volume-liquid-01-06-001/q2",
+          "questionType": "choice",
+          "questionText": "סעיף ב׳: האם המתכון משנת 1950 והמתכון העדכני יצרו עוגה זהה או שונה משמעותית?",
+          "answers": ["זהה לגמרי", "כמעט זהה", "שונה משמעותית", "אי אפשר לדעת מראש"],
+          "correctAnswers": ["כמעט זהה"]
+        },
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-06/methodica-science-volume-liquid-01-06-001/q3",
+          "questionType": "choice",
+          "questionText": "סעיף ג׳: סבתא לא הייתה מודעת ליחידות כמו מיליליטר (מ\"ל). מדוע המתכון העדכני משתמש ביחידות תקניות?",
+          "answers": [
+            "כי בשנת 1950 ידעו פחות ממה שיודעים היום",
+            "כי אנשים צעירים לא נוהגים לבשל כמו בעבר",
+            "כדי שגם מי שמכין את העוגה עם כוס אחרת יקבל את אותה העוגה",
+            "כיוון שהיום החוק מחייב זאת"
+          ],
+          "correctAnswers": ["כדי שגם מי שמכין את העוגה עם כוס אחרת יקבל את אותה העוגה"]
+        },
+        {
+          "questionId": "https://lomdot.education.gov.il/metodica/720active/science/volume-liquid/01/methodica-science-volume-liquid-01-06/methodica-science-volume-liquid-01-06-001/q4",
+          "questionType": "choice",
+          "questionText": "סעיף ד׳: בקונדיטוריה המקפידה על דיוק ואחידות, באיזה כלי תמליצו לבחור למדידת 15 מ\"ל של שמן במתכון? לחצו על האפשרות המתאימה ביותר.",
+          "answers": [
+            "משורת 50 מ״ל",
+            "כפית מדידה רפואית של 5 מ\"ל: מודדים 3 פעמים כדי להגיע ל-15",
+            "כף מטבח רגילה זה מספיק טוב",
+            "כוס כימית של 500 מ״ל – מהר וקל"
+          ],
+          "correctAnswers": ["משורת 50 מ״ל"]
+        }
+      ]
+    }
+  ]
+}

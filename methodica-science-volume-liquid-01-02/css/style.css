@@ -1,0 +1,879 @@
+/* ═══════════════════════════════════════════════════════
+   css/style.css  —  720 Science · Volume Comparison Lomda
+   Canvas: 1280 × 710 px   (matches the 720 reference engine)
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── Screens ───────────────────────────────────────────── */
+/* .screen fills #app (which fills the viewport) so chrome anchored to its
+   bottom/top edges (flag button, .scq-bar, .screen::after) reaches the
+   actual screen edges on tablet aspect ratios. Per-screen content stays
+   positioned via absolute layout against the 1280-wide design grid. */
+.screen {
+  position: absolute; inset: 0;
+  display: none; overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TEMPLATE — TwoOptionSelection (Screen 01)
+   Title + subtitle + two single-select cards. Card states:
+   hover + selected. First screen: no Back button.
+   ═══════════════════════════════════════════════════════ */
+
+/* Screen 01: +10% image window — 238px box, matching the reference
+   character-selection implementation (same asset style: transparent,
+   portrait fluffy-character PNGs). */
+
+/* Reduce padding from the global 220/16px default to 4px so the character
+   fills the frame; object-fit:contain keeps full visibility (no crop). */
+
+/* ── Cards row ── */
+
+/* Hover + keyboard-focus — Figma ImageContainer state=hover: Subject/500 border */
+/* Selected — Figma ImageContainer state=selected: 2px Subject/500 border + Subject/100 fill */
+
+/* ═══════════════════════════════════════════════════════
+   TEMPLATE — SingleChoiceQuestion (Screen 02)
+   Question image (left, placeholder until a real photo is
+   supplied) + question text + 3 single-choice option pills
+   (right). Feedback panel (draggable popup) + bottom bar.
+   ═══════════════════════════════════════════════════════ */
+
+/* Question block — Figma: top 139px, right 40px, width 1188px */
+.scq-question {
+  position: absolute; top: 139px; right: 40px;
+  width: 1188px; height: auto;
+}
+
+/* Image placeholder (left) — 380×380 square, gray until a real photo is
+   supplied (per template convention: container stays gray until present). */
+.scq-img {
+  position: absolute; left: 0; top: 0;
+  width: 380px; height: 380px; padding: 8px;
+}
+
+/* Question text (right) — vertically centered against the image */
+.scq-qtext {
+  position: absolute; right: 0; top: 0;
+  width: 792px; height: auto;
+  display: flex; flex-direction: column; justify-content: flex-start; gap: 0;
+  padding-top: 16px;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 700; color: var(--subject-500);   /* Blue/70, Body/B5 Bold */
+  text-align: right; direction: rtl; line-height: normal;
+}
+
+/* Answers (right, below the question text) */
+.scq-answers {
+  position: absolute; right: 0; top: 100px;
+  width: 604px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+/* S1 only: the talk-stage bubble top sits at y≈398 while the template's
+   answers column ends at y≈401 — a ~3px collision. The character can't
+   move (feet pinned above the action bar, bubble pinned to its head), so
+   reclaim spare question→answers air instead: 100→84 lifts the capsules
+   16px, leaving ~13px clear above the bubble. No element changes size. */
+.scq-opt {
+  width: 604px; min-height: 46px;
+  border: 2px solid var(--subject-500); border-radius: 1000px;
+  background: #fff; padding: 7px 20px;
+  display: flex; align-items: center; gap: 10px;
+  direction: rtl; cursor: pointer;
+  font-family: Calibri, Arial, sans-serif;
+  overflow: visible;
+}
+.scq-popup-title p { margin: 0 0 2px; }
+.scq-popup-title p:last-child { margin-bottom: 0; }
+
+.img-zoom-modal__panel {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  width: 660px;
+  height: 660px;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+
+.img-zoom-modal__stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* The enlarged view is a clone of the image wrapper (364×364 inner frame),
+   scaled up. Overlays inside the wrapper are included by construction. */
+.img-zoom-modal__stage > .img-zoom-clone {
+  width: 364px;
+  height: 364px;
+  flex: none;
+  border: none;
+  transform: scale(1.7);
+  transform-origin: center;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TEMPLATE — FlipCardsReveal (Screen 03)
+   Card: 325×325px square — both faces identical dimensions.
+   Reuses TwoOptionSelection's composition (title+subtitle above
+   a card row, Continue/Back at the bottom bar).
+   ═══════════════════════════════════════════════════════ */
+
+/* Override gap between cards + text-to-cards gap for this screen.
+   Tighter than the 40/50px baseline used elsewhere — this screen carries
+   more vertical content than a typical FlipCardsReveal instance (a 3-line
+   instructional paragraph, per-card captions, and a footnote revealed on
+   completion), which measured out to ~2px clearance from the bottom bar
+   at the default gap. */
+
+/* Source paragraph is a full instructional sentence, not a short tagline —
+   explicit source formatting (regular weight, one bold word) overrides the
+   template's default bold short-subtitle styling for this role. */
+
+/* The flip card — 325×325 square, IS the visual card object */
+
+/* Rotating inner wrapper */
+
+/* Both faces: identical 325×325, same padding, same border-radius */
+
+/* ── Front face: image ───────────────────────────────── */
+
+/* Hover + keyboard focus on unflipped card — Subject/500 border */
+
+/* ── Back face: text ─────────────────────────────────── */
+/* Cards flip freely back and forth here (producer notes) — once flipped,
+   allow the back face's inline tooltip to escape the card's own bounds.
+   Nothing on this face relies on the overflow:hidden clip (rounded corners
+   come from the face's own border-radius, not from clipped content); see
+   figma-lomda-builder/reference/patterns.md → "floating overlay cut in a
+   straight line" for why z-index alone can't fix this. */
+
+/* Text wrapper: fills padded area, right-aligned RTL Hebrew */
+
+/* Revealed card stays interactive (can flip back) — no cursor change */
+
+/* Back button in S2 bottom bar — S2 has no .scq-bar flex container, so the
+   button is anchored to the bar area directly (mirrors .btn-continue). */
+
+/* Footnote — revealed once all 3 cards have been seen. It participates in
+   layout from the start (visibility, not display) so the vertically-centered
+   .select-content has the SAME height in both states — the title/cards must
+   not shift when the footnote appears. 20px = Body/B-8 (approved token);
+   single line (nowrap) may extend past the 810px column, stays centered. */
+
+/* ═══════════════════════════════════════════════════════
+   GLOBAL COMPONENT — Inline tooltip icon on a highlighted term
+   (RTL Hebrew). Reusable across any body text / card / popup —
+   not scoped to one screen. See 720-templates/_global-components.md
+   → "Inline tooltip icons in RTL Hebrew text".
+   ═══════════════════════════════════════════════════════ */
+/* Vector icon, not a font character. Figma source of truth:
+   eSbp4bKHgBky0rakDb8l9N node 1580:17042 ("Tooltip",
+   TooltipAllocation=WhiteBg) — self-contained 15×15 asset: the SVG already
+   bakes in the blue circular background and the white "i" path, so no
+   background/border-radius is drawn on `.term-info` here. */
+/* Hovering the underlined term itself opens the tooltip too, not only
+   the info icon (.tooltip-word wraps both; the tooltip stays anchored
+   to the icon, so its position is identical either way). */
+
+/* Flip-card terms sit near the top of the card-back text, close to the
+   top of the canvas — opening upward (the component's default) measured
+   as escaping above y=0 and getting clipped by .screen's own
+   overflow:hidden. Open downward on these screens instead; the cards
+   have ample room below the term. */
+
+/* ═══════════════════════════════════════════════════════
+   TEMPLATE — DragAndDropQuestion · Image Top variant (Screen 04)
+   Cloned from the reference S16 implementation (Target-01),
+   namespaced .s3ddq-*. Sizes adapted to this screen's content:
+   the draggables are 2-line scenario sentences, so cards and drop
+   zones are 247×87 (per the source layout) instead of 216×42.
+   State colors follow the canonical Drag&Drop State spec.
+   ═══════════════════════════════════════════════════════ */
+
+/* Content block — centered above the 74px bar */
+
+/* Text header — Figma node 2462:4888: two lines, Assistant Bold 24,
+   line 1 Subject/500 blue, line 2 Natural/800, 16px gap, right-aligned.
+   In normal flow so the targets row sits below it. */
+
+/* Targets row — fixed image, drop zone + tool label beneath.
+   direction:ltr keeps physical order stable. */
+
+/* Fixed tool image frame */
+
+/* Tool name label — between the image and its drop zone */
+
+/* Drop target zone — sized to the 2-line scenario cards */
+/* Drag-over (Hover): dashed line turns Subject/500, white fill */
+/* Occupied (Dropped): Subject/100 fill + Subject/500 stroke (text-pill draggable) */
+
+/* Draggable scenario cards row */
+/* Placeholder left behind once the item is dropped — HIDDEN (keeps slot space) */
+/* Selected state — the floating drag clone gets a Subject/500 stroke */
+
+/* Placed card — same text box as the draggable, injected by render.
+   Transparent so the zone state fill shows through. */
+
+/* Per-zone feedback icon (inline ✓/✕ circle, reading-start / right in RTL) */
+
+/* ═══════════════════════════════════════════════════════
+   S5 — Image-choice SingleChoiceQuestion (Screen 06)
+   Composition of two existing templates: TwoOptionSelection's
+   image-card visuals (hover / selected states) as the answer
+   options, driven by the SingleChoiceQuestion state machine.
+   Card frames match the sibling S3 tool frames (216×216);
+   correct/wrong use the shared feedback state colors.
+   ═══════════════════════════════════════════════════════ */
+
+/* Companion character hanging from the screen's top edge (rope asset).
+   Glued to top:0 at any viewport size. Horizontally centered between the
+   flag button (right edge ≈ x104) and the leftmost card (spoon): the
+   1090px .s5q-content is viewport-centered with the 848px cards row
+   right-aligned inside it (10px inset), so spoon left = 50% − 313px →
+   midpoint = (104 + 50% − 313)/2 = 25% − 104px. */
+
+/* Speech bubble beside the hanging character — Figma "Image Text Bubble
+   States" node 2500:5858 (188×91, blue #1CB0F6 stroke, white fill, tail
+   on the LEFT pointing at the character). Anchored to the same
+   width-relative x as the character (center = 25% − 104px, visible body
+   ≈ 60px half-width) so the pair moves together on any canvas width. */
+
+.s5q-content {
+  position: absolute;
+  left: 50%; top: calc(50% - 37px);
+  transform: translate(-50%, -50%);
+  width: 1090px;
+  display: flex; flex-direction: column; align-items: center; gap: 36px;
+}
+
+/* Header — right-aligned RTL block (source layout): blue bold title,
+   regular body, bold final instruction line */
+.s5q-header {
+  display: flex; flex-direction: column; gap: 8px;
+  align-items: stretch; width: 100%; padding: 0 10px;
+}
+.s5q-body {
+  width: 100%; text-align: right;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 400; color: #303030;
+  direction: rtl; line-height: 1.35; margin: 0;
+}
+
+/* Cards row — right→left: משורה · פיפטה · כפית; ltr keeps physical order */
+.s5q-cards {
+  display: flex; gap: 100px; justify-content: center;
+  direction: ltr;
+}
+
+/* S5 — options row right-aligned (user request): the first card from the
+   right shares the header text's right edge (the 10px header inset). */
+
+/* Card button — image frame + label below (TwoOptionSelection card look) */
+.s5q-card {
+  position: relative;
+  background: transparent; border: none; padding: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  cursor: pointer; outline: none;
+  width: 216px;
+}
+.s5q-card:disabled { cursor: default; }
+.s5q-card-frame {
+  width: 216px; height: 216px;
+  border: 3px solid rgba(201, 206, 216, 0.4);
+  border-radius: 16px; background: #fff;
+  overflow: hidden; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.15s, background 0.15s;
+}
+.s5q-card-frame img {
+  width: 100%; height: 100%;
+  object-fit: cover; border-radius: 13px;
+  display: block; pointer-events: none; user-select: none;
+}
+.s5q-card-label {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 22px; font-weight: 700; color: #303030;
+  text-align: center; direction: rtl;
+}
+/* Hover + keyboard focus — Subject/500 border (TwoOptionSelection hover state) */
+.s5q-card:not(:disabled):hover .s5q-card-frame,
+.s5q-card:focus-visible .s5q-card-frame { border-color: var(--subject-500); }
+/* Selected — Subject/500 border + Subject/100 tint (TwoOptionSelection selected state) */
+.s5q-card.selected .s5q-card-frame {
+  border-color: var(--subject-500);
+  background: var(--subject-100);
+}
+/* Correct / wrong post-check states — shared feedback colors */
+.s5q-card.correct .s5q-card-frame { border-color: #609e12; background: #edf8ed; }
+.s5q-card.wrong   .s5q-card-frame { border-color: #b20010; background: #fff0f4; }
+/* Feedback icon badge — exact Figma vector (32px circle), pinned to the
+   card frame's top-right corner (nodes 3707:23340 / 2134:21437) */
+.s5q-card.correct::after,
+.s5q-card.wrong::after {
+  content: '';
+  position: absolute; top: 0; right: 0;
+  transform: translate(50%, -50%);
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background-repeat: no-repeat; background-position: center;
+}
+.s5q-card.correct::after {
+  background-color: #609e12;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 11' fill='none'%3E%3Cpath d='M5.16613 11C4.71195 11.0002 4.27638 10.8283 3.9555 10.5222L0.295374 7.03766C-0.0984579 6.66246 -0.0984579 6.05428 0.295374 5.67908C0.689332 5.30401 1.32794 5.30401 1.72189 5.67908L5.16613 8.95926L14.2781 0.281305C14.6721 -0.0937682 15.3107 -0.0937682 15.7046 0.281305C16.0985 0.656497 16.0985 1.26468 15.7046 1.63988L6.37675 10.5222C6.05587 10.8283 5.6203 11.0002 5.16613 11Z' fill='white'/%3E%3C/svg%3E");
+  background-size: 16px 11px;
+}
+.s5q-card.wrong::after {
+  background-color: #b20010;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M15.6278 0.372219C15.3894 0.133887 15.0661 0 14.729 0C14.3919 0 14.0686 0.133887 13.8302 0.372219L8 6.20239L2.16983 0.372219C1.93143 0.133887 1.60813 0 1.27103 0C0.933923 0 0.610622 0.133887 0.372219 0.372219C0.133887 0.610622 0 0.933923 0 1.27103C0 1.60813 0.133887 1.93143 0.372219 2.16983L6.20239 8L0.372219 13.8302C0.133887 14.0686 0 14.3919 0 14.729C0 15.0661 0.133887 15.3894 0.372219 15.6278C0.610622 15.8661 0.933923 16 1.27103 16C1.60813 16 1.93143 15.8661 2.16983 15.6278L8 9.79761L13.8302 15.6278C14.0686 15.8661 14.3919 16 14.729 16C15.0661 16 15.3894 15.8661 15.6278 15.6278C15.8661 15.3894 16 15.0661 16 14.729C16 14.3919 15.8661 14.0686 15.6278 13.8302L9.79761 8L15.6278 2.16983C15.8661 1.93143 16 1.60813 16 1.27103C16 0.933923 15.8661 0.610622 15.6278 0.372219Z' fill='white'/%3E%3C/svg%3E");
+  background-size: 16px 16px;
+}
+
+/* ── S4 (FlipCardsReveal #2) screen-scoped overrides ── */
+
+/* ═══════════════════════════════════════════════════════
+   TEMPLATE — ScratchCardsReveal (Screen 08) — NEW template
+   Figma: 720 — UI Templates, nodes 1784:18759 / 1784:18835.
+   Structure mirrors FlipCardsReveal; side A (white card + question,
+   drawn on a canvas cover) is scratched away with a coin cursor to
+   reveal side B (Subject/100 card + full content, live HTML).
+   Includes the learning-path toggle (text-pill variant).
+   ═══════════════════════════════════════════════════════ */
+
+/* Learning-path toggle — Figma text-pill variant: Subject/500 pill,
+   active segment white with Subject/500 text, inactive transparent
+   with white text. Position-locked: גירוד LEFT, בריחה RIGHT.
+   Lives in the bottom nav bar (Figma FixedNavigationBar), centered
+   between Continue (bottom-left) and Back (bottom-right) — same
+   containing block as those buttons (a direct child of .screen), so
+   left:50%/bottom centers it on the full 1280px bar, not on whatever
+   content column happens to be its DOM sibling. */
+
+/* Cards row — 283×283 cards, gap 22 (Figma), stable ltr order */
+
+/* Card: Subject/500-bordered frame; side B fills it, canvas covers it.
+   Default (unscratched) border is the gray side-A border; once revealed
+   the border switches to Subject/500 (side-B state). */
+
+/* Side B — live HTML content under the canvas cover */
+/* Illustrations under S7's scratch-card text — kept small so each fits
+   under its card's existing paragraphs inside the 283px card without
+   overflow. Base class holds shared layout; modifiers size per image
+   (aspect ratios differ: min.png is square, minEye.png is wide). */
+/* minEye.png's drawn cylinder occupies a smaller share of its canvas
+   than min.png's does of its own (measured via pixel bounding box:
+   ~88% of canvas height in both, but minEye.png's canvas is wider/
+   shorter overall) — 170px width (vs. min.png's 100px box) renders the
+   two cylinders at matching visual height (~100px drawn). */
+
+/* Canvas cover — side A, erased by scratching. Cursor is hidden here;
+   the real .s7sc-coin element (below) tracks the pointer instead — a
+   native CSS cursor is size-limited and can be silently rejected, so
+   this shows the actual coin.png asset at full size. */
+
+/* Coin cursor — real element, positioned in JS on pointermove over any
+   unscratched card, in #app DESIGN coordinates (the JS converts viewport
+   clientX/Y through the app scale — see s7scShowCoin). position:absolute,
+   NOT fixed: a fixed descendant of the scale()-transformed #app is
+   captured by it anyway, so absolute in design coords is the one honest
+   coordinate space (and the coin scales with the canvas like everything
+   else). coin.png also has asymmetric transparent padding around the
+   graphic (visible bbox center at −4.33%/−1.00% of the canvas), so the
+   translate below centers the actual coin, not the padded image box.
+   Never intercepts events. */
+
+/* ── S6 (TwoOptionSelection: learning-style choice) overrides ── */
+/* Source subtitle is a two-line instruction: regular intro + bold choose-line */
+/* Character renders fill the frame — ported from Target-01's #s0/#s4 recipe:
+   4px padding (down from the global 16px) + object-fit:contain so the whole
+   character shows uncropped inside the same 220px/296:278 image box. */
+
+/* ═══════════════════════════════════════════════════════
+   TEMPLATE — ImageHotspotQuestion (Screen 09) — NEW template
+   Figma: dpY9DTl41tzW8SKvcPWU0C, node 2467:5348 / 2467:5371,
+   component "PointSelectionHotspot". Reuses the SingleChoiceQuestion
+   state machine; only the option mechanism differs (image hotspots
+   instead of text pills). No .md reference yet in the skill library.
+   ═══════════════════════════════════════════════════════ */
+
+/* Photo frame — 718×387 visible, 8px padding wrapper (matches the
+   .scq-img-inner convention), rounded 16, object-fit: cover. */
+
+/* Hotspot — invisible hit-rectangle covering a whole figure (producer
+   change: the old visible pulsing dots are gone; the learner clicks the
+   student directly). Size/position come inline from the HTML. All state
+   visuals render on the figure CUTOUT inside the button (.s8q-figure):
+   a stacked drop-shadow glow that follows the figure's alpha contour —
+   the S11 escape-room object language (.s11er-object.active), with the
+   standard feedback greens/reds after check. */
+/* The cutout layer — same 718×387 cover-rendering as .s8q-img, offset
+   (inline) so it sits pixel-on-pixel over the background photo. Its
+   pixels match the photo exactly, so with no filter it's invisible. */
+/* Depth occlusion — how the glow "goes behind" overlapping figures:
+   the middle boy's cutout was EXTENDED (pixel-edited from the photo) so
+   its alpha edge lies INSIDE the right girl's cutout; her layer (later
+   in DOM = painted above) and the cylinder occluder below then cover
+   his glow along the shared boundary, so it reads as passing behind
+   her hair and behind the glass. */
+
+/* Hover / keyboard focus — the full S11 glow (what 'selected' used to
+   be; producer feedback: the light version was too subtle) */
+/* Selected — clearly stronger than hover: tight high-opacity Subject/500
+   layers read as an outline hugging the contour, plus a wide halo */
+/* Correct / wrong post-check — final feedback, as strong as selected,
+   in the standard feedback colors (#609e12 correct / #b20010 wrong) */
+
+/* Companion character peeking in from the LEFT screen edge on S9.
+   Glued to left:0 at any viewport size, vertically centered. Sized per
+   producer markup (~245px tall; the peeking asset is roughly square but
+   mostly transparent on its right side). */
+
+/* Speech bubble above the peeking character — Figma node 2541:1397
+   (203×137, blue stroke, white fill, tail bottom-center). Anchored to the
+   viewport's vertical center like the character: bubble bottom meets the
+   character's top edge (char is 245px tall, centered → top = 50% − 122.5,
+   bubble top = 50% − 122.5 − 137 ≈ 50% − 260px). */
+
+/* ── S9 (ScratchCardsReveal, second instance) screen-scoped overrides ──
+   Same layout tuning as S7 (more vertical content than the template
+   default); reuses every .s7sc-* class as-is. ── */
+/* S9's third card carries more text than the template's 283×283 square
+   holds (full unit names per producer fix). All three cards grow together
+   to 300×320 — equal sizes keep the row symmetric, and the S9
+   cover-paint/pointer code is rectangle-aware (s9scPaintCover). S7 keeps
+   the square template default. 300px width lets the units card's title
+   fit on one line (needs 247px of text width; 300 − 6 border − 32 padding
+   = 262). Content stays top-aligned (template default) in all three.
+   274px height = the units card's measured content bottom (252px) + 16px
+   bottom padding + 2×3px borders — the densest card reads exactly full. */
+
+/* Unit-equivalences chip — the 1:1 conversion facts sit on a white
+   rounded surface (same visual language as the toggle's active pill)
+   instead of a raw text block. Typography: Body/B-6 (20 Regular). */
+
+/* ═══════════════════════════════════════════════════════
+   TEMPLATE — DropdownQuestion (Multiple Blanks), Screen 10
+   Ported from the reference S8/mdq implementation (Target-01).
+   No .md reference yet in the skill library. Figma: node 2476:5201.
+   Shared .mdq-dropdown-wrap/.mdq-btn/.mdq-list/.mdq-option classes
+   (generic, reusable — not screen-scoped) ported alongside.
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Dropdown component (generic — reusable across any DropdownQuestion) ── */
+
+/* Resolved states — Figma DropdownQuestion (110:1703) / ValueInputQuestion
+   (120:3439): WHITE background, 1px Feedback/300 border (#609e12 correct,
+   #b20010 incorrect), 16px ✓/✗ icon in place of the chevron. */
+
+/* ═══════════════════════════════════════════════════════
+   TEMPLATE — EscapeRoomHotspots (Screen 12 / #s11) — NEW template
+   Figma: dpY9DTl41tzW8SKvcPWU0C, nodes 2482:5770 / 2493:5851,
+   component "AreaSelectionHotspot". Branch screen of the חדר בריחה
+   learning path. No .md reference yet in the skill library.
+   ═══════════════════════════════════════════════════════ */
+
+/* Scene — the lab photo strip. Clipped at the 636px action-bar line
+   (Figma frame ends at 641 but its last 5px sit under the bar).
+   Photo + objects + bubbles are ONE pixel-locked composition (objects
+   must stay glued to photo features like the whiteboard), so the whole
+   fixed-width scene centers on the canvas — scaleApp() widens #app
+   beyond 1280 design px on wide viewports. */
+
+/* Objects — clickable items "hiding" in the room. Buttons stripped to
+   the bare image; the table variant is a live HTML table. */
+/* Active (found, modal open) — glow in the shape of the image.
+   Figma: box-shadow 0 4px 7.3px 6px Subject-Alpha-200; PNGs get the
+   equivalent via stacked drop-shadows so the glow hugs the alpha shape. */
+/* Visited (modal was read and closed) — fully desaturated, inactive
+   (producer spec: black color-blend over the image, i.e. grayscale at
+   full opacity) */
+
+/* Object positions (Figma, scene-relative) */
+
+/* Measurement table (49/50/51) — lives on the whiteboard in the photo */
+
+/* Speech-bubble modals — SVG bubble as background (stretches with the
+   box), text inside the balloon area (the bottom ~10.6% is the tail;
+   flipped variant has the tail on top). */
+/* (tail-on-top text inset removed — the table bubble now uses the std
+   tail-at-bottom asset, so the default .s11er-bubble-text insets apply) */
+
+/* Bubble positions + variants (Figma group mapping, scene-relative;
+   each bubble keeps its Figma offset from its object — the eye bubble
+   deliberately overflows the scene top, over the head area) */
+/* 5 wrapped lines at browser-normal line-height run 3px past the balloon
+   area — Figma's spec is line-height 100%, so tightening is the faithful
+   direction */
+/* Illustration under the eye-bubble text (1632×964 source, aspect ~1.69) */
+
+/* Progress meter — Figma "Progress question" (node 2494:6410): white
+   rounded box floating on the photo, dot 1 rightmost (RTL), each dot
+   flips current → correct as objects are found. */
+
+/* ═══════════════════════════════════════════════════════
+   S12 — DropdownQuestion, escape-path variant (Figma 2571:1775).
+   Reuses S10's .s10q-* / .mdq-* components as-is; adds only the faded
+   escape-room backdrop (S11's scene classes reused for pixel-exact
+   positions, under a white 83% veil) and the Figma question anchor.
+   ═══════════════════════════════════════════════════════ */
+/* White veil — Figma: rgba(255,255,255,0.83) over the full canvas.
+   z-index above the scene objects (z:2), so the WHOLE composition —
+   photo, table, object cutouts — fades uniformly. */
+/* Question block — Figma 2571:2081: top 122, right 40 + inner padding 40
+   → text right edge at x=1200; content box 849px (929 − 2×40).
+   Figma's text nodes are cap-trimmed; with our normal line boxes the
+   design's 16px gaps become 1px/8px margins (visual gap stays ~16) and
+   the 122 anchor becomes 115 (cap top lands on 122). */
+/* Figma textbox here is 180×42 (S10's is 210). Inner metrics tightened so
+   the longest option ("בגובה העיניים", ~122px) still fits untruncated:
+   180 − 28 padding − 10 gap − 16 chevron = 126px text room. */
+
+/* ═══════════════════════════════════════════════════════
+   TEMPLATE — OrderedDragAndDropQuestion (Screen 14 / #s13,
+   legacy s12ddq namespace)
+   Sequencing variant of DragAndDropQuestion — order 5 steps into
+   numbered zones. Ported from Target-01 S11 (.s11ddq-*), the
+   reference the producer named; extended from 4 to 5 rows.
+   ═══════════════════════════════════════════════════════ */
+
+/* Main content row: source tray (left) + numbered targets (right) */
+
+/* Source tray — 5 rows; 16px gap (5×52 + 4×16 = 324px column) */
+
+/* Placeholder left behind once the item is dropped — hidden but keeps
+   its slot space so the tray order stays stable */
+/* Floating drag clone — light-blue stroke */
+
+/* Targets column */
+/* Each target row: [target-zone][gap-10px][badge] in LTR order */
+/* Number badge lives OUTSIDE the target zone, to the right */
+
+/* Placed card inside a drop zone — fills it; transparent so the zone
+   state fill (תכלת / green / red) shows through */
+
+/* Feedback icon circles (26px) — injected inside placed cards on check */
+
+/* ═══════════════════════════════════════════════════════
+   TEMPLATE — TransitionScreen (Screen 14 / #s13)
+   Ported from Target-01 S7. Centered title + subtitle above the
+   companion character video (Sporty variant).
+   ═══════════════════════════════════════════════════════ */
+
+.s13tr-content {
+  position: absolute;
+  inset: 0 0 74px 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 24px;
+}
+.s13tr-text {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 12px;
+  text-align: center;
+}
+.s13tr-title {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 40px; font-weight: 700; color: #303030;
+  margin: 0;
+}
+.s13tr-subtitle {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 28px; font-weight: 700; color: #303030;
+  margin: 0;
+}
+.s13tr-video-wrap { width: 640px; height: 360px; flex-shrink: 0; }
+.s13tr-video {
+  width: 100%; height: 100%;
+  object-fit: contain; display: block;
+  clip-path: inset(2px);   /* hide the GPU edge-blend seam (see .s1-talk-video) */
+  /* Decorative, non-interactive video — suppress browser-injected hover
+     overlays (PiP/cast/read-aloud) some browsers show regardless of the
+     controlsList/disablepictureinpicture attributes on the element itself. */
+  pointer-events: none;
+}
+
+/* ── S15 (TransitionScreen, second instance) — adds a lead-in line
+   above the S13 title/subtitle pair ── */
+#s0 { background: #fff; }
+.s15tr-lead {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 28px; font-weight: 400; color: #303030;
+  margin: 0;
+}
+#s15-back {
+  position: absolute;
+  bottom: 17.5px; right: 24px;
+  z-index: 12;
+}
+
+/* ── S16 (ImageHotspotQuestion, practice Q1/5) — S8 template with a
+   smaller photo frame (630×341 per slide 23), lettered hotspot dots,
+   and the Progress Question nav above. ── */
+#s1 { background: #fff; }
+
+.s16q-content {
+  position: absolute;
+  right: 64px; top: 121px;
+  width: 860px;
+  display: flex; flex-direction: column; align-items: flex-start;
+  gap: 12px;
+}
+.s16q-text {
+  width: 100%;
+  display: flex; flex-direction: column; gap: 4px;
+  text-align: right; direction: rtl;
+}
+.s16q-title {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 700; color: var(--subject-500);
+  line-height: normal; margin: 0;
+}
+.s16q-body {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 400; color: #303030;
+  line-height: normal; margin: 0;
+}
+
+/* Photo frame — 630×341 (slide geometry; source photo is top-cropped
+   18.8% in the slide → bottom-anchored cover shows the same region) */
+.s16q-img-wrap {
+  position: relative;
+  width: 630px; height: 341px;
+  padding: 8px; box-sizing: content-box;
+  border: 1px solid rgba(174, 174, 174, 0.5);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.s16q-img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: bottom;
+  border-radius: 16px;
+  display: block; pointer-events: none; user-select: none;
+}
+
+/* Lettered hotspots — 36×36 hit targets (the three points sit close
+   together on the meniscus — א↔ג centers are only 42px apart; S8's
+   140px targets would overlap). Same Pulsing states as S8, plus a
+   letter in the dot. */
+.s16q-hotspot {
+  position: absolute;
+  width: 36px; height: 36px;
+  background: none; border: none; padding: 0;
+  cursor: pointer; outline: none;
+  display: flex; align-items: center; justify-content: center;
+}
+.s16q-hotspot:disabled { cursor: default; }
+
+.s16q-hotspot-dot {
+  position: relative;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--subject-300);
+  border: 2px solid var(--subject-700);
+  box-sizing: border-box;
+  transition: width 0.15s ease, height 0.15s ease;
+  display: flex; align-items: center; justify-content: center;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 18px; font-weight: 700; color: #303030;
+  line-height: 1;
+}
+.s16q-hotspot-dot::before,
+.s16q-hotspot-dot::after {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--subject-400);
+  background: var(--subject-400);
+  opacity: 0.3;
+  animation: s8q-pulse 1.8s ease-out infinite;
+  z-index: -1;
+}
+.s16q-hotspot-dot::after { animation-delay: 0.6s; }
+/* Selected — dot enlarges, ripple stops */
+.s16q-hotspot.selected .s16q-hotspot-dot { width: 38px; height: 38px; }
+.s16q-hotspot.answered .s16q-hotspot-dot::before,
+.s16q-hotspot.answered .s16q-hotspot-dot::after,
+.s16q-hotspot.selected .s16q-hotspot-dot::before,
+.s16q-hotspot.selected .s16q-hotspot-dot::after { animation: none; opacity: 0; }
+/* Correct / wrong post-check — Feedback tokens (letter stays readable) */
+.s16q-hotspot.correct .s16q-hotspot-dot {
+  width: 38px; height: 38px;
+  background: #609e12; border-color: #355908;
+  color: #fff;
+}
+.s16q-hotspot.wrong .s16q-hotspot-dot {
+  width: 38px; height: 38px;
+  background: #ffdbdc; border-color: #c62828;
+  color: #c62828;
+}
+
+/* ── S17 (SingleChoiceQuestion dual-part variant, practice Q2/5) ──
+   Two option groups on one screen; both must be answered before
+   צדקתי? enables. Text/pill styling reuses the scq-* classes. ── */
+#s2 { background: #fff; }
+.s17q-content {
+  position: absolute;
+  top: 121px; right: 40px;
+  width: 813px;
+  display: flex; flex-direction: column; gap: 8px;
+  text-align: right; direction: rtl;
+}
+.s17q-title {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 700; color: var(--subject-500);
+  line-height: normal; margin: 0;
+}
+.s17q-body {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 400; color: #303030;
+  line-height: normal; margin: 0;
+}
+.s17q-part {
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 24px; font-weight: 700; color: #303030;
+  line-height: normal; margin: 8px 0 0;
+}
+.s17q-answers {
+  width: 604px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+/* ── S18 (SingleChoiceQuestion + content image, practice Q3/5) ──
+   S1 layout with flow-stacked text/answers (S14 pattern); the image
+   column stays absolute on the left. ── */
+#s3 { background: #fff; }
+#s3 .s18q-qtext { position: static; }
+#s3 .s18q-qtext p { margin: 0; }
+#s3 .s18q-qtext .s18q-body { font-weight: 400; color: #303030; }
+#s3 .s18q-qtext .s18q-strong { font-weight: 700; color: #303030; }
+#s3 .s18q-answers {
+  position: static;
+  margin-top: 53px;   /* the template's text→options rhythm (see S14) */
+}
+
+/* ── S19 (SingleChoiceQuestion image-cards variant, practice Q4/5) ──
+   Reuses the S5 layout; nudged down so the centered block clears the
+   Progress Question nav above it. Options row right-aligned with the
+   header text edge, same as S5 (user request). ── */
+#s4 { background: #fff; }
+#s4 .s19q-content {
+  top: calc(50% - 5px);
+  align-items: flex-start;   /* rtl column: flex-start = right */
+}
+#s4 .s5q-cards { margin-right: 10px; }   /* the 10px header text inset */
+
+/* ── S20 (SingleChoiceQuestion + content image, practice Q5/5) ──
+   S18 pattern: flow-stacked text/answers, image column absolute left.
+   This slide has no blue title line — lead-in regular, question bold. ── */
+#s5 { background: #fff; }
+/* dog.png is decorative flavor, not a data image the learner reads —
+   drop the template's gray content-image border (kept everywhere the
+   image itself carries information, e.g. S1/S18). */
+#s5 .scq-img-inner { border: none; }
+#s5 .s20q-qtext { position: static; }
+#s5 .s20q-qtext p { margin: 0; }
+#s5 .s20q-qtext .s20q-body { font-weight: 400; color: #303030; }
+#s5 .s20q-qtext .s20q-strong { font-weight: 700; color: #303030; }
+#s5 .s20q-answers {
+  position: static;
+  margin-top: 53px;   /* the template's text→options rhythm (see S14) */
+}
+
+/* =======================================================
+   Feedback popup — in-popup action button   [FOUNDATION]
+
+   The one approved interactive control inside a feedback popup: the
+   final-attempt solution/answer toggle. Every other in-popup control
+   remains forbidden (see 720-templates -> _global-components.md ->
+   Feedback popup system -> No manual close) -- this is NOT a dismiss
+   affordance and must never be styled or reused as one.
+
+   Opt-in per question: a screen gets this button only by returning an
+   `action` from its feedback config. In this part, S3, S10, S12 and
+   S13 do.
+
+   Figma source of truth: file eSbp4bKHgBky0rakDb8l9N, component set
+   217:4135 -- variants 2464:28288 (MyAnswerBtn=True, label
+   מעבר לתשובה שלי) and 2464:28331 (MyAnswerBtn=False, label
+   התשובה הנכונה). Both place the button hard against the physical
+   right of the popup's padding box, bottom-aligned, width hugging the
+   label. NOTE: an older node 217:4134 carries the same variant name as
+   2464:28331 -- it is superseded, do not use it.
+
+   Rendered widths are ~4px over the widths shown in Figma, because
+   .nav-label reserves the SemiBold measurement of each label while
+   Figma measures the Regular weight. That is the width-reservation
+   rule working as intended -- do not "correct" it.
+
+   This is the Figma `ShowAnswer` button (node 196:6020, Default +
+   Hover). It is NEUTRAL and must stay that way: white fill, #222222
+   text, #484848 hairline. It is NOT the subject-themed nav button --
+   no var(--subject-*) anywhere in this block, so the same button looks
+   identical in the Science and Math themes. Never restyle it from
+   .scq-back / .btn-continue / .scq-hint.
+
+   Ported verbatim from part 06's Foundation -- keep byte-identical
+   across parts; diff this block against part 06 if either changes.
+   ======================================================= */
+.scq-popup-actions {
+  display: flex;
+  justify-content: flex-start;   /* popup is direction:rtl -> physical right */
+  align-items: center;           /* never stretch the button */
+  /* 20px margin + the popup's own 4px flex gap = Figma's 24px, applied ONLY
+     between the feedback content and this row -- title-to-body spacing is
+     untouched (see the Popup layout comment below). */
+  margin-top: 20px;
+}
+
+.popup-action {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 39px;                  /* Figma exact. Pinned rather than derived so
+                                    sub-pixel border rounding at fractional
+                                    devicePixelRatio can't shift it off 39. */
+  padding: 7.5px 20px;           /* 7.5 + 22 + 7.5 + 2x1 border = 39 */
+  line-height: 22px;
+  flex: 0 0 auto;                /* hug the label; never stretch to the popup */
+  width: auto;                   /* no fixed width, no min-width floor */
+  border: 1px solid #484848; border-radius: 1000px; background: #FFFFFF;
+  color: #222222;
+  font-family: Calibri, Arial, sans-serif; font-size: 20px; font-weight: 400;
+  direction: rtl; white-space: nowrap;
+  cursor: pointer;               /* overrides .scq-popup's cursor: move */
+}
+
+/* Hover changes the LABEL WEIGHT ONLY -- Assistant 400 -> 600. Per the Figma
+   ShowAnswer component the stroke is identical in both states (1px #484848),
+   so unlike .scq-back / .btn-continue / .scq-hint this button must NOT thicken
+   its border on hover. Do not add border-width, outline, or a box-shadow ring
+   here: a 1px -> 1.5px border really would resize the button, because it is
+   width:auto and box-sizing:border-box has no effect on an auto-width box
+   (used width = content + padding + border). The weight change itself is
+   absorbed by .nav-label, whose ::before reserves the SemiBold measurement of
+   the same label, so the width is invariant. */
+.popup-action:hover { font-weight: 600; }
+
+/* ── Popup layout, Figma node 217:4135 ──────────────────────────────
+   Scoped to the popups that carry the toggle ON PURPOSE, one #id at a
+   time as each is migrated -- .scq-popup is shared by every question in
+   this part, and production ships 15px padding everywhere; correcting
+   that globally is a separate, wider change. When this pattern is
+   promoted, fold these rules into .scq-popup rather than continuing to
+   grow this selector list.
+
+   Title-to-body spacing is NOT part of this override -- it stays at the
+   base .scq-popup gap (4px), identical to every non-toggle popup (e.g.
+   SingleChoiceQuestion). Figma's "24px gap" describes the space between
+   the feedback content and the action row ONLY; earlier this was
+   mis-applied as the flex container's gap, which -- since gap applies
+   between EVERY adjacent child, not just the last pair -- also pushed
+   title away from body by 24px. Fixed by leaving the container gap alone
+   and adding the 24px purely via .scq-popup-actions's own margin-top (above). */
+/* Vestige of the removed X close button: the title was nudged down 4px to
+   optically centre against it. With no X and a 24px padding box, it just
+   offsets the first line. */
+/* Single-child header now -- drop the LTR flip that ordered title vs. X. */

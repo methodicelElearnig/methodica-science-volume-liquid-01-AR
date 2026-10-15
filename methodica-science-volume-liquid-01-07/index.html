@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>وحدة تعليمية — قياس حجم السائل وأدوات القياس · الجزء 07</title>
+  <link rel="stylesheet" href="../unit-css/base.css?v=3">
+  <link rel="stylesheet" href="../unit-css/scq.css?v=1">
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="../unit-css/25-report.css?v=1">
+  <link rel="stylesheet" href="../unit-css/motion.css?v=1">
+  <link rel="stylesheet" href="../unit-css/nav-buttons.css?v=1">
+</head>
+<body>
+<!-- Boot cover (guide §8.11): hides screen 0 until the resume decision, so a restored learner
+     never sees the first screen flash before their own. Inline-styled and a sibling of #app (not a
+     child: #app is scaled). 50-loader.js drops it on every exit path; this failsafe lifts it after
+     800 ms, or up to 6 s while a restore is actually in flight (window.__resumeInFlight). -->
+<div id="boot-cover" style="position:fixed;inset:0;z-index:9999;background:#fff"></div>
+<script>
+(function () {
+  var t0 = Date.now();
+  function tick() {
+    var c = document.getElementById('boot-cover');
+    if (!c || !c.parentNode) return;
+    if (window.__resumeInFlight && Date.now() - t0 < 6000) { setTimeout(tick, 100); return; }
+    c.parentNode.removeChild(c);
+  }
+  setTimeout(tick, 800);
+})();
+</script><div id="app">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       GLOBAL — Report / Issue button (shared across every screen).
+       Visual only; no click behavior wired.
+       ═══════════════════════════════════════════════════════════ -->
+  <button class="flag-btn" id="flag-btn" type="button" aria-label="هل وجدتم مشكلة؟">
+    <span class="flag-btn-icon"></span>
+    <span class="flag-btn-label">هل وجدتم مشكلة؟</span>
+  </button>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       Screens start here — add each screen's own <section class="screen"
+       data-screen="N" id="sN"> below as it's built, following the deck /
+       Figma one screen at a time.
+       ═══════════════════════════════════════════════════════════ -->
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S0 — Screen 01 · TransitionScreen (slide 41, last slide of the
+       production deck). Companion video, resolved per the character
+       carried over from earlier parts. Intro to THIS part's own peak
+       question (שאלת השיא — 4 sections א׳-ד׳, 3+ needed to pass),
+       built as S1-S5: S1 sets up the bottling-QC scenario, S2-S5 are
+       the 4 sections. Near-identical text to part 05's S0 (which
+       introduced that part's own separate peak question) minus the
+       "סיימת את התרגול" line. First screen of this part: back button
+       goes to the previous part.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen active" data-screen="0" id="s0">
+
+    <div class="s0tr-content">
+      <!-- Motion v0.1 (approved video-screen pattern): text floats in as
+           one group; the video + wrap are EXCLUDED — appear immediately. -->
+      <div class="s0tr-text" data-reveal="1">
+        <p class="s0tr-lead">كل الاحترام!</p>
+        <p class="s0tr-lead">إذا لم تنجحوا في الإجابة عن بعض الأسئلة،</p>
+        <p class="s0tr-lead">فمن المهم أن تفهموا ما الذي لا يزال غير واضح، وأن تتوجهوا إلى الدردشة أو إلى المعلّم للحصول على شرح إضافي.</p>
+        <h1 class="s0tr-title">والآن يأتي السؤال الأكبر!</h1>
+        <p class="s0tr-strong">يحتوي السؤال على 4 بنود.</p>
+        <p class="s0tr-strong">عليكم الإجابة عن 3 بنود على الأقل بشكل صحيح لتتمكّنوا من التقدّم.</p>
+      </div>
+      <!-- Motion v0.1 (video-zone fade): gentle fade only, starts with the
+           screen entrance; autoplay untouched. -->
+      <div class="s0tr-video-wrap" data-reveal="1" data-reveal-fade>
+        <video id="s0-video" class="s0tr-video" autoplay muted playsinline
+               disablepictureinpicture disableremoteplayback
+               controlsList="nodownload noremoteplayback nofullscreen noplaybackrate"></video>
+      </div>
+    </div>
+
+    <button class="btn-continue" id="s0-continue" onclick="advanceFromS0()">متابعة</button>
+    <button class="scq-back" id="s0-back" type="button" onclick="goBack()">عودة</button>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S1 — Screen 02 · TextScreen (Figma node 2525:1344). Reference/
+       setup screen: a photo + a 3-item numbered list setting up the
+       bottling-QC scenario for the section's questions. No question
+       mechanics — Continue is enabled from the start, same convention
+       as part 05's S1 reference screen.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="1" id="s1">
+
+    <div class="s1t-content">
+      <!-- Motion v0.1: RTL order — the list sits physically RIGHT
+           (row is direction:ltr, image first in DOM = left), so the
+           list reveals first and the left-side photo last, fade-only. -->
+      <div class="s1t-img" data-reveal="2" data-reveal-fade>
+        <div class="s1t-img-inner">
+          <img src="assets/img/OrangeJuiceBottle.png" alt="قنينة عصير برتقال، المحتوى 750 ملل">
+        </div>
+      </div>
+      <!-- Client QA 2026-09-24: replaced the 3-item numbered list with
+           unnumbered paragraphs + a real 2-column table for the 8
+           measurements (was an inline comma-separated list). -->
+      <div class="s1t-list" data-reveal="1">
+        <p class="s1t-para">تنتج شركة مشروبات مئات قناني العصير المكتوب على ملصقاتها - <strong>المحتوى: 750 ملل.</strong><br>وفق المعيار، يتراوح حجم العصير المسموح به في القنينة بين 735 و-765 ملل.</p>
+        <p class="s1t-para">اختار قسم الاستهلاك 8 قناني في المصنع، وقاس حجم العصير في كل قنينة‎:</p>
+        <table class="s1t-table">
+          <tr><th>رقم القنينة</th><th>حجم العصير في القنينة (بالمليلتر)</th></tr>
+          <tr><td>1</td><td>745</td></tr>
+          <tr><td>2</td><td>752</td></tr>
+          <tr><td>3</td><td>748</td></tr>
+          <tr><td>4</td><td>760</td></tr>
+          <tr><td>5</td><td>749</td></tr>
+          <tr><td>6</td><td>755</td></tr>
+          <tr><td>7</td><td>747</td></tr>
+          <tr><td>8</td><td>754</td></tr>
+        </table>
+        <p class="s1t-para"><strong>مهمتكم: اكتشاف كيفية فحص ما إذا كانت الشركة تلتزم بالمعيار، وما هي نتيجة الفحص‎.</strong></p>
+      </div>
+    </div>
+
+    <button class="btn-continue" id="s1-continue" onclick="advanceScreen()">متابعة</button>
+    <button class="scq-back" id="s1-back" type="button" onclick="goBack()">عودة</button>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S2 — Screen 03 · DropdownQuestion (Figma 2525:1423 / 2525:1602).
+       Section א׳. Single standalone dropdown (4 options) embedded in
+       a fill-the-blank sentence. Hint hidden until first wrong
+       attempt. 2 attempts. Correct: 751.25. "אפשר להיזכר בפרטי
+       המשימה?" opens the shared task-details popup (reuses S1's exact
+       content), always visible from the start — same policy as the
+       recall button pattern established in part 05.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="2" id="s2">
+
+    <div class="scq-question">
+      <!-- Motion v0.1: question text → fill-row (with the CLOSED dropdown).
+           The dropdown LIST opens on user action and is excluded; the
+           recall/hint/check action buttons stay static. -->
+      <div class="scq-qtext" data-reveal="1">
+        <p class="s2q-title">البند أ</p>
+        <p class="s2q-body">نتائج قياس حجم العصير في القناني المختلفة بالملل:<br>745، 752، 748، 760، 749، 755، 747، 754</p>
+      </div>
+
+      <div class="p6q-fillrow" data-reveal="2">
+        <span>معدل حجم محتوى القناني الـ 8</span>
+        <div class="mdq-dropdown-wrap" id="s2dd-wrap">
+          <button class="mdq-btn" id="s2dd-btn" type="button" data-empty="true"
+                  aria-haspopup="listbox" aria-expanded="false" onclick="s2ddToggle()">
+            <svg class="mdq-chevron" width="16" height="8" viewBox="0 0 16 8" fill="none" aria-hidden="true">
+              <path d="M1 1L8 7L15 1" stroke="#AEAEAE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="mdq-selected" id="s2dd-selected">اختاروا إجابة</span>
+          </button>
+          <ul class="mdq-list hidden" id="s2dd-list" role="listbox">
+            <li class="mdq-option" role="option" tabindex="0" onclick="s2ddSelect('748.5')">748.5</li>
+            <li class="mdq-option" role="option" tabindex="0" onclick="s2ddSelect('751.25')">751.25</li>
+            <li class="mdq-option" role="option" tabindex="0" onclick="s2ddSelect('755')">755</li>
+            <li class="mdq-option" role="option" tabindex="0" onclick="s2ddSelect('760')">760</li>
+          </ul>
+        </div>
+        <span>ملل.</span>
+      </div>
+
+      <!-- Recall button is part of the question CONTENT body (not the
+           fixed action bar) → participates in the reveal as group 3. -->
+      <button class="scq-hint s2q-recall-btn" id="s2-recall" type="button" data-reveal="3"
+              onclick="openRecallPopup()">
+        <span>هل يمكن تذكيري بتفاصيل المهمّة؟</span>
+        <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+      </button>
+    </div>
+
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s2q-check" type="button" disabled
+                onclick="s2qCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="s2q-hint" type="button"
+                style="visibility:hidden" onclick="s2qOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s2-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+  </section>
+
+  <!-- Popup motion (approved): .m-popup = 260ms fade-in on every open,
+       one unit, instant close — applied to every standard hint/feedback
+       popup in this part + the shared recall overlay. -->
+  <div class="scq-popup m-popup hidden" id="s2q-popup"
+       onpointerdown="popupMouseDown(event, 's2q-popup')"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s2q-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s2q-popup-body"></div>
+  </div>
+
+  <div class="scq-hint-overlay m-popup hidden" id="s2q-hint-overlay"
+       onclick="s2qCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="s2q-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="s2q-hint-title">تلميح</h2>
+          <div class="scq-hint-body">
+            <p>المعدل = مجموع كل القياسات ÷ عدد القياسات‎.</p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="s2qCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S3 — Screen 04 · ValueInputQuestion (Figma 2526:1287).
+       Section ב׳. Single numeric input embedded in a fill-the-blank
+       sentence, with a 2-item numbered recap of facts established in
+       S1/S2. Hint hidden until first wrong attempt. 2 attempts.
+       Correct: 8. Same task-details recall popup as S2.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="3" id="s3">
+
+    <div class="scq-question">
+      <!-- Motion v0.1: title+recap → fill-row (float; verified the input
+           stays typeable mid-reveal with no focus/position side effects)
+           → recall button (content-body button, group 3). -->
+      <div class="scq-qtext" data-reveal="1">
+        <p class="s2q-title">البند ب</p>
+      </div>
+
+      <ol class="s2q-recap" data-reveal="1">
+        <li>وفق المعيار، يمكن أن تحتوي القناني على حجم يتراوح بين 735 و-765 ملل من عصير البرتقال‎.</li>
+        <li>معدل القياسات هو: 751.25 ملل.</li>
+      </ol>
+
+      <div class="p6q-fillrow" data-reveal="2">
+        <span>ولذلك</span>
+        <input class="p6-input" id="s3v-input" type="number" inputmode="decimal"
+               dir="ltr" aria-label="عدد القناني ضمن مجال المعيار" oninput="s3vInputChange()">
+        <span>قناني من أصل 8 قناني تقع ضمن مجال المعيار‎.</span>
+      </div>
+
+      <button class="scq-hint s2q-recall-btn" id="s3-recall" type="button" data-reveal="3"
+              onclick="openRecallPopup()">
+        <span>هل يمكن تذكيري بتفاصيل المهمّة؟</span>
+        <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+      </button>
+    </div>
+
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s3v-check" type="button" disabled
+                onclick="s3vCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="s3v-hint" type="button"
+                style="visibility:hidden" onclick="s3vOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s3-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+  </section>
+
+  <div class="scq-popup m-popup hidden" id="s3v-popup"
+       onpointerdown="popupMouseDown(event, 's3v-popup')"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s3v-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s3v-popup-body"></div>
+  </div>
+
+  <div class="scq-hint-overlay m-popup hidden" id="s3v-hint-overlay"
+       onclick="s3vCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="s3v-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="s3v-hint-title">تلميح</h2>
+          <div class="scq-hint-body">
+            <p>افحصوا مجددًا كل العيّنات الـ 8 مقارنةً بالمجال.</p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="s3vCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S4 — Screen 05 · SingleChoiceQuestion (Figma 2526:1497).
+       Section ג׳. Standard text-pill answers (4 options), no content
+       image. Hint hidden until first wrong attempt. 2 attempts.
+       Correct: c. Same task-details recall popup as S2/S3.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="4" id="s4">
+
+    <div class="scq-question">
+      <!-- Motion v0.1: question (1) → answers as one group (2) →
+           recall content-body button (3). Action bar stays static. -->
+      <div class="scq-qtext" data-reveal="1">
+        <p class="s2q-title">البند ت</p>
+        <p class="s2q-body">تدعي شركة المشروبات أنها تلتزم بالمعيار.<br>أيٌّ من الجمل التالية تعرض <strong>ادّعاءً علميًا صحيحًا وكاملًا</strong> يدعم ادعاء الشركة؟</p>
+      </div>
+
+      <div class="scq-answers" id="s4q-answers" data-reveal="2" role="radiogroup"
+           aria-label="أيٌّ من الجمل التالية تعرض ادّعاءً علميًا صحيحًا وكاملًا يدعم ادعاء الشركة؟">
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="a" onclick="s4qSelect('a')">
+          <span class="scq-opt-text">تلتزم الشركة بالمعيار وفق القانون - المعيار المطلوب في البلاد يتراوح بين 735 ملل و-765 ملل، وهذا مجال عادل تمامًا للمستهلكين</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="b" onclick="s4qSelect('b')">
+          <span class="scq-opt-text">تلتزم الشركة بالمعيار وفق القانون - في فحص قسم الاستهلاك تمّ قياس قيَم تتراوح بين 745 ملل و-760 ملل في القناني المختلفة</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="c" onclick="s4qSelect('c')">
+          <span class="scq-opt-text">تلتزم الشركة بالمعيار وفق القانون - جميع قياسات الفحص (760-745 ملل) تقع ضمن المجال المسموح به وفق المعيار (765-735 ملل)</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="d" onclick="s4qSelect('d')">
+          <span class="scq-opt-text">لا تلتزم الشركة بالمعيار، لأنه تم العثور في الفحص على قنينة تحتوي على 745 ملل، وهذا أقل من 750 ملل المكتوبة على ملصق العصير</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <button class="scq-hint s2q-recall-btn" id="s4-recall" type="button" data-reveal="3"
+              onclick="openRecallPopup()">
+        <span>هل يمكن تذكيري بتفاصيل المهمّة؟</span>
+        <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+      </button>
+    </div>
+
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s4q-check" type="button" disabled
+                onclick="s4qCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="s4q-hint" type="button"
+                style="visibility:hidden" onclick="s4qOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s4-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+  </section>
+
+  <div class="scq-popup m-popup hidden" id="s4q-popup"
+       onpointerdown="popupMouseDown(event, 's4q-popup')"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s4q-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s4q-popup-body"></div>
+  </div>
+
+  <div class="scq-hint-overlay m-popup hidden" id="s4q-hint-overlay"
+       onclick="s4qCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="s4q-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="s4q-hint-title">تلميح</h2>
+          <div class="scq-hint-body">
+            <p>لا يكفي تحديد موقف (ادّعاء)، بل يجب أيضًا عرض معطيات من الفحص (أدلّة) وشرح كيفية توافقها مع قواعد المعيار (التبرير).</p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="s4qCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S5 — Screen 06 · SingleChoiceQuestion (Figma 2526:1579).
+       Section ד׳. Standard text-pill answers (4 options), no content
+       image. Hint hidden until first wrong attempt. 2 attempts.
+       Correct: b. Same task-details recall popup as S2/S3/S4.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="5" id="s5">
+
+    <div class="scq-question">
+      <!-- Motion v0.1: same pattern as s4 — question → answers → recall. -->
+      <div class="scq-qtext" data-reveal="1">
+        <p class="s2q-title">البند ت</p>
+        <p class="s2q-body">يدعي أمجد أنه يجب قياس حجم العصير في جميع القناني.<br>ما رأيكم؟</p>
+      </div>
+
+      <div class="scq-answers" id="s5q-answers" data-reveal="2" role="radiogroup"
+           aria-label="يدعي أمجد أنه يجب قياس حجم العصير في جميع القناني. ما رأيكم؟">
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="a" onclick="s5qSelect('a')">
+          <span class="scq-opt-text">اقتراح ممتاز – من الأفضل دائمًا التأكد</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="b" onclick="s5qSelect('b')">
+          <span class="scq-opt-text">غير عمليّ. مكلف وبطيء. يمكن الاستنتاج من عيّنة ممثّلة</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="c" onclick="s5qSelect('c')">
+          <span class="scq-opt-text">فكرة غير جيدة – قد تضر بعملية القياس بأكملها</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="d" onclick="s5qSelect('d')">
+          <span class="scq-opt-text">لا يمكن التقدير</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <button class="scq-hint s2q-recall-btn" id="s5-recall" type="button" data-reveal="3"
+              onclick="openRecallPopup()">
+        <span>هل يمكن تذكيري بتفاصيل المهمّة؟</span>
+        <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+      </button>
+    </div>
+
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s5q-check" type="button" disabled
+                onclick="s5qCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="s5q-hint" type="button"
+                style="visibility:hidden" onclick="s5qOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s5-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+  </section>
+
+  <div class="scq-popup m-popup hidden" id="s5q-popup"
+       onpointerdown="popupMouseDown(event, 's5q-popup')"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s5q-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s5q-popup-body"></div>
+  </div>
+
+  <div class="scq-hint-overlay m-popup hidden" id="s5q-hint-overlay"
+       onclick="s5qCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="s5q-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="s5q-hint-title">تلميح</h2>
+          <div class="scq-hint-body">
+            <p>الحسنات مقابل السيئات: قياس كل القناني دقيق‎.</p>
+            <p>لكن هل هو عمليّ؟</p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="s5qCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       GLOBAL — Task-details popup (Figma "ContentPopup", nodes
+       2525:1602 / 2526:1287's expanded state) — shared by every
+       section's "אפשר להיזכר בפרטי המשימה?" button (S2 onward). One
+       instance reused across the whole task, reopening S1's exact
+       photo + numbered-list content regardless of which section
+       opened it. Always available from the start — never gated.
+       ═══════════════════════════════════════════════════════════ -->
+  <!-- Popup motion (approved): standard overlay+popup structure →
+       .m-popup on the OVERLAY, whole unit fades in on every open. -->
+  <div class="recipe-popup-overlay m-popup hidden" id="recall-overlay"
+       onclick="closeRecallPopupOnBackdrop(event)">
+    <div class="recipe-popup" role="dialog" aria-modal="true" aria-label="تذكير بتفاصيل المهمة">
+      <button class="recipe-popup-close" type="button"
+              onclick="closeRecallPopup()" aria-label="إغلاق"></button>
+      <div class="s1t-content">
+        <div class="s1t-img">
+          <div class="s1t-img-inner">
+            <img src="assets/img/OrangeJuiceBottle.png" alt="قنينة عصير برتقال، المحتوى 750 ملل">
+          </div>
+        </div>
+        <div class="s1t-list">
+          <p class="s1t-para">تنتج شركة مشروبات مئات قناني العصير المكتوب على ملصقاتها - <strong>المحتوى: 750 ملل.</strong><br>وفق المعيار، يتراوح حجم العصير المسموح به في القنينة بين 735 و-765 ملل.</p>
+          <p class="s1t-para">اختار قسم الاستهلاك 8 قناني في المصنع، وقاس حجم العصير في كل قنينة‎:</p>
+          <table class="s1t-table">
+            <tr><th>رقم القنينة</th><th>حجم العصير في القنينة (بالمليلتر)</th></tr>
+            <tr><td>1</td><td>745</td></tr>
+            <tr><td>2</td><td>752</td></tr>
+            <tr><td>3</td><td>748</td></tr>
+            <tr><td>4</td><td>760</td></tr>
+            <tr><td>5</td><td>749</td></tr>
+            <tr><td>6</td><td>755</td></tr>
+            <tr><td>7</td><td>747</td></tr>
+            <tr><td>8</td><td>754</td></tr>
+          </table>
+          <p class="s1t-para"><strong>مهمتكم: اكتشاف كيفية فحص ما إذا كانت الشركة تلتزم بالمعيار، وما هي نتيجة الفحص‎.</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ "מצאתם בעיה?" — the shared 720 issue-report dialogs (unit-js/25-report.js,
+       unit-css/25-report.css). Copied unchanged from methodica-science-mass-measure-03; inside
+       #app (the overlay aligns with the scaled canvas) and outside every .screen (always
+       available). Guide §7.1. ═══ -->
+  <div id="report-modal"
+       class="report-modal-overlay"
+       hidden
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="report-modal-title">
+    <div class="report-modal-box">
+      <button class="report-close-btn" type="button" onclick="tryCloseReportModal()" aria-label="إغلاق">&#10005;</button>
+      <h2 class="report-modal-title" id="report-modal-title">الإبلاغ عن مشكلة</h2>
+      <p class="report-modal-body">هل هناك شيء غير واضح أو لا يعمل كما ينبغي؟<br>أخبرونا بما حدث لنعالج المشكلة.</p>
+
+      <div class="report-field">
+        <label class="report-label" for="report-type"><span class="required-star">*</span> ما نوع المشكلة</label>
+        <div class="report-custom-select" id="report-type-wrapper">
+          <button class="report-select-btn is-placeholder" type="button" aria-haspopup="listbox" aria-expanded="false">
+            <span class="report-select-value">اختاروا نوع المشكلة</span>
+          </button>
+          <ul class="report-select-list" role="listbox" hidden>
+            <li class="report-select-option" data-value="technical" role="option">عطل تقني أو شيء لا يعمل</li>
+            <li class="report-select-option" data-value="unclear" role="option">شيء غير واضح لي</li>
+            <li class="report-select-option" data-value="other" role="option">أخرى</li>
+          </ul>
+          <input type="hidden" id="report-type" value="">
+        </div>
+        <span class="report-field-error" id="report-type-error" hidden>اختاروا نوع المشكلة</span>
+      </div>
+
+      <div class="report-field">
+        <label class="report-label" for="report-text"><span class="required-star">*</span> ماذا حدث؟</label>
+        <textarea class="report-textarea" id="report-text" maxlength="250" rows="4" placeholder="اشرحوا ما حدث لنتمكن من فهم المشكلة" onblur="reportTextBlur()"></textarea>
+        <span class="report-field-error" id="report-text-error" hidden>اكتبوا ما حدث</span>
+        <span class="report-char-count" id="report-char-count">0 / 250</span>
+      </div>
+
+      <div class="report-actions">
+        <button class="report-cancel-btn" type="button" onclick="tryCloseReportModal()">إلغاء</button>
+        <button class="report-submit-btn" type="button" onclick="submitReport()" disabled>إرسال البلاغ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- מצב "הדיווח נשלח". דיאלוג נפרד מדיאלוג הנטישה שמתחתיו — אין לאחד ביניהם. -->
+  <div id="report-thanks-modal"
+       class="report-modal-overlay"
+       hidden
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="report-thanks-title">
+    <div class="report-modal-box report-confirm-box">
+      <h2 class="report-modal-title" id="report-thanks-title">تم إرسال البلاغ، شكرًا!</h2>
+      <p class="report-modal-body">استلمنا بلاغكم وسنعالجه في أقرب وقت.</p>
+      <div class="report-actions">
+        <button class="report-submit-btn" type="button" onclick="closeReportThanks()">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- אישור נטישה: נפתח רק כשיש קלט שלא נשלח. -->
+  <div id="report-confirm-modal"
+       class="report-modal-overlay"
+       hidden
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="report-confirm-title">
+    <div class="report-modal-box report-confirm-box">
+      <h2 class="report-modal-title" id="report-confirm-title">هل أنتم متأكدون من إغلاق النافذة؟</h2>
+      <p class="report-modal-body">عند الضغط على إغلاق لن يُرسل البلاغ</p>
+      <div class="report-actions">
+        <button class="report-cancel-btn" type="button" onclick="forceCloseReportModal()">إغلاق النافذة</button>
+        <button class="report-submit-btn" type="button" onclick="backToReportForm()">أريد الإبلاغ</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /#app -->
+
+<script src="../unit-js/10-identity.js?v=2"></script>
+<script src="../unit-js/20-xapi.js?v=2"></script>
+<script src="../unit-js/25-report.js?v=1"></script>
+<script src="../unit-js/40-resume.js?v=2"></script>
+<script src="../unit-js/45-resume-paint.js?v=1"></script>
+<script src="../unit-js/50-loader.js?v=1"></script>
+<script src="../unit-js/05-motion.js?v=1"></script>
+<script src="../unit-js/00-util.js?v=2"></script>
+<script src="../unit-js/30-nav.js?v=2"></script>
+<script src="../unit-js/32-navlabels.js?v=1"></script>
+<script src="../unit-js/35-popup.js?v=1"></script>
+<script src="js/main.js?v=13"></script>
+<script src="../unit-js/90-boot.js?v=2"></script>
+</body>
+</html>

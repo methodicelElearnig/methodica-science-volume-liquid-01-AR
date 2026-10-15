@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>وحدة تعليمية — قياس حجم السائل وأدوات القياس · الجزء 06</title>
+  <link rel="stylesheet" href="../unit-css/base.css?v=3">
+  <link rel="stylesheet" href="../unit-css/scq.css?v=1">
+  <link rel="stylesheet" href="../unit-css/img-zoom.css?v=1">
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="../unit-css/25-report.css?v=1">
+  <link rel="stylesheet" href="../unit-css/motion.css?v=1">
+  <link rel="stylesheet" href="../unit-css/nav-buttons.css?v=1">
+</head>
+<body>
+<!-- Boot cover (guide §8.11): hides screen 0 until the resume decision, so a restored learner
+     never sees the first screen flash before their own. Inline-styled and a sibling of #app (not a
+     child: #app is scaled). 50-loader.js drops it on every exit path; this failsafe lifts it after
+     800 ms, or up to 6 s while a restore is actually in flight (window.__resumeInFlight). -->
+<div id="boot-cover" style="position:fixed;inset:0;z-index:9999;background:#fff"></div>
+<script>
+(function () {
+  var t0 = Date.now();
+  function tick() {
+    var c = document.getElementById('boot-cover');
+    if (!c || !c.parentNode) return;
+    if (window.__resumeInFlight && Date.now() - t0 < 6000) { setTimeout(tick, 100); return; }
+    c.parentNode.removeChild(c);
+  }
+  setTimeout(tick, 800);
+})();
+</script><div id="app">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       GLOBAL — Report / Issue button (shared across every screen).
+       Visual only; no click behavior wired.
+       ═══════════════════════════════════════════════════════════ -->
+  <button class="flag-btn" id="flag-btn" type="button" aria-label="هل وجدتم مشكلة؟">
+    <span class="flag-btn-icon"></span>
+    <span class="flag-btn-label">هل وجدتم مشكلة؟</span>
+  </button>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S0 — Screen 01 · TransitionScreen (slide 40, last slide of the
+       production deck). Companion video, resolved per the character
+       carried over from earlier parts. Intro to the part's peak
+       question (שאלת השיא — 4 parts, 3+ needed to pass), which will
+       follow as later screens of this same part. First screen of
+       this part: back button goes to the previous part.
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen active" data-screen="0" id="s0">
+
+    <div class="s0tr-content">
+      <!-- Motion v0.1 (approved video-screen pattern): text floats in as
+           one group; the video + wrap are EXCLUDED — appear immediately. -->
+      <div class="s0tr-text" data-reveal="1">
+        <p class="s0tr-lead">كل الاحترام!</p>
+        <p class="s0tr-lead">إذا لم تنجحوا في الإجابة عن بعض الأسئلة،</p>
+        <p class="s0tr-lead">فمن المهم أن تفهموا ما الذي لا يزال غير واضح، وأن تتوجهوا إلى الدردشة أو إلى المعلّم للحصول على شرح إضافي.</p>
+        <h1 class="s0tr-title">والآن يأتي السؤال الأكبر!</h1>
+        <p class="s0tr-strong">يحتوي السؤال على 4 بنود.</p>
+        <p class="s0tr-strong">عليكم الإجابة عن 3 بنود على الأقل بشكل صحيح لتتمكّنوا من التقدّم.</p>
+      </div>
+      <!-- Motion v0.1 (video-zone fade): gentle fade only, starts with the
+           screen entrance; autoplay untouched. -->
+      <div class="s0tr-video-wrap" data-reveal="1" data-reveal-fade>
+        <video id="s0-video" class="s0tr-video" autoplay muted playsinline
+               disablepictureinpicture disableremoteplayback
+               controlsList="nodownload noremoteplayback nofullscreen noplaybackrate"></video>
+      </div>
+    </div>
+
+    <button class="btn-continue" id="s0-continue" onclick="advanceFromS0()">متابعة</button>
+    <button class="scq-back" id="s0-back" type="button" onclick="goBack()">عودة</button>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S1 — Screen 02 · Reference-materials screen (Figma node 2515:6338,
+       "DropdownQuestion - Multiple Blanks - state 01 - Before
+       Interaction"). The Figma component name is inherited from a
+       shared library frame — this instance has no actual dropdown/
+       blank fields, hint, or check button; it's purely two reference
+       photos (a 1950 handwritten recipe vs. a modern online recipe)
+       plus the unit-conversion table the learner will need for the
+       peak question that follows. Continue is enabled from the start
+       (no gating) — confirmed with the producer.
+       Two columns, right-anchored within each (Figma: two adjacent
+       545px-wide panels, x=150–1240) — direction:ltr row keeps the
+       table panel physically LEFT and the recipes panel physically
+       RIGHT, matching Figma's layout (same technique as part-03's
+       .ts-content-row).
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="1" id="s1">
+
+    <div class="s1rc-row">
+
+      <!-- Motion v0.1: RTL order — .s1rc-row is direction:ltr, so the
+           FIRST DOM column (conversion table) sits physically LEFT and
+           the second (recipes) physically RIGHT. Hebrew reading order:
+           recipes column (right) reveals first, table column (left)
+           last. No zoom buttons here → float is safe for both. -->
+      <div class="s1rc-col" data-reveal="2">
+        <p class="s1rc-caption">بحسب جدول التحويل القياسي، معطى‎:</p>
+        <table class="s1rc-table">
+          <tr><td>1 &quot;كوب&quot; = 240 ملل</td></tr>
+          <tr><td>1 &quot;ملعقة صغيرة&quot; = 5 ملل</td></tr>
+          <tr><td>1 &quot;ملعقة كبيرة&quot; = 15 ملل</td></tr>
+        </table>
+      </div>
+
+      <div class="s1rc-col" data-reveal="1">
+        <p class="s1rc-caption">وجدت ريهام في الخزانة وصفة تركتها جدّتها من عام 1950. فيما يلي جزء منها‎:</p>
+        <div class="s1rc-photo-frame">
+          <img src="assets/img/recipe-1950-note.png"
+               alt="بطاقة عليها وصفة قديمة بخط يد: كعكة شوكولاتة – كوب واحد من العصير، ملعقتان صغيرتان من السكر، ملعقة كبيرة من الزيت‎.">
+        </div>
+        <p class="s1rc-caption">وجد يوسف وصفة حديثة على الإنترنت. فيما يلي جزء منها‎:</p>
+        <div class="s1rc-photo-frame">
+          <img src="assets/img/recipe-online.png"
+               alt="وصفة إلكترونية لكعكة شوكولاتة: 250 ملل ماء، 10 غرام سكر، 15 ملل زيت‎.">
+        </div>
+      </div>
+
+    </div>
+
+    <button class="btn-continue" id="s1-continue" onclick="advanceScreen()">متابعة</button>
+    <button class="scq-back" id="s1-back" type="button" onclick="goBack()">عودة</button>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S2 — Screen 03 · SingleChoiceQuestion (Figma 2515:6476 /
+       2519:1069). Section א׳ of the 4-part peak question. Standard
+       SCQ (title + question + 4 text pills), hint hidden until the
+       first wrong attempt.
+
+       New this screen: a SECOND help button, "אפשר להיזכר
+       במתכונים?" — same gating as the standard hint (hidden until
+       first wrong), styled identically to .scq-hint but positioned
+       inline below the answers (not in the bottom bar, per Figma).
+       Clicking it does NOT open a hint-text popup — it reopens S1's
+       exact reference content (conversion table + both recipe
+       photos) in a large centered modal, so the learner doesn't have
+       to navigate back to see it again. Reuses S1's .s1rc-* markup
+       verbatim inside the new .recipe-popup wrapper.
+       Correct: a (240 מ״ל).
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="2" id="s2">
+
+    <div class="scq-question">
+      <!-- Motion v0.1: question (1) → answers as one group (2) → recall
+           content-body button (3). Action bar stays static. -->
+      <div class="scq-qtext s2q-qtext" data-reveal="1">
+        <p class="s2q-title">البند أ</p>
+        <p class="s2q-body">إذا استخدمنا وصفة الجدة، كم ملل من الماء سنضع؟</p>
+      </div>
+
+      <div class="scq-answers" id="s2q-answers" data-reveal="2" role="radiogroup"
+           aria-label="إذا استخدمنا وصفة الجدة، كم ملل من الماء سنضع؟">
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="a" onclick="s2qSelect('a')">
+          <span class="scq-opt-text">240‏‎ ‎ملل</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="b" onclick="s2qSelect('b')">
+          <span class="scq-opt-text">250‏‎ ‎ملل</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="c" onclick="s2qSelect('c')">
+          <span class="scq-opt-text">480‏‎ ‎ملل</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="d" onclick="s2qSelect('d')">
+          <span class="scq-opt-text">5‏‎ ‎ملل</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <!-- Recall button is part of the question CONTENT body (not the
+           fixed action bar) → participates in the reveal as group 3. -->
+      <button class="scq-hint s2q-recall-btn" id="s2q-recall" type="button" data-reveal="3"
+              onclick="openRecallPopup()">
+        <span>هل يمكن تذكيري بالوصفات؟</span>
+        <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+      </button>
+    </div>
+
+    <!-- Bottom action bar — standard hint hidden until the first wrong answer -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s2q-check" type="button" disabled
+                onclick="s2qCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="s2q-hint" type="button"
+                style="visibility:hidden" onclick="s2qOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s2-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+  </section>
+
+  <!-- Popup motion (approved): .m-popup = 260ms fade-in on every open,
+       one unit, instant close — applied to every standard hint/feedback
+       popup in this part + the shared recall overlay. -->
+  <!-- S2 feedback popup — outside .screen so display:none never hides it -->
+  <div class="scq-popup m-popup hidden" id="s2q-popup"
+       onpointerdown="popupMouseDown(event, 's2q-popup')"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s2q-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s2q-popup-body"></div>
+  </div>
+
+  <!-- S2 standard hint popup (modal) — outside .screen divs, inside #app -->
+  <div class="scq-hint-overlay m-popup hidden" id="s2q-hint-overlay"
+       onclick="s2qCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="s2q-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="s2q-hint-title">تلميح</h2>
+          <div class="scq-hint-body">
+            <p>على كم ملل يحتوي كوب الجدّة؟</p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="s2qCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S3 — Screen 04 · SingleChoiceQuestionImage (Figma 2519:6057).
+       Section ב׳ of the peak question. Same shape as S2, plus a
+       380×380 content image (per SingleChoiceQuestion.md's base
+       image variant) — a photo of the baked cake, cropped to fill
+       the frame (object-fit: cover) matching Figma's explicit crop,
+       rather than this template's usual object-fit: contain default.
+       "אפשר להיזכר במתכונים?" opens the exact same shared recall
+       popup as S2. Correct: b (כמעט זהה) — a 4% mass/volume
+       difference is negligible for a cake (contrast with S1Q in
+       part 04, where the same-size error mattered for medication).
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="3" id="s3">
+
+    <div class="scq-question">
+      <!-- Motion v0.1: RTL order — .scq-question is direction:ltr, so
+           this image (first DOM child) sits physically LEFT and the
+           text column physically RIGHT. Right side first: qtext (1) →
+           answers (2) → image (3) → recall (4, approved LAST-group
+           rule for content-body recall buttons). The image has a
+           JS-measured zoom clone → fade-only so geometry never moves. -->
+      <div class="scq-img s3q-img" data-reveal="3" data-reveal-fade>
+        <div class="scq-img-inner">
+          <button class="img-zoom-btn" type="button" aria-label="تكبير الصورة"
+                  data-zoom-src="assets/img/baked-cake.png"
+                  data-zoom-alt="كعكة شوكولاتة مخبوزة في قالب دائري، تبرد على شبكة">
+            <svg class="img-zoom-btn__icon" aria-hidden="true" width="20" height="20" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1C11.8661 1 15 4.13371 15 7.99902C15 11.8643 11.8661 14.998 8 14.998C4.1339 14.998 1.00002 11.8643 1 7.99902C1 4.13371 4.13389 1 8 1Z" stroke="currentColor" stroke-width="2"/><path d="M12.6221 14.188L14.2657 12.6141L19.928 18.5274C20.3626 18.9813 20.347 19.7016 19.8931 20.1362C19.4392 20.5708 18.7189 20.5552 18.2843 20.1013L12.6221 14.188Z" fill="currentColor"/></svg>
+          </button>
+          <img src="assets/img/baked-cake.png"
+               alt="كعكة شوكولاتة مخبوزة في قالب دائري، تبرد على شبكة">
+        </div>
+      </div>
+
+      <div class="s3q-textcol">
+        <div class="scq-qtext s3q-qtext" data-reveal="1">
+          <p class="s2q-title">البند ب</p>
+          <p class="s2q-body">هل الوصفة من عام 1950 والوصفة الحديثة ستُنتِجان كعكة متطابقة أم مختلفة بشكل ملحوظ؟</p>
+        </div>
+
+        <div class="scq-answers" id="s3q-answers" data-reveal="2" role="radiogroup"
+             aria-label="هل الوصفة من عام 1950 والوصفة الحديثة ستُنتِجان كعكة متطابقة أم مختلفة بشكل ملحوظ؟">
+          <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                  data-id="a" onclick="s3qSelect('a')">
+            <span class="scq-opt-text">متطابقة تمامًا</span>
+            <span class="scq-radio" aria-hidden="true"></span>
+          </button>
+          <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                  data-id="b" onclick="s3qSelect('b')">
+            <span class="scq-opt-text">متطابقة تقريبًا</span>
+            <span class="scq-radio" aria-hidden="true"></span>
+          </button>
+          <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                  data-id="c" onclick="s3qSelect('c')">
+            <span class="scq-opt-text">مختلفة بشكل ملحوظ</span>
+            <span class="scq-radio" aria-hidden="true"></span>
+          </button>
+          <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                  data-id="d" onclick="s3qSelect('d')">
+            <span class="scq-opt-text">لا يمكن المعرفة مسبقًا</span>
+            <span class="scq-radio" aria-hidden="true"></span>
+          </button>
+        </div>
+
+        <button class="scq-hint s2q-recall-btn" id="s3q-recall" type="button" data-reveal="4"
+                onclick="openRecallPopup()">
+          <span>هل يمكن تذكيري بالوصفات؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom action bar — standard hint hidden until the first wrong answer -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s3q-check" type="button" disabled
+                onclick="s3qCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="s3q-hint" type="button"
+                style="visibility:hidden" onclick="s3qOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s3-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+  </section>
+
+  <!-- S3 feedback popup — outside .screen so display:none never hides it -->
+  <div class="scq-popup m-popup hidden" id="s3q-popup"
+       onpointerdown="popupMouseDown(event, 's3q-popup')"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s3q-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s3q-popup-body"></div>
+  </div>
+
+  <!-- S3 standard hint popup (modal) — outside .screen divs, inside #app -->
+  <div class="scq-hint-overlay m-popup hidden" id="s3q-hint-overlay"
+       onclick="s3qCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="s3q-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="s3q-hint-title">تلميح</h2>
+          <div class="scq-hint-body">
+            <p>أي نسبة مئوية تشكّل 10 ملل من 250؟</p>
+            <p>هل هذا فرق مهم في الكعكة؟</p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="s3qCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S4 — Screen 05 · SingleChoiceQuestion (Figma 2520:1164).
+       Section ג׳ of the peak question. No content image, same shape
+       as S2 (single 792px-wide column). "אפשר להיזכר במתכונים?"
+       opens the same shared recall popup. Correct: c (כדי שגם מי
+       שמכין את העוגה עם כוס אחרת יקבל את אותה העוגה).
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="4" id="s4">
+
+    <div class="scq-question">
+      <!-- Motion v0.1: question (1) → answers as one group (2) → recall
+           content-body button (3). Action bar stays static. -->
+      <div class="scq-qtext s4q-qtext" data-reveal="1">
+        <p class="s2q-title">البند ت</p>
+        <p class="s2q-body">لم تكن الجدة تعرف وحدات مثل مليلتر (ملل). لماذا تستخدم الوصفة الحديثة وحدات معيارية؟</p>
+      </div>
+
+      <div class="scq-answers" id="s4q-answers" data-reveal="2" role="radiogroup"
+           aria-label="لم تكن الجدة تعرف وحدات مثل مليلتر (ملل). لماذا تستخدم الوصفة الحديثة وحدات معيارية؟">
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="a" onclick="s4qSelect('a')">
+          <span class="scq-opt-text">لأن الناس في عام 1950 كانوا يعرفون أقل مما نعرفه اليوم</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="b" onclick="s4qSelect('b')">
+          <span class="scq-opt-text">لأن الشباب غير معتادين على الطبخ كما كان في الماضي</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="c" onclick="s4qSelect('c')">
+          <span class="scq-opt-text">لكي يحصل الشخص الذي يحضّر الكعكة بكوب مختلف على نفس الكعكة</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+        <button class="scq-opt" type="button" role="radio" aria-checked="false"
+                data-id="d" onclick="s4qSelect('d')">
+          <span class="scq-opt-text">لأن القانون يفرض ذلك اليوم</span>
+          <span class="scq-radio" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <button class="scq-hint s2q-recall-btn" id="s4q-recall" type="button" data-reveal="3"
+              onclick="openRecallPopup()">
+        <span>هل يمكن تذكيري بالوصفات؟</span>
+        <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+      </button>
+    </div>
+
+    <!-- Bottom action bar — standard hint hidden until the first wrong answer -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s4q-check" type="button" disabled
+                onclick="s4qCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="s4q-hint" type="button"
+                style="visibility:hidden" onclick="s4qOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s4-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+  </section>
+
+  <!-- S4 feedback popup — outside .screen so display:none never hides it -->
+  <div class="scq-popup m-popup hidden" id="s4q-popup"
+       onpointerdown="popupMouseDown(event, 's4q-popup')"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s4q-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s4q-popup-body"></div>
+  </div>
+
+  <!-- S4 standard hint popup (modal) — outside .screen divs, inside #app -->
+  <div class="scq-hint-overlay m-popup hidden" id="s4q-hint-overlay"
+       onclick="s4qCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="s4q-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="s4q-hint-title">تلميح</h2>
+          <div class="scq-hint-body">
+            <p>بماذا تختلف "الوحدة المعيارية" عن "كوب الجدة"؟</p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="s4qCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       S5 — Screen 06 · SingleChoiceQuestion, image-choice variant
+       (same structure as part-02's #s1 — see that file for the
+       reference implementation of .s5q-content/.s5q-cards/.s5q-card).
+       Section ד׳, the last of the peak question's 4 parts. 4 image
+       cards, each with a caption below it, instead of text pills.
+       DOM order is reversed from the on-screen right→left reading
+       order — .s5q-cards uses direction:ltr, so first DOM child is
+       physically LEFTMOST (same technique as part-02's #s1).
+       Unlike part-02's #s1 (hint visible from the start), hint here
+       is hidden until the first wrong attempt, per this part's own
+       policy for sections א–ד. Also includes the recall button
+       (standing policy: present and always-visible on every section).
+       Correct: cylinder (משורת 50 מ״ל).
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="screen" data-screen="5" id="s5">
+
+    <div class="s5q-content">
+
+      <!-- Motion v0.1: header (1) → the whole card grid as ONE group
+           (2) — .s5q-cards is direction:ltr so DOM order ≠ visual
+           order; per the approved rule such a grid never staggers
+           per-card — → recall content-body button (3). -->
+      <div class="s5q-header" data-reveal="1">
+        <p class="s5q-title">البند ت</p>
+        <p class="s5q-body">في محل حلويات يحرص على الدقة والتجانس، أي أداة تنصحون باختيارها لقياس 15 ملل من الزيت في الوصفة؟<br><strong>اضغطوا على الإمكانية الأنسب‎.</strong></p>
+      </div>
+
+      <!-- Image cards — on-screen right→left: כוס כימית · כף · כפית מדידה
+           רפואית · משורה. DOM order (direction:ltr → first child = leftmost)
+           is reversed from that reading order. -->
+      <div class="s5q-cards" data-reveal="2" role="radiogroup"
+           aria-label="في محل حلويات يحرص على الدقة والتجانس، أي أداة تنصحون باختيارها لقياس 15 ملل من الزيت في الوصفة؟ اضغطوا على الإمكانية الأنسب‎.">
+
+        <button class="s5q-card" type="button" role="radio" aria-checked="false"
+                data-id="cylinder" onclick="s5qSelect('cylinder')">
+          <span class="s5q-card-frame">
+            <img src="assets/img/MeasuringCylinder50ml.png" alt="مخبار مدرّج بسِعة 50 ملل">
+          </span>
+          <span class="s5q-card-label">مخبار مدرّج بسِعة 50 ملل</span>
+        </button>
+
+        <button class="s5q-card" type="button" role="radio" aria-checked="false"
+                data-id="medspoon" onclick="s5qSelect('medspoon')">
+          <span class="s5q-card-frame">
+            <img class="img-contain" src="../unit-assets/img/MedicineSpoon.png" alt="ملعقة قياس طبية سِعتها 5 ملل">
+          </span>
+          <span class="s5q-card-label">ملعقة قياس طبية سِعتها 5 ملل: <br>نقيس 3 مرات للوصول إلى 15 ملل</span>
+        </button>
+
+        <button class="s5q-card" type="button" role="radio" aria-checked="false"
+                data-id="spoon" onclick="s5qSelect('spoon')">
+          <span class="s5q-card-frame">
+            <img src="../unit-assets/img/spoon.png" alt="ملعقة مطبخ عادية">
+          </span>
+          <span class="s5q-card-label">ملعقة مطبخ عادية جيدة بما يكفي</span>
+        </button>
+
+        <button class="s5q-card" type="button" role="radio" aria-checked="false"
+                data-id="beaker" onclick="s5qSelect('beaker')">
+          <span class="s5q-card-frame">
+            <img src="../unit-assets/img/ChemicalBeaker2.png" alt="دورق بسِعة 500 ملل">
+          </span>
+          <span class="s5q-card-label">دورق بسِعة 500 ملل – سريع وسهل</span>
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- Bottom action bar — standard hint hidden until the first wrong answer -->
+    <div class="scq-bar">
+      <div class="scq-bar-main">
+        <button class="scq-check" id="s5q-check" type="button" disabled
+                onclick="s5qCheck()">هل إجابتي صحيحة؟</button>
+        <button class="scq-hint" id="s5q-hint" type="button"
+                style="visibility:hidden" onclick="s5qOpenHint()">
+          <span>هل يمكنني الحصول على تلميح؟</span>
+          <img class="scq-hint-ico" src="../unit-assets/img/icon-idea-blue.svg" alt="">
+        </button>
+      </div>
+      <button class="scq-back" id="s5-back" type="button" onclick="goBack()">عودة</button>
+    </div>
+
+  </section>
+
+  <!-- S5 feedback popup — outside .screen so display:none never hides it -->
+  <div class="scq-popup m-popup hidden" id="s5q-popup"
+       onpointerdown="popupMouseDown(event, 's5q-popup')"
+       role="status" aria-live="polite">
+    <div class="scq-popup-header">
+      <p class="scq-popup-title" id="s5q-popup-title"></p>
+    </div>
+    <div class="scq-popup-body" id="s5q-popup-body"></div>
+  </div>
+
+  <!-- S5 standard hint popup (modal) — outside .screen divs, inside #app -->
+  <div class="scq-hint-overlay m-popup hidden" id="s5q-hint-overlay"
+       onclick="s5qCloseHintOnBackdrop(event)">
+    <div class="scq-hint-popup" role="dialog" aria-modal="true"
+         aria-labelledby="s5q-hint-title">
+      <div class="scq-hint-content">
+        <div class="scq-hint-text">
+          <h2 class="scq-hint-title" id="s5q-hint-title">تلميح</h2>
+          <div class="scq-hint-body">
+            <p>أي أداة تقع في المجال المناسب، وهي معيارية ومريحة في نفس الوقت؟</p>
+          </div>
+        </div>
+      </div>
+      <button class="scq-hint-close" type="button" onclick="s5qCloseHint()">عودة إلى السؤال</button>
+    </div>
+  </div>
+
+
+  <!-- GLOBAL — Recipe-reminder popup (modal), shared by every section's
+       "אפשר להיזכר במתכונים?" button (S2 onward) — one instance reused
+       across the whole multi-part question, not duplicated per screen.
+       Reuses S1's exact content, outside .screen divs. -->
+  <!-- Popup motion (approved): standard overlay+popup structure →
+       .m-popup on the OVERLAY, whole unit fades in on every open. -->
+  <div class="recipe-popup-overlay m-popup hidden" id="recall-overlay"
+       onclick="closeRecallPopupOnBackdrop(event)">
+    <div class="recipe-popup" role="dialog" aria-modal="true" aria-label="تذكير بالوصفات">
+      <button class="recipe-popup-close" type="button"
+              onclick="closeRecallPopup()" aria-label="إغلاق"></button>
+      <div class="s1rc-row">
+        <div class="s1rc-col">
+          <p class="s1rc-caption">بحسب جدول التحويل القياسي، معطى‎:</p>
+          <table class="s1rc-table">
+            <tr><td>1 &quot;كوب&quot; = 240 ملل</td></tr>
+            <tr><td>1 &quot;ملعقة صغيرة&quot; = 5 ملل</td></tr>
+            <tr><td>1 &quot;ملعقة كبيرة&quot; = 15 ملل</td></tr>
+          </table>
+        </div>
+        <div class="s1rc-col">
+          <p class="s1rc-caption">وجدت ريهام في الخزانة وصفة تركتها جدّتها من عام 1950. فيما يلي جزء منها‎:</p>
+          <div class="s1rc-photo-frame">
+            <img src="assets/img/recipe-1950-note.png"
+                 alt="بطاقة عليها وصفة قديمة بخط يد: كعكة شوكولاتة – كوب واحد من العصير، ملعقتان صغيرتان من السكر، ملعقة كبيرة من الزيت‎.">
+          </div>
+          <p class="s1rc-caption">وجد يوسف وصفة حديثة على الإنترنت. فيما يلي جزء منها‎:</p>
+          <div class="s1rc-photo-frame">
+            <img src="assets/img/recipe-online.png"
+                 alt="وصفة إلكترونية لكعكة شوكولاتة: 250 ملل ماء، 10 غرام سكر، 15 ملل زيت‎.">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image zoom modal — global component, outside all .screen divs -->
+  <div class="img-zoom-modal hidden" id="img-zoom-modal" aria-hidden="true">
+    <div class="img-zoom-modal__backdrop" data-zoom-close="true"></div>
+    <div class="img-zoom-modal__panel" role="dialog" aria-modal="true" aria-label="عرض الصورة المكبَّرة">
+      <button class="img-zoom-modal__close" type="button" aria-label="إغلاق الصورة" data-zoom-close="true"><svg class="img-zoom-modal__close-icon" aria-hidden="true" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.192 1.192L13.808 13.808M13.808 1.192L1.192 13.808" stroke="currentColor" stroke-width="2.383" stroke-linecap="round"/></svg></button>
+      <p class="img-zoom-modal__caption" id="img-zoom-modal-caption"></p>
+      <div class="img-zoom-modal__stage" id="img-zoom-modal-stage"></div>
+    </div>
+  </div>
+
+  <!-- ═══ "מצאתם בעיה?" — the shared 720 issue-report dialogs (unit-js/25-report.js,
+       unit-css/25-report.css). Copied unchanged from methodica-science-mass-measure-03; inside
+       #app (the overlay aligns with the scaled canvas) and outside every .screen (always
+       available). Guide §7.1. ═══ -->
+  <div id="report-modal"
+       class="report-modal-overlay"
+       hidden
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="report-modal-title">
+    <div class="report-modal-box">
+      <button class="report-close-btn" type="button" onclick="tryCloseReportModal()" aria-label="إغلاق">&#10005;</button>
+      <h2 class="report-modal-title" id="report-modal-title">الإبلاغ عن مشكلة</h2>
+      <p class="report-modal-body">هل هناك شيء غير واضح أو لا يعمل كما ينبغي؟<br>أخبرونا بما حدث لنعالج المشكلة.</p>
+
+      <div class="report-field">
+        <label class="report-label" for="report-type"><span class="required-star">*</span> ما نوع المشكلة</label>
+        <div class="report-custom-select" id="report-type-wrapper">
+          <button class="report-select-btn is-placeholder" type="button" aria-haspopup="listbox" aria-expanded="false">
+            <span class="report-select-value">اختاروا نوع المشكلة</span>
+          </button>
+          <ul class="report-select-list" role="listbox" hidden>
+            <li class="report-select-option" data-value="technical" role="option">عطل تقني أو شيء لا يعمل</li>
+            <li class="report-select-option" data-value="unclear" role="option">شيء غير واضح لي</li>
+            <li class="report-select-option" data-value="other" role="option">أخرى</li>
+          </ul>
+          <input type="hidden" id="report-type" value="">
+        </div>
+        <span class="report-field-error" id="report-type-error" hidden>اختاروا نوع المشكلة</span>
+      </div>
+
+      <div class="report-field">
+        <label class="report-label" for="report-text"><span class="required-star">*</span> ماذا حدث؟</label>
+        <textarea class="report-textarea" id="report-text" maxlength="250" rows="4" placeholder="اشرحوا ما حدث لنتمكن من فهم المشكلة" onblur="reportTextBlur()"></textarea>
+        <span class="report-field-error" id="report-text-error" hidden>اكتبوا ما حدث</span>
+        <span class="report-char-count" id="report-char-count">0 / 250</span>
+      </div>
+
+      <div class="report-actions">
+        <button class="report-cancel-btn" type="button" onclick="tryCloseReportModal()">إلغاء</button>
+        <button class="report-submit-btn" type="button" onclick="submitReport()" disabled>إرسال البلاغ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- מצב "הדיווח נשלח". דיאלוג נפרד מדיאלוג הנטישה שמתחתיו — אין לאחד ביניהם. -->
+  <div id="report-thanks-modal"
+       class="report-modal-overlay"
+       hidden
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="report-thanks-title">
+    <div class="report-modal-box report-confirm-box">
+      <h2 class="report-modal-title" id="report-thanks-title">تم إرسال البلاغ، شكرًا!</h2>
+      <p class="report-modal-body">استلمنا بلاغكم وسنعالجه في أقرب وقت.</p>
+      <div class="report-actions">
+        <button class="report-submit-btn" type="button" onclick="closeReportThanks()">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- אישור נטישה: נפתח רק כשיש קלט שלא נשלח. -->
+  <div id="report-confirm-modal"
+       class="report-modal-overlay"
+       hidden
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="report-confirm-title">
+    <div class="report-modal-box report-confirm-box">
+      <h2 class="report-modal-title" id="report-confirm-title">هل أنتم متأكدون من إغلاق النافذة؟</h2>
+      <p class="report-modal-body">عند الضغط على إغلاق لن يُرسل البلاغ</p>
+      <div class="report-actions">
+        <button class="report-cancel-btn" type="button" onclick="forceCloseReportModal()">إغلاق النافذة</button>
+        <button class="report-submit-btn" type="button" onclick="backToReportForm()">أريد الإبلاغ</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /#app -->
+
+<script src="../unit-js/10-identity.js?v=2"></script>
+<script src="../unit-js/20-xapi.js?v=2"></script>
+<script src="../unit-js/25-report.js?v=1"></script>
+<script src="../unit-js/40-resume.js?v=2"></script>
+<script src="../unit-js/45-resume-paint.js?v=1"></script>
+<script src="../unit-js/50-loader.js?v=1"></script>
+<script src="../unit-js/05-motion.js?v=1"></script>
+<script src="../unit-js/00-util.js?v=2"></script>
+<script src="../unit-js/30-nav.js?v=2"></script>
+<script src="../unit-js/32-navlabels.js?v=1"></script>
+<script src="../unit-js/35-popup.js?v=1"></script>
+<script src="js/main.js?v=13"></script>
+<script src="../unit-js/90-boot.js?v=2"></script>
+</body>
+</html>

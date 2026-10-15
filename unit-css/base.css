@@ -1,0 +1,143 @@
+/* ═══════════════════════════════════════════════════════
+   unit-css/base.css  —  shared base layer for every part of
+   methodica-science-volume-liquid-01. Loaded FIRST in each
+   index.html, so a part's own css/style.css may override it.
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── Fonts: Calibri (system font), Arial fallback. No @font-face — nothing to load. ─── */
+
+/* ─── Shared base: reset, subject tokens, canvas, screens, flag and ──────
+   continue buttons. Rules identical in all seven parts, moved here verbatim
+   from each part's css/style.css (part 01's copy, with its comments). ── */
+/* ─── Reset ────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── Subject theme tokens — Figma Variable Collection (720 UI Templates)
+   Default theme: science. Theme switch = data-subject-theme attribute on <body>;
+   only Subject/* tokens may change between themes. ── */
+:root {
+  --subject-100: #d4f3ff;
+  --subject-200: #c7f0ff;
+  --subject-300: #b9ecff;
+  --subject-400: #00baff;
+  --subject-500: #019de5;
+  --subject-600: #0690d0;
+  --subject-700: #007ac6;
+  --subject-800: #0070c0;
+  --subject-900: #002060;
+  --subject-alpha-100: rgba(0, 186, 255, 0);
+  --subject-alpha-200: rgba(0, 186, 255, 0.3);
+}
+body[data-subject-theme="math"] {
+  --subject-100: #f1d9ff;
+  --subject-200: #e7c2ff;
+  --subject-300: #e0bff5;
+  --subject-400: #ce82ff;
+  --subject-500: #7100b9;
+  --subject-600: #8518cc;
+  --subject-700: #8300d9;
+  --subject-800: #7106b7;
+  --subject-900: #580091;
+  --subject-alpha-100: rgba(165, 28, 255, 0);
+  --subject-alpha-200: rgba(165, 28, 255, 0.3);
+}
+/* ─── Global utility ───────────────────────────────────── */
+.hidden { display: none !important; }
+/* ─── Global ────────────────────────────────────────────── */
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  direction: rtl;
+  font-family: Calibri, Arial, sans-serif;
+  background: #fff;
+}
+/* ─── App Canvas ────────────────────────────────────────── */
+#app {
+  position: absolute;
+  /* Width/height are set dynamically by scaleApp() to fill the viewport
+     (in design coords). The 1280×710 fallback keeps the page sensible if JS
+     is still booting. */
+  width: 1280px; height: 710px;
+  transform-origin: top left;
+  background: #fff;
+  overflow: hidden;
+}
+.screen.active { display: block; }
+/* 74px white feedback bar at the bottom of every screen (Figma standard). */
+.screen::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 74px;
+  background: #fff;
+  border-top: 0.4px solid #AEAEAE;
+  pointer-events: none;
+  z-index: 9;
+}
+/* ═══════════════════════════════════════════════════════
+   GLOBAL COMPONENT — Report / Issue button (top-left).
+   Figma "issue button" component (default + hover variants).
+   Appears on every screen. Visual only for now (no behavior).
+   - default: gray circle + flag icon
+   - hover:   blue/white circle + flag icon + "מצאתם בעיה?" label
+   Icon = exact Figma PNG; label = live HTML (never baked in).
+   ═══════════════════════════════════════════════════════ */
+.flag-btn {
+  position: absolute; top: 16px; left: 16px;
+  width: 88px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  background: none; border: none; padding: 0; cursor: pointer;
+  z-index: 30;          /* above screen content + feedback bar */
+}
+.flag-btn-icon {
+  width: 38px; height: 38px; flex-shrink: 0;
+  background: url('../unit-assets/img/btn-flag-default.png') no-repeat center / contain;
+}
+.flag-btn:hover .flag-btn-icon,
+.flag-btn:focus-visible .flag-btn-icon {
+  background-image: url('../unit-assets/img/btn-flag-hover.png');
+}
+.flag-btn-label {
+  font-family: Calibri, Arial, sans-serif;
+  font-weight: 600; font-size: 18px; color: var(--subject-500);
+  text-align: center; width: 80px; line-height: normal;
+  direction: rtl; display: none;
+}
+.flag-btn:hover .flag-btn-label,
+.flag-btn:focus-visible .flag-btn-label { display: block; }
+/* ─── Shared: Continue Button — blue pill, bottom-left of bar ── */
+.btn-continue {
+  position: absolute;
+  bottom: 17.5px; left: 24px;   /* centered in 74px bar: (74-39)/2 = 17.5px */
+  z-index: 12;                /* above the ::after white bar (z-index 9) */
+  min-width: 140px;
+  height: 39px;   /* canonical nav-pill height — see _global-components.md § Nav bar button geometry */
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 40px;
+  background: linear-gradient(180deg, #005FBE 9%, #0059B2 23.36%, #003971 100%);
+  color: #fff;
+  border: none; border-radius: 1000px;
+  font-family: Calibri, Arial, sans-serif;
+  font-size: 20px; font-weight: 400;
+  cursor: pointer; direction: rtl;
+  text-align: center; white-space: nowrap;
+}
+.btn-continue:not(:disabled):hover { font-weight: 600; }
+.btn-continue.hidden { display: none !important; }
+/* Disabled state — gray inactive pill (modeled on the reference צדקתי button) */
+.btn-continue:disabled {
+  background: #AEAEAE;
+  color: #303030;
+  cursor: not-allowed;
+  opacity: 1;
+}
+/* Back button — white pill, bottom-right of bar (never shown on the first screen) */
+.scq-back {
+  width: 140px; padding: 0 40px;
+  height: 39px;   /* canonical nav-pill height — see _global-components.md § Nav bar button geometry */
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--subject-700); border-radius: 1000px; background: #fff;
+  color: var(--subject-700);
+  font-family: Calibri, Arial, sans-serif; font-size: 20px; font-weight: 400;
+  cursor: pointer; direction: rtl;
+}
+.scq-back:hover { font-weight: 600; border-width: 1.5px; }
