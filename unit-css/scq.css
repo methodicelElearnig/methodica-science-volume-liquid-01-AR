@@ -170,7 +170,8 @@
 }
 .scq-hint-body p { line-height: normal; }
 .scq-hint-close {
-  width: 196px; padding: 16px 40px;
+  /* Arabic "عودة إلى السؤال" is longer than the Hebrew label: grow with the text, stay on one line */
+  min-width: 196px; width: auto; white-space: nowrap; padding: 16px 40px;
   border: none; border-radius: 1000px; background: #fff;
   color: #303030;
   font-family: Calibri, Arial, sans-serif; font-size: 24px; font-weight: 400;

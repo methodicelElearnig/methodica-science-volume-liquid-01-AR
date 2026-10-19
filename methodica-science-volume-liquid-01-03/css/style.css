@@ -638,3 +638,8 @@
 #s3v-popup .scq-popup-title { padding-top: 0; }
 /* Single-child header now -- drop the LTR flip that ordered title vs. X. */
 #s3v-popup .scq-popup-header { direction: rtl; }
+
+/* Arabic build: "لا، يُفضّل إجراء 3 قياسات لزيادة الدقّة" is ~250px at 20px and overflowed the 260px list
+   (and would be cut with an ellipsis once selected). 15px makes the longest option fit in both places. */
+#s3dd-list .mdq-option,
+#s3dd-selected { font-size: 15px; }

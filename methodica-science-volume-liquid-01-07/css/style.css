@@ -367,6 +367,14 @@
    are left untouched. */
 #s4 .scq-question { gap: 16px; }
 
+/* Arabic build: bigger distractor pills. The long Arabic options run two lines and crowded the fully
+   rounded ends of the 46px pill, so each pill is taller, wider and has more inner padding; the whole
+   block starts higher (top 139 -> 40) so the extra height still clears the recall button and bottom bar. */
+#s4 .scq-question { top: 40px; }
+#s4 .scq-answers { width: 720px; gap: 12px; }
+#s4 .scq-opt { min-height: 76px; padding: 14px 36px; gap: 16px; }
+#s4 .scq-opt-text { line-height: 1.25; }
+
 
 /* ═══════════════════════════════════════════════════════
    S5 — SingleChoiceQuestion (Figma 2526:1579). Section ד׳.
